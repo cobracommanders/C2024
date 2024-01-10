@@ -39,6 +39,12 @@ public final class Constants {
             public static final double D = 0;
             public static final double EPSILON = Constants.mode == Mode.SIM ? 5.0 : 1.0;
 
+        public static final class ClimberConstants {
+
+            public static final double MAX_RPM = 0;
+            
+        }
+
 
             // Constraints for the profiled angle controller
             public static final double MAX_ANGULAR_SPEED_DEGREES_PER_SECOND = 720;

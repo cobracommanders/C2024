@@ -1,13 +1,13 @@
 package org.team498.C2024.subsystems;
 
-import org.team498.C2023.Ports;
-import org.team498.C2023.State;
-import org.team498.C2023.Constants.FlywheelConstants;
+import org.team498.C2024.Ports;
 import org.team498.lib.drivers.LazySparkMax;
-import org.team498.lib.wpilib.PController;
 
+import com.ctre.phoenix6.mechanisms.swerve.utility.PhoenixPIDController;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 /*
@@ -25,7 +25,7 @@ public class Climber extends SubsystemBase {
     private final LazySparkMax rMotor; // We use left / right descriptors to make identification easier in testing and communication
     private final RelativeEncoder encoder; //Declaration for a Built-in NEO/NEO550 encoder
 
-    private final PController pController; //Declaration for a P Controller
+    private final PIDController pController; //Declaration for a P Controller
     private final SimpleMotorFeedforward feedforward;
 
     // Variables will store the current properties of the subsystem

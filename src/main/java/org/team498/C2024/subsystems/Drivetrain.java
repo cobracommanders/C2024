@@ -35,12 +35,12 @@ public class Drivetrain extends SubsystemBase {
 
     private final SwerveDrivePoseEstimator poseEstimator;
 
-    private final ProfiledPIDController angleController = new ProfiledPIDController(0, 0, 0, null, 0);
+    private final ProfiledPIDController angleController = new ProfiledPIDController(5, 0, 0, AngleConstants.CONTROLLER_CONSTRAINTS);
 
-    private final PIDController xController = new PIDController(0, 0, 0, 0);
+    private final PIDController xController = new PIDController(0, 0, 0);
     private final SlewRateLimiter xLimiter = new SlewRateLimiter(MAX_ACCELERATION_METERS_PER_SECOND_SQUARED);
     private final SlewRateLimiter yLimiter = new SlewRateLimiter(MAX_ACCELERATION_METERS_PER_SECOND_SQUARED);
-    private final PIDController yController = new PIDController(0, 0, 0, 0);
+    private final PIDController yController = new PIDController(0, 0, 0);
     private final Field2d field2d = new Field2d();
     public Drivetrain(){
         modules = new SwerveModule[]{
@@ -56,7 +56,6 @@ public class Drivetrain extends SubsystemBase {
         yController.setTolerance(0);
         xLimiter.reset(0);
         yLimiter.reset(0);
-
         kinematics = new SwerveDriveKinematics(getModuleTranslations());
 
         poseEstimator = new SwerveDrivePoseEstimator(kinematics, Rotation2d.fromDegrees(getYaw()), getModulePositions(), new Pose2d(), 
