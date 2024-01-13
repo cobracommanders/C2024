@@ -7,6 +7,8 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+
+import org.team498.C2024.commands.auto.PathPlannerTest;
 import org.team498.C2024.commands.auto.TestAuto;
 import org.team498.C2024.subsystems.Drivetrain;
 import org.team498.lib.auto.Auto;
@@ -36,7 +38,8 @@ public class Robot extends TimedRobot{
     private boolean matchStarted = false;
 
     private final List<Auto> autoOptions = List.of(
-           new TestAuto()
+           new TestAuto(),
+           new PathPlannerTest()
                                                   );
 
     @Override
