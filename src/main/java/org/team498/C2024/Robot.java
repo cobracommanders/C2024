@@ -33,12 +33,10 @@ public class Robot extends TimedRobot{
     private final SendableChooser<Auto> autoChooser = new SendableChooser<Auto>();
     private Auto autoToRun;
 
-    //private final Logger logger = Logger.getInstance();
-
     private boolean matchStarted = false;
 
     private final List<Auto> autoOptions = List.of(
-           
+           new TestAuto()
                                                   );
 
     @Override
@@ -147,16 +145,4 @@ public class Robot extends TimedRobot{
     public static void main(String... args) {
         RobotBase.startRobot(Robot::new);
     }
-
-    // @Override
-    // public void startCompetition() {
-    //     // TODO Auto-generated method stub
-    //     throw new UnsupportedOperationException("Unimplemented method 'startCompetition'");
-    // }
-
-    // @Override
-    // public void endCompetition() {
-    //     // TODO Auto-generated method stub
-    //     throw new UnsupportedOperationException("Unimplemented method 'endCompetition'");
-    // }
 }

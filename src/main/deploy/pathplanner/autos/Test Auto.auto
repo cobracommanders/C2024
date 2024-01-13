@@ -14,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Mid subwoofer to first note"
+            "pathName": "MidSubwooferToFirstNote"
           }
         },
         {
@@ -38,7 +38,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "First Note to Fifth Note"
+            "pathName": "FirstNoteToFifthNote"
           }
         },
         {
@@ -50,7 +50,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Fifth_Note_to_Second_Note_under_stage"
+            "pathName": "FifthNoteToSecondNoteUnderStage"
           }
         }
       ]
