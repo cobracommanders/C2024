@@ -148,15 +148,15 @@ public class Robot extends TimedRobot{
         RobotBase.startRobot(Robot::new);
     }
 
-    @Override
-    public void startCompetition() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'startCompetition'");
-    }
+    // @Override
+    // public void startCompetition() {
+    //     // TODO Auto-generated method stub
+    //     throw new UnsupportedOperationException("Unimplemented method 'startCompetition'");
+    // }
 
-    @Override
-    public void endCompetition() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'endCompetition'");
-    }
+    // @Override
+    // public void endCompetition() {
+    //     // TODO Auto-generated method stub
+    //     throw new UnsupportedOperationException("Unimplemented method 'endCompetition'");
+    // }
 }
