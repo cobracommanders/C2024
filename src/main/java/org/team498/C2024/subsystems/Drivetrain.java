@@ -20,7 +20,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static org.team498.C2024.Constants.DrivetrainConstants.*;
 
+import java.util.Optional;
+
+import javax.sound.sampled.Port;
+
+import org.team498.C2024.Constants;
+import org.team498.C2024.Ports;
 import org.team498.C2024.Robot;
+import org.team498.C2024.subsystems.PhotonVision.TimedPose;
 import org.team498.lib.drivers.Gyro;
 import org.team498.lib.wpilib.ChassisSpeeds;
 
@@ -37,17 +44,17 @@ public class Drivetrain extends SubsystemBase {
 
     private final ProfiledPIDController angleController = new ProfiledPIDController(5, 0, 0, AngleConstants.CONTROLLER_CONSTRAINTS);
 
-    private final PIDController xController = new PIDController(0, 0, 0);
+    private final PIDController xController = new PIDController(Constants.DrivetrainConstants.PoseConstants.P, Constants.DrivetrainConstants.PoseConstants.I,  Constants.DrivetrainConstants.PoseConstants.D);
     private final SlewRateLimiter xLimiter = new SlewRateLimiter(MAX_ACCELERATION_METERS_PER_SECOND_SQUARED);
     private final SlewRateLimiter yLimiter = new SlewRateLimiter(MAX_ACCELERATION_METERS_PER_SECOND_SQUARED);
-    private final PIDController yController = new PIDController(0, 0, 0);
+    private final PIDController yController = new PIDController(Constants.DrivetrainConstants.PoseConstants.P, Constants.DrivetrainConstants.PoseConstants.I,  Constants.DrivetrainConstants.PoseConstants.D);
     private final Field2d field2d = new Field2d();
     public Drivetrain(){
         modules = new SwerveModule[]{
-            new SwerveModule(0, 0, 0, getName(), 0),
-            new SwerveModule(0, 0, 0, getName(), 0),
-            new SwerveModule(0, 0, 0, getName(), 0),
-            new SwerveModule(0, 0, 0, getName(), 0) 
+            new SwerveModule(Ports.DrivetrainPorts.FL_DRIVE, Ports.DrivetrainPorts.FL_STEER, Ports.DrivetrainPorts.FL_CANCODER, getName(), FL_MODULE_OFFSET),
+            new SwerveModule(Ports.DrivetrainPorts.FR_DRIVE, Ports.DrivetrainPorts.FR_STEER, Ports.DrivetrainPorts.FR_CANCODER, getName(), FR_MODULE_OFFSET),
+            new SwerveModule(Ports.DrivetrainPorts.BL_DRIVE, Ports.DrivetrainPorts.BL_STEER, Ports.DrivetrainPorts.BL_CANCODER, getName(), BL_MODULE_OFFSET),
+            new SwerveModule(Ports.DrivetrainPorts.BR_DRIVE, Ports.DrivetrainPorts.BR_STEER, Ports.DrivetrainPorts.BR_CANCODER, getName(), BR_MODULE_OFFSET) 
         };
 
          angleController.enableContinuousInput(-180, 180);
@@ -69,6 +76,9 @@ public class Drivetrain extends SubsystemBase {
     @Override
     public void periodic() {
         field2d.setRobotPose(getPose().getX(), getPose().getY(), getPose().getRotation());
+        Optional<TimedPose> visionPose = PhotonVision.getInstance().getEstimatedPose();
+        if (visionPose.isPresent())
+        poseEstimator.addVisionMeasurement(visionPose.get().pose, visionPose.get().timeStamp);
         SmartDashboard.putData(field2d);
         SmartDashboard.putNumber("Pitch", gyro.pitch());
         for (int i = 0; i < modules.length; i++) {

@@ -39,13 +39,6 @@ public final class Constants {
             public static final double D = 0;
             public static final double EPSILON = Constants.mode == Mode.SIM ? 5.0 : 1.0;
 
-        public static final class ClimberConstants {
-
-            public static final double MAX_RPM = 0;
-            
-        }
-
-
             // Constraints for the profiled angle controller
             public static final double MAX_ANGULAR_SPEED_DEGREES_PER_SECOND = 720;
             public static final double MAX_ANGULAR_SPEED_DEGREES_PER_SECOND_SQUARED = Math.pow(MAX_ANGULAR_SPEED_DEGREES_PER_SECOND, 2);
@@ -65,5 +58,30 @@ public final class Constants {
             public static final double EPSILON = 0.05;
         }
     }
+
+    public static final class ShooterConstants {
+        public static final double P = 0;
+        public static final double I = 0;
+        public static final double D = 0;
+        public static final double S = 0;
+        public static final double V = 0;
+        public static final double A = 0;
+        public static final double MAX_RPM = 0;
+
+        public static final class AngleConstants{
+            public static final double P = 0;
+            public static final double I = 0;
+            public static final double D = 0;
+            public static final double S = 0;
+            public static final double V = 0;
+            public static final double G = 0;
+        }
+    }
+
+    public static final class ClimberConstants {
+
+            public static final double MAX_RPM = 0;
+            
+        }
 
 }

@@ -21,6 +21,13 @@ public final class Ports {
         public static final int GYRO = 15;
     }
 
+    public static class ShooterPorts {
+        public static final int BOTTOM_MOTOR = 31;
+        public static final int TOP_MOTOR = 32;
+        public static final int ANGLE_MOTOR = 33;
+        public static final int ANGLE_ENCODER = 0;//DIO
+    }
+
     public static class Accessories {
         public static final int BLINKIN = 9; // PWM
         public static final int SETUP_SWITCH = 8; //DIO

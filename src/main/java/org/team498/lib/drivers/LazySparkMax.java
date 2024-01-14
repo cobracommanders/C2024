@@ -1,9 +1,7 @@
-  package org.team498.lib.drivers;
+package org.team498.lib.drivers;
 
- import com.revrobotics.CANSparkMax;
- import com.revrobotics.REVLibError;
-
-import edu.wpi.first.wpilibj.drive.RobotDriveBase.MotorType;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.REVLibError;
 
 // // Credit to team 254 for inspiring this class
  public class LazySparkMax extends CANSparkMax {
