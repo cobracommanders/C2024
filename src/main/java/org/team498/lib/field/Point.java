@@ -5,7 +5,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 import java.awt.geom.Point2D;
 
-import org.team498.C2024.Robot;
 
 public class Point extends Point2D.Double implements BaseRegion {
 

@@ -110,14 +110,18 @@ public class Shooter extends SubsystemBase {
         topController.setSetpoint(this.topSpeed);
     }
 
+    public boolean atSetpoint(){
+        return topController.atSetpoint() && bottomController.atSetpoint() && angleController.atSetpoint();
+    }
+
     // We do NOT use the preset methods for following and inverting motors in case of flash failure 
     // (Ask Caleb about that if you're curious)
     // Use a method to define motor control in relevant groups
-    public void set(double topSpeed, double bottomSpeed) {
+    private void set(double topSpeed, double bottomSpeed) {
         bottomMotor.set(bottomSpeed);
         topMotor.set(-topSpeed); // invert speed on right side (assuming the motor is facing opposite the left)
     }
-    public void setAngle(double speed){
+    private void setAngle(double speed){
         angleMotor.set(speed);
     }
     

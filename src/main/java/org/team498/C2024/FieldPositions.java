@@ -5,14 +5,10 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import org.team498.lib.field.Point;
 import org.team498.lib.field.Rectangle;
-import org.team498.lib.field.Region;
 
-import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 public final class FieldPositions {

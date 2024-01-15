@@ -28,6 +28,22 @@ public final class Ports {
         public static final int ANGLE_ENCODER = 0;//DIO
     }
 
+    public static class HopperPorts {
+        public static final int MOTOR = 40;
+        public static final int ENCODER = 41;
+    }
+
+    public static class IntakePorts {
+        public static final int LMOTOR = 50;
+        public static final int RMOTOR = 51;
+        public static final int ANGLE_ENCODER = 52;
+    }
+
+    public static class IntakeRollersPorts {
+        public static final int MOTOR = 53;
+
+    }
+
     public static class Accessories {
         public static final int BLINKIN = 9; // PWM
         public static final int SETUP_SWITCH = 8; //DIO

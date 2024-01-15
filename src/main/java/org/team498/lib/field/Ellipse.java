@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import java.awt.geom.Ellipse2D;
 import java.util.LinkedList;
 
-import org.team498.C2024.Robot;
 
 public class Ellipse extends Ellipse2D.Double implements BaseRegion {
     /**

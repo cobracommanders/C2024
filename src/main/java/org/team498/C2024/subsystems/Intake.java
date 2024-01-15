@@ -1,13 +1,13 @@
 package org.team498.C2024.subsystems;
 
-import org.team498.C2023.Ports;
-import org.team498.C2023.State;
-import org.team498.C2023.Constants.FlywheelConstants;
+import org.team498.C2024.Ports;
+import org.team498.C2024.State;
+import org.team498.C2024.Constants.IntakeConstants;
 import org.team498.lib.drivers.LazySparkMax;
-import org.team498.lib.wpilib.PController;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 /*
@@ -21,34 +21,30 @@ public class Intake extends SubsystemBase {
     // They can be instantiated (given values) later, but they must be declared here
 
     // Motors will almost always be private because they will only be controlled using public methods. There should be NO global use where motors 
-    private final LazySparkMax lMotor; // Declaration for a NEO or NEO550 brushless motor
-    private final LazySparkMax rMotor; // We use left / right descriptors to make identification easier in testing and communication
+    private final LazySparkMax motor; // Declaration for a NEO or NEO550 brushless motor
     private final RelativeEncoder encoder; //Declaration for a Built-in NEO/NEO550 encoder
 
-    private final PController pController; //Declaration for a P Controller
+    private final PIDController pidController; //Declaration for a P Controller
     private final SimpleMotorFeedforward feedforward;
 
     // Variables will store the current properties of the subsystem
-    private double setpoint;
+    private double speed;
     private State.Intake currentState;
     
     // Constructor: Configure Motor Controller settings and  
     // Instantiate all objects (assign values to every variable and object)
     public Intake() {
-        lMotor = new LazySparkMax(Ports.Intake.Intake, MotorType.kBrushless);
-        rMotor = new LazySparkMax(Ports.Intake.Intake, MotorType.kBrushless);
-        encoder = lMotor.getEncoder(); //this can be left or right motor, whichever is most convenient
+        motor = new LazySparkMax(Ports.IntakePorts.LMOTOR, MotorType.kBrushless);
+        encoder = motor.getEncoder(); //this can be left or right motor, whichever is most convenient
 
         // Use the subsystems constants to instantiate PID and Feedforward
-        pController = new PController(IntakeConstants.P);
-        feedforward = new SimpleMotorFeedforward(IntakeConstants.S, IntakeConstants.V, IntakeConstants.A);
+        pidController = new PIDController(IntakeConstants.P, IntakeConstants.I, IntakeConstants.D);
+        feedforward = new SimpleMotorFeedforward(IntakeConstants.S, IntakeConstants.V, IntakeConstants.G);
 
         // reset motor defaults to ensure all settings are clear
-        lMotor.restoreFactoryDefaults();
-        rMotor.restoreFactoryDefaults();
+        motor.restoreFactoryDefaults();
 
         // Instantiate variables to intitial values
-        setpoint = 0;
         currentState = State.Intake.IDLE;
     }
 
@@ -57,11 +53,9 @@ public class Intake extends SubsystemBase {
     public void periodic() {
         // This condition will reduce CPU utilization when the motor is not meant to run and save power because 
         // it will not actively deccelerate the wheel
-        if (setpoint == 0) return; //don't run the motor or calculate anything if the setpoint is 0
-
         double speed; // We will use this variable to keep track of our desired speed
-        speed = feedforward.calculate(setpoint); // adjust the setpoint to account for physical motor properties using feedforward
-        speed = pController.calculate(encoder.getVelocity(), speed); // adjust for feedback error using proportional gain
+        speed = feedforward.calculate(this.speed); // adjust the setpoint to account for physical motor properties using feedforward
+        speed = pidController.calculate(encoder.getVelocity(), speed); // adjust for feedback error using proportional gain
         set(speed / IntakeConstants.MAX_RPM); // set the motor behavior using set() to interact with the controllers
         // We divide by MAX_RPM to scale to {-1, 1}
     }
@@ -73,17 +67,20 @@ public class Intake extends SubsystemBase {
 
     // Every subsystem has a setState() method that configures local properties to match the desired state
     public void setState(State.Intake state) {
-        currentState = state; // update state
-        setpoint = state.setpoint; // update setpoint
-        pController.setSetpoint(setpoint); // update pController
+        currentState = state;
+        speed = state.speed; // update state
+        pidController.setSetpoint(this.speed); // update pController
+    }
+
+    public boolean atSetpoint(){
+        return pidController.atSetpoint();
     }
 
     // We do NOT use the preset methods for following and inverting motors in case of flash failure 
     // (Ask Caleb about that if you're curious)
     // Use a method to define motor control in relevant groups
     public void set(double speed) {
-        lMotor.set(speed);
-        rMotor.set(-speed); // invert speed on right side (assuming the motor is facing opposite the left)
+        motor.set(speed);
     }
     
     // Using static instances to reference the flywheel object ensures that we only use ONE FLywheel throughout the code 

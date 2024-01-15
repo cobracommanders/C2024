@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 
 import java.awt.geom.Rectangle2D;
 
-import org.team498.C2024.Robot;
 
 public class Rectangle extends Rectangle2D.Double implements BaseRegion {
 
