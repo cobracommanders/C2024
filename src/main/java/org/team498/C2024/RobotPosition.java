@@ -5,10 +5,13 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+
 import org.team498.C2024.Constants.DrivetrainConstants;
 import org.team498.C2024.subsystems.Drivetrain;
 import org.team498.lib.field.BaseRegion;
 import org.team498.lib.field.Point;
+import org.team498.lib.util.PoseUtil;
 import org.team498.lib.util.RotationUtil;
 import org.team498.lib.wpilib.ChassisSpeeds;
 
@@ -56,10 +59,14 @@ public class RobotPosition {
         return angle;
     }
 
+    public static double distanceToSpeaker(){
+        return distanceTo(FieldPositions.blueSpeaker);
+    }
+
     private static Transform2d getVelocity(double loopCycles) {
         var currentSpeeds = drivetrain.getCurrentSpeeds();
         return new Transform2d(new Translation2d(
-            currentSpeeds.vxMetersPerSecond * (Robot.DEFAULT_PERIOD * loopCycles), 
+            currentSpeeds.vxMetersPerSecond * (Robot.DEFAULT_PERIOD * loopCycles),
             currentSpeeds.vyMetersPerSecond * (Robot.DEFAULT_PERIOD * loopCycles)),
             Rotation2d.fromRadians(currentSpeeds.omegaRadiansPerSecond * (Robot.DEFAULT_PERIOD * loopCycles)));
     }
@@ -70,6 +77,12 @@ public class RobotPosition {
         var y = currentSpeeds.vyMetersPerSecond * (Robot.DEFAULT_PERIOD * loopCycles);
         var r = Rotation2d.fromRadians(currentSpeeds.omegaRadiansPerSecond * (Robot.DEFAULT_PERIOD * loopCycles));
         return new Transform2d(new Translation2d(Math.copySign(x * x, x), Math.copySign(y * y, y)), r);
+    }
+
+    public static  double calculateDegreesToSpeaker(){
+        Pose2d blueSpeaker = FieldPositions.blueSpeaker.toPose2d();
+        if (Robot.alliance.get() == Alliance.Red) return calculateDegreesToTarget(PoseUtil.flip(blueSpeaker));
+        return calculateDegreesToTarget(blueSpeaker);
     }
 
     public static Pose2d getFuturePose(double loopCycles) {

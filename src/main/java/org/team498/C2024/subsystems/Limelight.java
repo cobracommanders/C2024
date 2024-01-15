@@ -8,6 +8,8 @@ public class Limelight extends SubsystemBase{
     private double x;
     private double y;
     private double area;
+    private double minimum;
+    private double maximum;
 
     NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
     NetworkTableEntry tx = table.getEntry("tx");
@@ -18,6 +20,14 @@ public class Limelight extends SubsystemBase{
         x = tx.getDouble(0.0);
         y = ty.getDouble(0.0);
         area = ta.getDouble(0.0);
+        maximum = 0;
+        minimum = 0;
+    }
+
+    public boolean isCentered(){
+        if (getX() > maximum || getX() < minimum)
+        return false;
+        return true;
     }
 
     public double getX(){

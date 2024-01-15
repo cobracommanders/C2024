@@ -2,6 +2,7 @@ package org.team498.C2024.subsystems;
 
 import org.team498.C2024.Constants;
 import org.team498.C2024.Ports;
+import org.team498.C2024.RobotPosition;
 import org.team498.C2024.State;
 import org.team498.lib.drivers.LazySparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -77,6 +78,11 @@ public class Shooter extends SubsystemBase {
     public void periodic() {
         // This condition will reduce CPU utilization when the motor is not meant to run and save power because 
         // it will not actively deccelerate the wheel
+        if (currentState == State.Shooter.CRESCENDO){
+            this.bottomSpeed = calculateBottomSpeed(RobotPosition.distanceToSpeaker());
+            this.topSpeed = calculateTopSpeed(RobotPosition.distanceToSpeaker());
+            this.angle = calculateAngle(RobotPosition.distanceToSpeaker());
+        }
 
         double topSpeed; // We will use this variable to keep track of our desired speed
         double bottomSpeed;
@@ -106,8 +112,10 @@ public class Shooter extends SubsystemBase {
         currentState = state; // update state
         topSpeed = state.topSpeed; // update setpoint
         bottomSpeed = state.bottomSpeed;
+        angle = state.angle;
         bottomController.setSetpoint(this.bottomSpeed); // update pController
         topController.setSetpoint(this.topSpeed);
+        angleController.setSetpoint(this.angle);
     }
 
     public boolean atSetpoint(){
@@ -123,6 +131,18 @@ public class Shooter extends SubsystemBase {
     }
     private void setAngle(double speed){
         angleMotor.set(speed);
+    }
+
+    private double calculateAngle(double distance){
+        return 0;
+    }
+
+    private double calculateTopSpeed(double distance){
+        return 0;
+    }
+
+    private double calculateBottomSpeed(double distance){
+        return 0;
     }
     
     // Using static instances to reference the flywheel object ensures that we only use ONE FLywheel throughout the code 

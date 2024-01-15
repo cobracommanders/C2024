@@ -1,8 +1,10 @@
 package org.team498.C2024.commands.drivetrain;
 
 import org.team498.C2024.Robot;
+import org.team498.C2024.RobotPosition;
 import org.team498.C2024.subsystems.Drivetrain;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import java.util.function.BooleanSupplier;
@@ -18,6 +20,7 @@ public class HybridDrive extends Command {
     private final DoubleSupplier yTranslationSupplier;
     private final DoubleSupplier rotationSupplier;
     private final BooleanSupplier slowDriveSupplier;
+    private final BooleanSupplier targetDriveSupplier;
     private final DoubleSupplier povAngle;
     private double desiredAngle;
 
@@ -25,12 +28,14 @@ public class HybridDrive extends Command {
                         DoubleSupplier yTranslationSupplier,
                         DoubleSupplier rotationSupplier,
                         DoubleSupplier povAngle,
-                        BooleanSupplier slowDriveSupplier) {
+                        BooleanSupplier slowDriveSupplier, 
+                        BooleanSupplier targetDriveSupplier) {
         this.xTranslationSupplier = xTranslationSupplier;
         this.yTranslationSupplier = yTranslationSupplier;
         this.rotationSupplier = rotationSupplier;
         this.slowDriveSupplier = slowDriveSupplier;
         this.povAngle = povAngle;
+        this.targetDriveSupplier = targetDriveSupplier;
 
         addRequirements(drivetrain);
     }
@@ -60,15 +65,10 @@ public class HybridDrive extends Command {
             desiredAngle = povAngle.getAsDouble() - Robot.rotationOffset;
         }
         drivetrain.setAngleGoal(desiredAngle);
-        //}
-        //if(!drivetrain.atAngleGoal()){//rotation == 0 && (xTranslation != 0 || yTranslation != 0) || drivetrain.angle){
-            //drivetrain.setAngleGoal(desiredAngle);
-        rotation = drivetrain.calculateAngleSpeed();
-        // } else {
-        //     rotation = 0;
-        // }
     
+        if (targetDriveSupplier.getAsBoolean())drivetrain.setAngleGoal(RobotPosition.calculateDegreesToSpeaker());
 
+        rotation = drivetrain.calculateAngleSpeed();
         // Set the robot to drive in field relative mode, with the rotation controlled by the snap controller
         drivetrain.drive(xTranslation, yTranslation, rotation, true);
     }

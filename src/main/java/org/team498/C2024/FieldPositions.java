@@ -17,6 +17,8 @@ public final class FieldPositions {
 
     public static final double midline = width / 2;
 
+    public static final Point blueSpeaker = new Point(0.16, 5.57);
+
     public static final Point[] blueNotes = {
         new Point(2.89, 4.107),
         new Point(2.89, 5.552),
@@ -37,8 +39,6 @@ public final class FieldPositions {
         new Point(13.665, 5.552),
         new Point(13.665, 6.997)
     };
-    
-    
 
     public static Point flip(Point input) {
         return new Point(midline + (midline - input.x), input.y);
