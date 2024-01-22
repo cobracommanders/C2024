@@ -2,24 +2,25 @@ package org.team498.C2024.commands;
 
 import org.team498.C2024.StateController;
 import org.team498.C2024.subsystems.Hopper;
+import org.team498.C2024.subsystems.IntakeRollers;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class SetIntakeRollersNextState extends Command {
-    private final Hopper hopper = Hopper.getInstance();
+    private final IntakeRollers intakeRollers = IntakeRollers.getInstance();
 
     public SetIntakeRollersNextState() {
-        addRequirements(hopper);
+        addRequirements(intakeRollers);
     }
 
     @Override
     public void initialize() {
-        hopper.setState(StateController.getInstance().getState().hopper);
+        intakeRollers.setState(StateController.getInstance().getState().intakeRollers);
     }
 
     @Override
     public boolean isFinished() {
-        return hopper.atSetpoint();
+        return intakeRollers.atSetpoint();
     }
 }
 

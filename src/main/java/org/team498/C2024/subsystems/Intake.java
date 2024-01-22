@@ -5,7 +5,7 @@ import org.team498.C2024.State;
 import org.team498.C2024.Constants.IntakeConstants;
 import org.team498.lib.drivers.LazySparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-
+import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -21,7 +21,7 @@ public class Intake extends SubsystemBase {
     // They can be instantiated (given values) later, but they must be declared here
 
     // Motors will almost always be private because they will only be controlled using public methods. There should be NO global use where motors 
-    private final LazySparkMax motor; // Declaration for a NEO or NEO550 brushless motor
+    private final CANSparkMax motor; // Declaration for a NEO or NEO550 brushless motor
     private final RelativeEncoder encoder; //Declaration for a Built-in NEO/NEO550 encoder
 
     private final PIDController pidController; //Declaration for a P Controller
@@ -34,7 +34,8 @@ public class Intake extends SubsystemBase {
     // Constructor: Configure Motor Controller settings and  
     // Instantiate all objects (assign values to every variable and object)
     public Intake() {
-        motor = new LazySparkMax(Ports.IntakePorts.LMOTOR, MotorType.kBrushless);
+        // motor = new LazySparkMax(Ports.IntakePorts.LMOTOR, MotorType.kBrushless);
+        motor = new CANSparkMax(Ports.IntakePorts.LMOTOR, MotorType.kBrushless);
         encoder = motor.getEncoder(); //this can be left or right motor, whichever is most convenient
 
         // Use the subsystems constants to instantiate PID and Feedforward

@@ -8,46 +8,60 @@ import static org.team498.C2024.Constants.DrivetrainConstants.MK4I_STEER_REDUCTI
 import org.team498.lib.drivers.LazyTalonFX;
 import org.team498.lib.util.Falcon500Conversions;
 
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.ControlRequest;
+import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 
 public class SwerveModule {
-    private final LazyTalonFX drive;
-    private final LazyTalonFX steer;
+    private final TalonFX drive;
+    private final TalonFX steer;
     private final CANcoder encoder;
 
     private SwerveModuleState currentTarget = new SwerveModuleState();
     double angleOffset;
     public SwerveModule(int driveID, int steerID, int encoderID, String canBus, double angleOffset){
-        drive = new LazyTalonFX(driveID,canBus);
-        steer = new LazyTalonFX(steerID,canBus);
+        drive = new TalonFX(driveID,canBus);
+        steer = new TalonFX(steerID,canBus);
         encoder = new CANcoder(encoderID,canBus);
         this.angleOffset = angleOffset;
         configDriveMotor(drive);
         configSteerMotor(steer);
         configCANCoder(encoder);
+        enableBrakeMode(true);
+    }
+    public void enableBrakeMode(boolean setBrake) {
+        drive.setNeutralMode(setBrake ? NeutralModeValue.Brake : NeutralModeValue.Coast);
+        steer.setNeutralMode(setBrake ? NeutralModeValue.Brake : NeutralModeValue.Coast);
     }
     public void setState(SwerveModuleState state) {
         currentTarget = optimize(state, Falcon500Conversions.falconToDegrees(steer.getPosition().getValueAsDouble(), MK4I_STEER_REDUCTION_L3));
 
-        drive.set(Falcon500Conversions.MPSToFalcon(currentTarget.speedMetersPerSecond, Units.inchesToMeters(DRIVE_WHEEL_DIAMETER), MK4I_DRIVE_REDUCTION_L3));
-        steer.setPosition(Falcon500Conversions.degreesToFalcon(currentTarget.angle.getDegrees(), MK4I_STEER_REDUCTION_L3));
+        drive.setControl(new VelocityVoltage(currentTarget.speedMetersPerSecond * MK4I_DRIVE_REDUCTION_L3 * MK4I_DRIVE_REDUCTION_L3 / Units.inchesToMeters(DRIVE_WHEEL_CIRCUMFERENCE)));
+        steer.setControl(new PositionVoltage(Falcon500Conversions.degreesToFalcon(currentTarget.angle.getDegrees(), MK4I_STEER_REDUCTION_L3)));
     }
     public void updateIntegratedEncoder() {
-        steer.setPosition(Falcon500Conversions.degreesToFalcon(encoder.getAbsolutePosition().getValueAsDouble() - angleOffset, MK4I_STEER_REDUCTION_L3));
+        steer.setPosition(Falcon500Conversions.degreesToFalcon(getAngle(), MK4I_STEER_REDUCTION_L3));
+        steer.setControl(new PositionVoltage(Falcon500Conversions.degreesToFalcon(getAngle(), MK4I_STEER_REDUCTION_L3)));
     }
     public double getSpeed(){
         return currentTarget.speedMetersPerSecond;
     }
+    public double getDriveMotorSpeed() {
+        return drive.getVelocity().getValueAsDouble() * Units.inchesToMeters(DRIVE_WHEEL_CIRCUMFERENCE) / 6.12;
+    }
     public double getPosition(){
-        return Falcon500Conversions.falconToDegrees(drive.getSelectedSensorPosition(), MK4I_DRIVE_REDUCTION_L3) / 360 * Units.inchesToMeters(DRIVE_WHEEL_CIRCUMFERENCE);
+        return Falcon500Conversions.falconToDegrees(drive.getPosition().getValueAsDouble(), MK4I_DRIVE_REDUCTION_L3) / 360 * Units.inchesToMeters(DRIVE_WHEEL_CIRCUMFERENCE);
    }
 
    public double getAngle(){
@@ -98,13 +112,18 @@ public class SwerveModule {
         TalonFXConfiguration driveConfig = new TalonFXConfiguration();
         driveConfig.CurrentLimits.SupplyCurrentLimit = 35;
         driveConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
-        driveConfig.Slot0.kP = 0.025;
+        driveConfig.Slot0.kP = 0.0215;//0.025;
         driveConfig.Slot0.kI = 0.0;
-        driveConfig.Slot0.kD = 0.5;
+        driveConfig.Slot0.kD = 0.01;//0.5;
+        driveConfig.Slot0.kV = 0;
         //TODO: ADD FEET FOWARD
         driveConfig.OpenLoopRamps.VoltageOpenLoopRampPeriod = 1;
         motor.getConfigurator().apply(driveConfig);
         motor.setInverted(false);
+        
+        motor.optimizeBusUtilization(.01);
+        motor.getPosition().setUpdateFrequency(20);
+        motor.getVelocity().setUpdateFrequency(20);
     }
 
     private void configSteerMotor(TalonFX motor) {
@@ -113,19 +132,25 @@ public class SwerveModule {
         TalonFXConfiguration steerConfig = new TalonFXConfiguration();
         steerConfig.CurrentLimits.SupplyCurrentLimit = 20;
         steerConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
-        steerConfig.Slot0.kP = 0.2;
+        steerConfig.Slot0.kP = 2.4; //0.2
         steerConfig.Slot0.kI = 0.0;
-        steerConfig.Slot0.kD = 0.1;
+        steerConfig.Slot0.kD = 0.2; // 0.1
         steerConfig.OpenLoopRamps.VoltageOpenLoopRampPeriod = 1;
         motor.getConfigurator().apply(steerConfig);
         motor.setInverted(true);    
+        motor.optimizeBusUtilization(.01);
+        motor.getPosition().setUpdateFrequency(20);
+        // motor.getVelocity().setUpdateFrequency(100);
     }
 
     private void configCANCoder(CANcoder CANCoder) {
         //CANCoder.configFactoryDefault();
         CANcoderConfiguration encoderConfig = new CANcoderConfiguration();
         encoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
+        encoderConfig.MagnetSensor.MagnetOffset = angleOffset;
         CANCoder.getConfigurator().apply(encoderConfig);
+        CANCoder.optimizeBusUtilization(0.01);
+        CANCoder.getAbsolutePosition().setUpdateFrequency(20);
         //CANCoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
     }
 

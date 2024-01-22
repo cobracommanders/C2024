@@ -57,8 +57,8 @@ public class PhotonVision {
     
     public PhotonVision(){
         PhotonCamera.setVersionCheckEnabled(true);
-        rightCamera = new PhotonCamera("right camera");
-        leftCamera = new PhotonCamera("left camera");
+        rightCamera = new PhotonCamera("top camera");
+        leftCamera = new PhotonCamera("bottom camera");
         // rightInputs = new CameraInputs();
         // leftInputs = new CameraInputs();
 
@@ -92,8 +92,10 @@ public class PhotonVision {
     }
 
     public Optional<TimedPose> getEstimatedPose(){
-        Optional<EstimatedRobotPose> rightPose = rightEstimatedPose();
-        Optional<EstimatedRobotPose> leftPose = leftEstimatedPose();
+        Optional<EstimatedRobotPose> rightPose = Optional.empty();
+        if (rightCamera.isConnected()) rightPose = rightEstimatedPose();
+        Optional<EstimatedRobotPose> leftPose = Optional.empty();
+        if (leftCamera.isConnected()) leftPose = leftEstimatedPose();
         if (rightPose.isEmpty() && leftPose.isEmpty())
         return Optional.empty();
         if (rightPose.isEmpty())
@@ -112,15 +114,15 @@ Rotation2d rotation = Rotation2d.fromDegrees(poseOne.pose.getRotation().getDegre
 return new TimedPose(new Pose2d(x, y, rotation), timestamp);
 }
 
-public class TimedPose{
-Pose2d pose;
-double timeStamp;
+    public class TimedPose{
+        Pose2d pose;
+        double timeStamp;
 
-public TimedPose(Pose2d pose, double timeStamp){
-this.pose = pose;
-this.timeStamp = timeStamp;
-}
-}
+        public TimedPose(Pose2d pose, double timeStamp){
+            this.pose = pose;
+            this.timeStamp = timeStamp;
+        }
+    }
 
     private static PhotonVision instance;
 

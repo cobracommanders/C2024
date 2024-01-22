@@ -8,14 +8,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class TestAuto implements Auto{
+    
 
     @Override
     public Command getCommand() {
 
         return new SequentialCommandGroup(
-            new PathPlannerFollower(PathLib.MidSubwooferToFirstNote),
-            new PathPlannerFollower(PathLib.FirstNoteToFifthNote),
-            new PathPlannerFollower(PathLib.FifthNoteToSecondNoteUnderStage)
+            new PathPlannerFollower(PathLib.MidSubwooferToFirstNote)
+            // new PathPlannerFollower(PathLib.FirstNoteToFifthNote),
+            // new PathPlannerFollower(PathLib.FifthNoteToSecondNoteUnderStage)
         );
     }
 

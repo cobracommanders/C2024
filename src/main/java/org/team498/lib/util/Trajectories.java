@@ -31,39 +31,42 @@ public class Trajectories {
             return new Trajectory();
         }
     }
-    public static PathPlannerTrajectory getChoreoTrajectory(String name){
+    public static PathPlannerTrajectory getChoreoTrajectory(String name, Rotation2d initialRotation){
         PathPlannerPath path = PathPlannerPath.fromChoreoTrajectory(name);
+        path.preventFlipping = true;
         ChassisSpeeds speeds = new ChassisSpeeds();
-        Rotation2d rotation = path.getAllPathPoints().get(0).rotationTarget.getTarget();
+        Rotation2d rotation = initialRotation;//path.getAllPathPoints().get(0).rotationTarget.getTarget();
         return path.getTrajectory(speeds, rotation);
     }   
-    public static PathPlannerTrajectory getPathPlannerTrajectory(String name) {
+    public static PathPlannerTrajectory getPathPlannerTrajectory(String name, Rotation2d initialRotation) {
         PathPlannerPath path = PathPlannerPath.fromPathFile(name);
-        
+        path.preventFlipping = true;
         ChassisSpeeds speeds = new ChassisSpeeds();
-        Rotation2d rotation = path.getAllPathPoints().get(0).rotationTarget.getTarget();
+        Rotation2d rotation =  initialRotation;//path.getAllPathPoints().get(0).rotationTarget.getTarget();
         return path.getTrajectory(speeds, rotation);
     }
 
     public static PathPlannerTrajectory getOTFTrajectory(List<Pose2d> poses) {
-        PathConstraints constraints = new PathConstraints(DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND, DrivetrainConstants.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED, AngleConstants.MAX_ANGULAR_SPEED_DEGREES_PER_SECOND / 360.0, AngleConstants.MAX_ANGULAR_SPEED_DEGREES_PER_SECOND_SQUARED / 360.0);
+        PathConstraints constraints = new PathConstraints(DrivetrainConstants.MAX_AUTO_VELOCITY, DrivetrainConstants.MAX_AUTO_ACCELERATION, AngleConstants.MAX_ANGULAR_SPEED_DEGREES_PER_SECOND * Math.PI / 360.0, AngleConstants.MAX_ANGULAR_SPEED_DEGREES_PER_SECOND_SQUARED * Math.PI / 360.0);
         Rotation2d endRotation = poses.get(poses.size() - 1).getRotation();
         double endVelocity = 0;
         GoalEndState endState = new GoalEndState(endVelocity, endRotation);
         PathPlannerPath path = new PathPlannerPath(PathPlannerPath.bezierFromPoses(poses), constraints, endState, false);
-        ChassisSpeeds speeds = new ChassisSpeeds();
-        Rotation2d rotation = path.getAllPathPoints().get(0).rotationTarget.getTarget();
+        Pose2d firstPose = poses.get(0);
+        ChassisSpeeds speeds = new ChassisSpeeds(firstPose.getX(), firstPose.getY(), firstPose.getRotation().getRadians());
+        Rotation2d rotation = firstPose.getRotation();
         return path.getTrajectory(speeds, rotation);
     }
 
     public static PathPlannerTrajectory getOTFTrajectory(List<Pose2d> poses, double maxVelocityMPS, double maxAccelMPSSq) {
-        PathConstraints constraints = new PathConstraints(maxVelocityMPS, maxAccelMPSSq, AngleConstants.MAX_ANGULAR_SPEED_DEGREES_PER_SECOND / 360.0, AngleConstants.MAX_ANGULAR_SPEED_DEGREES_PER_SECOND_SQUARED / 360.0);
+        PathConstraints constraints = new PathConstraints(maxVelocityMPS, maxAccelMPSSq, AngleConstants.MAX_ANGULAR_SPEED_DEGREES_PER_SECOND * Math.PI / 360.0, AngleConstants.MAX_ANGULAR_SPEED_DEGREES_PER_SECOND_SQUARED * Math.PI / 360.0);
         Rotation2d endRotation = poses.get(poses.size() - 1).getRotation();
         double endVelocity = 0;
         GoalEndState endState = new GoalEndState(endVelocity, endRotation);
         PathPlannerPath path = new PathPlannerPath(PathPlannerPath.bezierFromPoses(poses), constraints, endState, false);
-        ChassisSpeeds speeds = new ChassisSpeeds();
-        Rotation2d rotation = path.getAllPathPoints().get(0).rotationTarget.getTarget();
+        Pose2d firstPose = poses.get(0);
+        ChassisSpeeds speeds = new ChassisSpeeds(firstPose.getX(), firstPose.getY(), firstPose.getRotation().getRadians());
+        Rotation2d rotation = firstPose.getRotation();
         return path.getTrajectory(speeds, rotation);
     }
     

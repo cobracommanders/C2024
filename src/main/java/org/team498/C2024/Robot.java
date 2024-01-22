@@ -1,14 +1,17 @@
 package org.team498.C2024;
 
 
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 import org.team498.C2024.commands.auto.PathPlannerTest;
+import org.team498.C2024.commands.auto.PracticeAuto;
 import org.team498.C2024.commands.auto.TestAuto;
 import org.team498.C2024.subsystems.Drivetrain;
 import org.team498.lib.auto.Auto;
@@ -23,6 +26,8 @@ public class Robot extends TimedRobot{
     public static final double DEFAULT_PERIOD = 0.02;
     public static int coordinateFlip = 1;
     public static int rotationOffset = 0;
+    
+    public static boolean slowDrive;
 
     public static Optional<Alliance> alliance = Optional.empty();
     public static final Controls controls = new Controls();
@@ -39,12 +44,13 @@ public class Robot extends TimedRobot{
 
     private final List<Auto> autoOptions = List.of(
            new TestAuto(),
-           new PathPlannerTest()
+           new PathPlannerTest(),
+           new PracticeAuto()
                                                   );
 
     @Override
     public void robotInit() {
-    //        new PowerDistribution(1, PowerDistribution.ModuleType.kRev).close(); // Enables power distribution logging
+        //new PowerDistribution(1, PowerDistribution.ModuleType.kRev).close(); // Enables power distribution logging
         drivetrain.setYaw(0);
        // FieldPositions.displayAll();
         autoChooser.setDefaultOption("Score", new TestAuto());
@@ -52,12 +58,14 @@ public class Robot extends TimedRobot{
         controls.configureDefaultCommands();
         controls.configureDriverCommands();
         controls.configureOperatorCommands();
-        PathLib.choreoTest.getClass();
+        PathLib.SL1Note1.getClass();
+        drivetrain.enableBrakeMode(false);
     }
 
     @Override
     public void robotPeriodic() {
         CommandScheduler.getInstance().run();
+        SmartDashboard.putData(autoChooser);
 
         if (alliance.isEmpty()) {
             alliance = DriverStation.getAlliance();
@@ -98,6 +106,7 @@ public class Robot extends TimedRobot{
     @Override
     public void teleopInit() {
         matchStarted = true;
+        drivetrain.enableBrakeMode(true);
     }
 
     @Override
@@ -111,7 +120,12 @@ public class Robot extends TimedRobot{
     }
 
     @Override
+    public void disabledInit() {
+        drivetrain.enableBrakeMode(false);
+    }
+    @Override
     public void autonomousInit() {
+        drivetrain.enableBrakeMode(true);
         matchStarted = true;
 
         if (autoToRun == null)
@@ -126,8 +140,9 @@ public class Robot extends TimedRobot{
             Drivetrain.getInstance().setYaw(PoseUtil.flip(autoToRun.getInitialPose()).getRotation().getDegrees());
             Drivetrain.getInstance().setPose(PoseUtil.flip(autoToRun.getInitialPose()));
         }
+        //SmartDashboard.putData((Sendable) autoToRun.getInitialPose());
 
-        autoToRun.getCommand().schedule();
+        // autoToRun.getCommand().schedule();
 
         CommandScheduler.getInstance().run();
 

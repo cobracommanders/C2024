@@ -9,7 +9,7 @@ public class Falcon500Conversions {
      * @return Degrees of Rotation of mechanism
      */
     public static double falconToDegrees(double counts, double gearRatio) {
-        return counts * (360.0 / (gearRatio * 2048.0));
+        return counts * (360.0 / (gearRatio));
     }
 
     /**
@@ -18,7 +18,7 @@ public class Falcon500Conversions {
      * @return Falcon Counts
      */
     public static double degreesToFalcon(double degrees, double gearRatio) {
-        return degrees / (360.0 / (gearRatio * 2048.0));
+        return degrees / (360.0 / (gearRatio));
     }
 
     /**
@@ -27,7 +27,7 @@ public class Falcon500Conversions {
      * @return RPM of mechanism
      */
     public static double falconToRPM(double velocityCounts, double gearRatio) {
-        double motorRPM = velocityCounts * (600.0 / 2048.0);
+        double motorRPM = velocityCounts * (60.0);
         return motorRPM / gearRatio;
     }
 
@@ -38,7 +38,7 @@ public class Falcon500Conversions {
      */
     public static double RPMToFalcon(double RPM, double gearRatio) {
         double motorRPM = RPM * gearRatio;
-        return motorRPM * (2048.0 / 600.0);
+        return motorRPM * (1 / 60.0);
     }
 
     /**

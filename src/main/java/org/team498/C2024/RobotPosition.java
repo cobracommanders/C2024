@@ -44,8 +44,8 @@ public class RobotPosition {
         ChassisSpeeds currentSpeeds = drivetrain.getCurrentSpeeds();
 
         // Estimate the future pose of the robot to compensate for lag
-        double newX = currentPose.getX() + (currentSpeeds.vxMetersPerSecond * (Robot.DEFAULT_PERIOD * (Robot.isReal() ? 10 : 0)));
-        double newY = currentPose.getY() + (currentSpeeds.vyMetersPerSecond * (Robot.DEFAULT_PERIOD * (Robot.isReal() ? 10 : 0)));
+        double newX = currentPose.getX() + (-currentSpeeds.vxMetersPerSecond * (Robot.DEFAULT_PERIOD * 15));
+        double newY = currentPose.getY() + (-currentSpeeds.vyMetersPerSecond * (Robot.DEFAULT_PERIOD * 15));
 
         Pose2d futurePose = new Pose2d(newX, newY, new Rotation2d());
 

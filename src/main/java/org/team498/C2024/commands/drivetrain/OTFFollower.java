@@ -2,18 +2,21 @@ package org.team498.C2024.commands.drivetrain;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.BooleanSupplier;
 
 import org.team498.C2024.Robot;
 import org.team498.C2024.RobotPosition;
 import org.team498.C2024.subsystems.Drivetrain;
 import org.team498.lib.util.PoseUtil;
 import org.team498.lib.util.Trajectories;
+import org.team498.lib.wpilib.ChassisSpeeds;
 
 import com.pathplanner.lib.path.PathPlannerTrajectory;
 import com.pathplanner.lib.path.PathPlannerTrajectory.State;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -21,29 +24,37 @@ public class OTFFollower extends Command{
 
     private final Timer trajectoryTimer = new Timer();
     private PathPlannerTrajectory trajectory;
+    private BooleanSupplier slowDriveSupplier;
 
     private List <Pose2d> waypoints;
-    public OTFFollower(List <Pose2d> poses){
+    private double currentTime;
+    private double dt;
+    public OTFFollower(List <Pose2d> poses, BooleanSupplier slowDriveSupplier){
         waypoints = poses;
+        this.slowDriveSupplier = slowDriveSupplier;
+        addRequirements(Drivetrain.getInstance());
+        
     }
     @Override
     public void initialize() {
-        waypoints.add(0, Drivetrain.getInstance().getPose());
-        trajectory = Trajectories.getOTFTrajectory(waypoints);
+        List<Pose2d> poses = List.of(Drivetrain.getInstance().getPose(), waypoints.get(0), waypoints.get(1));
+        trajectory = Trajectories.getOTFTrajectory(poses);
         
         trajectoryTimer.reset();
         trajectoryTimer.start();
+        currentTime = 0;
+        dt = 0;
 
-        // Display the trajectory on the driver station dashboard
-        List<Pose2d> poses = new LinkedList<>();
-        List<State> trajectoryStates = trajectory.getStates();
-        for (int i = 0; i < trajectoryStates.size(); i += trajectoryStates.size() / 60) {
-            if (Robot.alliance.get() == Alliance.Blue) {
-                poses.add(PoseUtil.toPose2d(trajectoryStates.get(i).positionMeters));
-            } else {
-                poses.add(PoseUtil.flip(PoseUtil.toPose2d(trajectoryStates.get(i).positionMeters)));
-            }
-        }
+        // // Display the trajectory on the driver station dashboard
+        // List<Pose2d> poses = new LinkedList<>();
+        // List<State> trajectoryStates = trajectory.getStates();
+        // for (int i = 0; i < trajectoryStates.size(); i += trajectoryStates.size() / 60) {
+        //     if (Robot.alliance.get() == Alliance.Blue) {
+        //         poses.add(PoseUtil.toPose2d(trajectoryStates.get(i).positionMeters));
+        //     } else {
+        //         poses.add(PoseUtil.flip(PoseUtil.toPose2d(trajectoryStates.get(i).positionMeters)));
+        //     }
+        // }
 
 
 
@@ -51,22 +62,26 @@ public class OTFFollower extends Command{
     
      @Override
     public void execute() {
-            State state = trajectory.sample(trajectoryTimer.get());
+        dt = trajectoryTimer.get();
+        trajectoryTimer.restart();
+        currentTime += slowDriveSupplier.getAsBoolean() ? dt / 2 : dt;
+        State state = trajectory.sample(currentTime);
 
-            if (Robot.alliance.get() == Alliance.Blue) {
-                Drivetrain.getInstance().setPositionGoal(new Pose2d(state.positionMeters.getX(), state.positionMeters.getY(), state.targetHolonomicRotation));
-            } else {
-                Drivetrain.getInstance().setPositionGoal(PoseUtil.flip(new Pose2d(state.positionMeters.getX(), state.positionMeters.getY(), state.targetHolonomicRotation)));
-            }
+        if (Robot.alliance.get() == Alliance.Blue) {
+            Drivetrain.getInstance().setPositionGoal(new Pose2d(state.positionMeters.getX(), state.positionMeters.getY(), state.targetHolonomicRotation));
+        } else {
+            Drivetrain.getInstance().setPositionGoal(PoseUtil.flip(new Pose2d(state.positionMeters.getX(), state.positionMeters.getY(), state.targetHolonomicRotation)));
+        }
 
-            var speeds = Drivetrain.getInstance().calculatePositionSpeed();
-            Drivetrain.getInstance().drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, true);
-        // }
+        ChassisSpeeds speeds = Drivetrain.getInstance().calculatePositionSpeed();
+        Drivetrain.getInstance().drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, true);
+        
+        SmartDashboard.putNumber("trajectory time", currentTime);
     }
 
     @Override
     public boolean isFinished() {
-        if (Robot.controls.driver.isLeftStickActive() || Robot.controls.driver.isRightStickActive())
+        if (Robot.controls.driver.isLeftStickActive() || Robot.controls.driver.isRightStickActive() || Robot.controls.driver.isPOVActive())
             return true;
         // return trajectoryTimer.get() > trajectory.getTotalTimeSeconds();
         if (Robot.alliance.get() == Alliance.Blue) {
@@ -78,6 +93,7 @@ public class OTFFollower extends Command{
 
     @Override
     public void end(boolean interrupted) {
+        trajectoryTimer.stop();
         Drivetrain.getInstance().stop();
     }
 }

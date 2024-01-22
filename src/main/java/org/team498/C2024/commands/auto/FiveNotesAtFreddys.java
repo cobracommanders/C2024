@@ -54,8 +54,9 @@ public class FiveNotesAtFreddys implements Auto{
             new Score(),
             new ParallelCommandGroup(
                 new SequentialCommandGroup(
-                    new PathPlannerFollower(PathLib.Note3Mid5),
-                    new PathPlannerFollower(PathLib.Mid5Note3)),
+                    // new PathPlannerFollower(PathLib.Note3Mid5),
+                    // new PathPlannerFollower(PathLib.Mid5Note3)),
+                ),
                 new SequentialCommandGroup(
                     new WaitCommand(1),
                     new LoadGround(),

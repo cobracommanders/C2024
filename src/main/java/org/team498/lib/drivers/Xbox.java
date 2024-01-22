@@ -65,7 +65,7 @@ public class Xbox {
         }
     }
 
-    public boolean isPOVActive() {return getRawPOV() == -1;}
+    public boolean isPOVActive() {return getRawPOV() == 1;}
     public boolean isRightStickActive() {return Math.hypot(getAxis(Axis.RightY), getAxis(Axis.RightX)) != 0;}
     public boolean isLeftStickActive() {return Math.hypot(getAxis(Axis.LeftY), getAxis(Axis.LeftX)) != 0;}
 

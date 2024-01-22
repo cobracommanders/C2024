@@ -5,6 +5,8 @@ import org.team498.C2024.Ports;
 import org.team498.C2024.RobotPosition;
 import org.team498.C2024.State;
 import org.team498.lib.drivers.LazySparkMax;
+
+import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
@@ -25,9 +27,9 @@ public class Shooter extends SubsystemBase {
     // They can be instantiated (given values) later, but they must be declared here
 
     // Motors will almost always be private because they will only be controlled using public methods. There should be NO global use where motors 
-    private final LazySparkMax bottomMotor; // Declaration for a NEO or NEO550 brushless motor
-    private final LazySparkMax topMotor; // We use left / right descriptors to make identification easier in testing and communication
-    private final LazySparkMax angleMotor;
+    private final CANSparkMax bottomMotor; // Declaration for a NEO or NEO550 brushless motor
+    private final CANSparkMax topMotor; // We use left / right descriptors to make identification easier in testing and communication
+    private final CANSparkMax angleMotor;
     private final RelativeEncoder encoder; //Declaration for a Built-in NEO/NEO550 encoder
 
     private final PIDController bottomController; //Declaration for a P Controller
@@ -47,9 +49,9 @@ public class Shooter extends SubsystemBase {
     // Constructor: Configure Motor Controller settings and  
     // Instantiate all objects (assign values to every variable and object)
     public Shooter() {
-        bottomMotor = new LazySparkMax(Ports.ShooterPorts.BOTTOM_MOTOR, MotorType.kBrushless);
-        topMotor = new LazySparkMax(Ports.ShooterPorts.TOP_MOTOR, MotorType.kBrushless);
-        angleMotor = new LazySparkMax(Ports.ShooterPorts.ANGLE_MOTOR, MotorType.kBrushless);
+        bottomMotor = new CANSparkMax(Ports.ShooterPorts.BOTTOM_MOTOR, MotorType.kBrushless);
+        topMotor = new CANSparkMax(Ports.ShooterPorts.TOP_MOTOR, MotorType.kBrushless);
+        angleMotor = new CANSparkMax(Ports.ShooterPorts.ANGLE_MOTOR, MotorType.kBrushless);
         encoder = bottomMotor.getEncoder(); //this can be left or right motor, whichever is most convenient
 
         // Use the subsystems constants to instantiate PID and Feedforward

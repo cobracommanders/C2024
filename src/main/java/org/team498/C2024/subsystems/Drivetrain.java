@@ -41,7 +41,7 @@ public class Drivetrain extends SubsystemBase {
 
     private final SwerveDrivePoseEstimator poseEstimator;
 
-    private final ProfiledPIDController angleController = new ProfiledPIDController(5, 0, 0, AngleConstants.CONTROLLER_CONSTRAINTS);
+    private final ProfiledPIDController angleController = new ProfiledPIDController(3.5, 0, 0, AngleConstants.CONTROLLER_CONSTRAINTS);
 
     private final PIDController xController = new PIDController(Constants.DrivetrainConstants.PoseConstants.P, Constants.DrivetrainConstants.PoseConstants.I,  Constants.DrivetrainConstants.PoseConstants.D);
     private final SlewRateLimiter xLimiter = new SlewRateLimiter(MAX_ACCELERATION_METERS_PER_SECOND_SQUARED);
@@ -50,14 +50,15 @@ public class Drivetrain extends SubsystemBase {
     private final Field2d field2d = new Field2d();
     public Drivetrain(){
         modules = new SwerveModule[]{
-            new SwerveModule(Ports.DrivetrainPorts.FL_DRIVE, Ports.DrivetrainPorts.FL_STEER, Ports.DrivetrainPorts.FL_CANCODER, getName(), FL_MODULE_OFFSET),
-            new SwerveModule(Ports.DrivetrainPorts.FR_DRIVE, Ports.DrivetrainPorts.FR_STEER, Ports.DrivetrainPorts.FR_CANCODER, getName(), FR_MODULE_OFFSET),
-            new SwerveModule(Ports.DrivetrainPorts.BL_DRIVE, Ports.DrivetrainPorts.BL_STEER, Ports.DrivetrainPorts.BL_CANCODER, getName(), BL_MODULE_OFFSET),
-            new SwerveModule(Ports.DrivetrainPorts.BR_DRIVE, Ports.DrivetrainPorts.BR_STEER, Ports.DrivetrainPorts.BR_CANCODER, getName(), BR_MODULE_OFFSET) 
+            new SwerveModule(Ports.DrivetrainPorts.FL_DRIVE, Ports.DrivetrainPorts.FL_STEER, Ports.DrivetrainPorts.FL_CANCODER, Ports.Accessories.DriveBus, FL_MODULE_OFFSET),
+            new SwerveModule(Ports.DrivetrainPorts.FR_DRIVE, Ports.DrivetrainPorts.FR_STEER, Ports.DrivetrainPorts.FR_CANCODER, Ports.Accessories.DriveBus, FR_MODULE_OFFSET),
+            new SwerveModule(Ports.DrivetrainPorts.BL_DRIVE, Ports.DrivetrainPorts.BL_STEER, Ports.DrivetrainPorts.BL_CANCODER, Ports.Accessories.DriveBus, BL_MODULE_OFFSET),
+            new SwerveModule(Ports.DrivetrainPorts.BR_DRIVE, Ports.DrivetrainPorts.BR_STEER, Ports.DrivetrainPorts.BR_CANCODER, Ports.Accessories.DriveBus, BR_MODULE_OFFSET) 
         };
 
          angleController.enableContinuousInput(-180, 180);
         angleController.setTolerance(0);
+        angleController.reset(getYaw());
         xController.setTolerance(0);
         yController.setTolerance(0);
         xLimiter.reset(0);
@@ -74,25 +75,34 @@ public class Drivetrain extends SubsystemBase {
 
     @Override
     public void periodic() {
-        field2d.setRobotPose(getPose().getX(), getPose().getY(), getPose().getRotation());
+        field2d.setRobotPose(getPose().getX(), getPose().getY(), getPose().getRotation().plus(Rotation2d.fromDegrees(180)));
         Optional<TimedPose> visionPose = PhotonVision.getInstance().getEstimatedPose();
         if (visionPose.isPresent())
         poseEstimator.addVisionMeasurement(visionPose.get().pose, visionPose.get().timeStamp);
         SmartDashboard.putData(field2d);
-        SmartDashboard.putNumber("Pitch", gyro.pitch());
+        SmartDashboard.putNumber("Yaw", getYaw());
+        SmartDashboard.putNumber("Angle Setpoint", angleController.getSetpoint().position);
         for (int i = 0; i < modules.length; i++) {
             //modules[i].setBrakeMode(RobotState.isEnabled());
+            SmartDashboard.putNumber(i + " CanCoder Value", modules[i].getAngle());
+            SmartDashboard.putNumber(i + " Velocity Setpoint", modules[i].getSpeed());
+            SmartDashboard.putNumber(i + " Velocity Real", modules[i].getDriveMotorSpeed());
             if (RobotState.isDisabled()) {
                 modules[i].updateIntegratedEncoder();
             }
         }
-        poseEstimator.update(Rotation2d.fromDegrees(getYaw()), getModulePositions());
+        poseEstimator.update(Rotation2d.fromDegrees(getYaw() + 180), getModulePositions());
+    }
+    public void enableBrakeMode(boolean setBrake) {
+        for (int i = 0; i < modules.length; i++) {
+            modules[i].enableBrakeMode(setBrake);
+        }
     }
 
     public void drive(double vx, double vy, double degreesPerSecond, boolean fieldOriented) {
         ChassisSpeeds speeds = fieldOriented
-                               ? ChassisSpeeds.fromFieldRelativeSpeeds(-vx, -vy, Math.toRadians(degreesPerSecond), getYaw())
-                               : new ChassisSpeeds(-vx, -vy, Math.toRadians(degreesPerSecond));
+                               ? ChassisSpeeds.fromFieldRelativeSpeeds(vx, vy, Math.toRadians(degreesPerSecond), getYaw())
+                               : new ChassisSpeeds(vx, vy, Math.toRadians(degreesPerSecond));
 
         speeds.vxMetersPerSecond = xLimiter.calculate(speeds.vxMetersPerSecond);
         speeds.vyMetersPerSecond = yLimiter.calculate(speeds.vyMetersPerSecond);
@@ -103,7 +113,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     private ChassisSpeeds updateSpeeds(ChassisSpeeds speeds){
-        double dt = Robot.DEFAULT_PERIOD *2;
+        double dt = Robot.DEFAULT_PERIOD * -15;
         Pose2d newPose = new Pose2d(speeds.vxMetersPerSecond *dt, speeds.vyMetersPerSecond *dt, Rotation2d.fromRadians(speeds.omegaRadiansPerSecond *dt));
         Twist2d twist = new Pose2d().log(newPose);
         return new ChassisSpeeds(twist.dx/dt, twist.dy/dt, twist.dtheta/dt);
@@ -126,23 +136,23 @@ public class Drivetrain extends SubsystemBase {
     }
 
 public void setPositionGoal(Pose2d pose) {xController.setSetpoint(pose.getX()); yController.setSetpoint(pose.getY()); setAngleGoal(pose.getRotation().getDegrees()); /*Logger.getInstance().recordOutput("TargetPose", pose);*/}
-    public ChassisSpeeds calculatePositionSpeed() {return new ChassisSpeeds(xController.calculate(getPose().getX()), yController.calculate(getPose().getY()), calculateAngleSpeed());}
+    public ChassisSpeeds calculatePositionSpeed() {return new ChassisSpeeds(calculateXSpeed(), calculateYSpeed(), calculateAngleSpeed());}
     public boolean atPositionGoal() {return (Math.abs(xController.getPositionError()) < PoseConstants.EPSILON) && (Math.abs(yController.getPositionError()) < PoseConstants.EPSILON) && atAngleGoal();}
 
     public void setXGoal(double pose) {xController.setSetpoint(pose);}
-    public double calculateXSpeed() {return xController.calculate(getPose().getX());}
+    public double calculateXSpeed() {return -xController.calculate(getPose().getX());}
     public boolean atXGoal() {return Math.abs(xController.getPositionError()) < PoseConstants.EPSILON;}
     
     public void setYGoal(double pose) {yController.setSetpoint(pose);}
-    public double calculateYSpeed() {return yController.calculate(getPose().getY());}
+    public double calculateYSpeed() {return -yController.calculate(getPose().getY());}
     public boolean atYGoal() {return Math.abs(yController.getPositionError()) < PoseConstants.EPSILON;}
 
     public void setAngleGoal(double angle) {angleController.setGoal(angle);}
-    public double calculateAngleSpeed() {return angleController.calculate(getYaw());}
+    public double calculateAngleSpeed() {return -angleController.calculate(getYaw());}
     public boolean atAngleGoal() {return Math.abs(angleController.getPositionError()) < AngleConstants.EPSILON;}
 
     public Pose2d getPose() {return poseEstimator.getEstimatedPosition();}
-    public void setPose(Pose2d pose) {poseEstimator.resetPosition(Rotation2d.fromDegrees(getYaw()), getModulePositions(), pose);}
+    public void setPose(Pose2d pose) {poseEstimator.resetPosition(Rotation2d.fromDegrees(getYaw() + 180), getModulePositions(), pose);}
     public double getYaw() {return gyro.yaw();}
     public void setYaw(double angle) {gyro.setYaw(angle); angleController.reset(angle);}
     /** Return a double array with a value for yaw pitch and roll in that order */

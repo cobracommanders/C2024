@@ -1,24 +1,26 @@
 package org.team498.C2024;
 
 public enum State {
-    IDLE(Shooter.IDLE, Hopper.IDLE, Intake.IDLE),
-    SOURCE(Shooter.SOURCE, Hopper.IDLE, Intake.INTAKE),
-    INTAKE(Shooter.IDLE, Hopper.REVERSE, Intake.INTAKE),
-    OUTTAKE(Shooter.IDLE, Hopper.FORWARD, Intake.OUTTAKE),
-    AMP(Shooter.AMP, Hopper.FORWARD, Intake.OUTTAKE),
-    SUBWOOFER(Shooter.SUBWOOFER, Hopper.REVERSE, Intake.IDLE),
-    PODIUM(Shooter.PODIUM, Hopper.REVERSE, Intake.IDLE),
-    CRESCENDO(Shooter.CRESCENDO, Hopper.REVERSE, Intake.IDLE);
+    IDLE(Shooter.IDLE, Hopper.IDLE, Intake.IDLE, IntakeRollers.IDLE),
+    SOURCE(Shooter.SOURCE, Hopper.IDLE, Intake.INTAKE, IntakeRollers.IDLE),
+    INTAKE(Shooter.IDLE, Hopper.REVERSE, Intake.INTAKE, IntakeRollers.INTAKE),
+    OUTTAKE(Shooter.IDLE, Hopper.FORWARD, Intake.OUTTAKE, IntakeRollers.OUTTAKE),
+    AMP(Shooter.AMP, Hopper.FORWARD, Intake.OUTTAKE, IntakeRollers.IDLE),
+    SUBWOOFER(Shooter.SUBWOOFER, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE),
+    PODIUM(Shooter.PODIUM, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE),
+    CRESCENDO(Shooter.CRESCENDO, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE);
 
     public final Shooter shooter;
     public final Hopper hopper;
     public final Intake intake;
+    public final IntakeRollers intakeRollers;
 
 
-    State(Shooter shooter, Hopper hopper, Intake intake) {
+    State(Shooter shooter, Hopper hopper, Intake intake, IntakeRollers intakeRollers) {
         this.shooter = shooter;
         this.hopper = hopper;
         this.intake = intake;
+        this.intakeRollers = intakeRollers;
     }
 
     public enum Shooter {

@@ -4,7 +4,7 @@ import org.team498.C2024.Robot;
 import org.team498.C2024.RobotPosition;
 import org.team498.C2024.subsystems.Drivetrain;
 
-import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import java.util.function.BooleanSupplier;
@@ -23,6 +23,10 @@ public class HybridDrive extends Command {
     private final BooleanSupplier targetDriveSupplier;
     private final DoubleSupplier povAngle;
     private double desiredAngle;
+    private double rotationVelocity;
+    private boolean isPOVControlled;
+    private boolean isDriverControlled;
+    private int i = 0;
 
     public HybridDrive(DoubleSupplier xTranslationSupplier,
                         DoubleSupplier yTranslationSupplier,
@@ -43,30 +47,52 @@ public class HybridDrive extends Command {
     @Override
     public void initialize() {
         desiredAngle = drivetrain.getYaw();
+        rotationVelocity = 0;
+        isPOVControlled = false;
+        isDriverControlled = false;
     }
 
     @Override
     public void execute() {
-        double speed = slowDriveSupplier.getAsBoolean()
-                       ? 0.5
-                       : 1;
+        double speed = slowDriveSupplier.getAsBoolean() ? 0.5 : 1;
         double xTranslation = xTranslationSupplier.getAsDouble() * MAX_VELOCITY_METERS_PER_SECOND * Robot.coordinateFlip * speed;
         double yTranslation = yTranslationSupplier.getAsDouble() * MAX_VELOCITY_METERS_PER_SECOND * Robot.coordinateFlip * speed;
-        double rotation = Math.copySign(Math.pow(rotationSupplier.getAsDouble(), 2), rotationSupplier.getAsDouble()) * MAX_ANGULAR_SPEED_DEGREES_PER_SECOND * speed;
+        double rotation = Math.copySign(Math.pow(rotationSupplier.getAsDouble(), 3), rotationSupplier.getAsDouble()) * MAX_ANGULAR_SPEED_DEGREES_PER_SECOND * speed;
+
+        if (drivetrain.atAngleGoal()) isPOVControlled = false;
 
         if(rotation != 0){
-            double rotVel = rotation * Robot.DEFAULT_PERIOD * 10;//Math.copySign(Math.sqrt(Math.abs(rotation)), rotation) * Robot.DEFAULT_PERIOD * 110;
-            if (Math.abs(rotation) <= 0.3) {
-                rotVel = rotation * Robot.DEFAULT_PERIOD * 5;
+            rotationVelocity = rotation * Robot.DEFAULT_PERIOD * 10;//Math.copySign(Math.sqrt(Math.abs(rotation)), rotation) * Robot.DEFAULT_PERIOD * 110;
+            isDriverControlled = true;
+            i = 0;
+        } else {
+            if (rotationVelocity > 300) {
+                rotationVelocity -= rotationVelocity * Robot.DEFAULT_PERIOD / 2;
+                i = 0;
+            } else if (rotationVelocity < -300) {
+                rotationVelocity += rotationVelocity * Robot.DEFAULT_PERIOD / 2;
+                i = 0;
+            } else {
+
+                rotationVelocity = 0;
+                if (i++ > 100) {
+                    isDriverControlled = false;
+                    i = 0;
+                }
             }
-            desiredAngle = drivetrain.getYaw() + rotVel;
         }
-        if(povAngle.getAsDouble() != -1) {
+        if (!isPOVControlled && isDriverControlled) {
+            desiredAngle = drivetrain.getYaw() + rotationVelocity;
+        }
+
+        if(povAngle.getAsDouble() != 1) {
             desiredAngle = povAngle.getAsDouble() - Robot.rotationOffset;
+            isPOVControlled = true;
         }
+        
+        if (targetDriveSupplier.getAsBoolean()) desiredAngle = RobotPosition.calculateDegreesToSpeaker();
         drivetrain.setAngleGoal(desiredAngle);
     
-        if (targetDriveSupplier.getAsBoolean())drivetrain.setAngleGoal(RobotPosition.calculateDegreesToSpeaker());
 
         rotation = drivetrain.calculateAngleSpeed();
         // Set the robot to drive in field relative mode, with the rotation controlled by the snap controller

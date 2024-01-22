@@ -4,9 +4,11 @@ import org.team498.C2024.Ports;
 import org.team498.C2024.State;
 import org.team498.lib.drivers.LazySparkMax;
 
+import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 /*
  * This is an example Flywheel subsystem that can be used for reference while writing your own subsystems :)
@@ -19,7 +21,7 @@ public class IntakeRollers extends SubsystemBase {
     // They can be instantiated (given values) later, but they must be declared here
 
     // Motors will almost always be private because they will only be controlled using public methods. There should be NO global use where motors 
-    private final LazySparkMax motor; // Declaration for a NEO or NEO550 brushless motor
+    private final CANSparkMax motor; // Declaration for a NEO or NEO550 brushless motor
     private final RelativeEncoder encoder; //Declaration for a Built-in NEO/NEO550 encoder
 
     // Variables will store the current properties of the subsystem
@@ -29,7 +31,7 @@ public class IntakeRollers extends SubsystemBase {
     // Constructor: Configure Motor Controller settings and  
     // Instantiate all objects (assign values to every variable and object)
     public IntakeRollers() {
-        motor = new LazySparkMax(Ports.IntakeRollersPorts.MOTOR, MotorType.kBrushless);
+        motor = new CANSparkMax(Ports.IntakeRollersPorts.MOTOR, MotorType.kBrushless);
         encoder = motor.getEncoder(); //this can be left or right motor, whichever is most convenient
         
         // reset motor defaults to ensure all settings are clear
@@ -75,10 +77,10 @@ public class IntakeRollers extends SubsystemBase {
     
     // Using static instances to reference the flywheel object ensures that we only use ONE FLywheel throughout the code 
     // This makes it very easy to access the flywheel object
-    private static Hopper instance;
+    private static IntakeRollers instance;
 
-    public static Hopper getInstance() {
-        if (instance == null) instance = new Hopper(); // Make sure there is an instance (this will only run once)
+    public static IntakeRollers getInstance() {
+        if (instance == null) instance = new IntakeRollers(); // Make sure there is an instance (this will only run once)
         return instance;
     }
 }
