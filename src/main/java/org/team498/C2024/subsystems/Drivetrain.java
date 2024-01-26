@@ -24,6 +24,8 @@ import java.util.Optional;
 
 
 import org.team498.C2024.Constants;
+import org.team498.C2024.Constants.DrivetrainConstants.AngleConstants;
+import org.team498.C2024.Constants.DrivetrainConstants.PoseConstants;
 import org.team498.C2024.Ports;
 import org.team498.C2024.Robot;
 import org.team498.C2024.subsystems.PhotonVision.TimedPose;
@@ -82,6 +84,9 @@ public class Drivetrain extends SubsystemBase {
         SmartDashboard.putData(field2d);
         SmartDashboard.putNumber("Yaw", getYaw());
         SmartDashboard.putNumber("Angle Setpoint", angleController.getSetpoint().position);
+        
+        SmartDashboard.putBoolean("left Camera Connected", LeftCameraConnected().leftConnected);
+        SmartDashboard.putBoolean("right camera connected",RightCameraConnected().rightConnected);
         for (int i = 0; i < modules.length; i++) {
             //modules[i].setBrakeMode(RobotState.isEnabled());
             SmartDashboard.putNumber(i + " CanCoder Value", modules[i].getAngle());

@@ -27,10 +27,10 @@ import edu.wpi.first.units.Time;
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class PhotonVision {
-    private PhotonCamera leftCamera;
-    private PhotonCamera rightCamera;
-    private PhotonPoseEstimator rightPoseEstimator;
-    private PhotonPoseEstimator leftPoseEstimator;
+    public PhotonCamera leftCamera;
+    public PhotonCamera rightCamera;
+    public PhotonPoseEstimator rightPoseEstimator;
+    public PhotonPoseEstimator leftPoseEstimator;
 
     // private class CameraInputs{
     //     public boolean connected = false;
@@ -40,8 +40,8 @@ public class PhotonVision {
     //     public double[] distanceCoefficientData = {};
     // }
 
-    //private CameraInputs rightInputs;
-    //private CameraInputs leftInputs;
+    // private CameraInputs rightInputs;
+    // private CameraInputs leftInputs;
 
     private final Transform3d rightCameraPose = new Transform3d(
             new Translation3d(Units.inchesToMeters(2.5),
@@ -104,6 +104,20 @@ public class PhotonVision {
         return Optional.of(new TimedPose(rightPose.get().estimatedPose.toPose2d(), rightPose.get().timestampSeconds));
         return Optional.of(averagePoses(new TimedPose(leftPose.get().estimatedPose.toPose2d(), leftPose.get().timestampSeconds), new TimedPose(rightPose.get().estimatedPose.toPose2d(), rightPose.get().timestampSeconds)));
         
+    }
+
+    public Boolean LeftCameraConnected(boolean leftConnected){
+        if (leftCamera.isConnected()) leftConnected = true;
+            leftConnected = false;
+
+        return LeftCameraConnected(leftConnected);
+    }
+    
+    public Boolean RightCameraConnected(boolean rightConnected){
+        if (rightCamera.isConnected()) rightConnected = true;
+            rightConnected = false;
+
+        return RightCameraConnected(rightConnected);
     }
 
     public TimedPose averagePoses(TimedPose poseOne, TimedPose poseTwo){
