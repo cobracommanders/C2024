@@ -56,7 +56,7 @@ public class PhotonVision {
         new Rotation3d());
     
     public PhotonVision(){
-        PhotonCamera.setVersionCheckEnabled(true);
+        PhotonCamera.setVersionCheckEnabled(false);
         rightCamera = new PhotonCamera("top camera");
         leftCamera = new PhotonCamera("bottom camera");
         // rightInputs = new CameraInputs();
@@ -92,40 +92,38 @@ public class PhotonVision {
     }
 
     public Optional<TimedPose> getEstimatedPose(){
+
+        boolean leftEnabled = leftCamera.isConnected();
+        boolean rightEnabled = rightCamera.isConnected();
         Optional<EstimatedRobotPose> rightPose = Optional.empty();
-        if (rightCamera.isConnected()) rightPose = rightEstimatedPose();
+        if (rightEnabled) rightPose = rightEstimatedPose();
         Optional<EstimatedRobotPose> leftPose = Optional.empty();
-        if (leftCamera.isConnected()) leftPose = leftEstimatedPose();
-        if (rightPose.isEmpty() && leftPose.isEmpty())
+        if (leftEnabled) leftPose = leftEstimatedPose();
+        if (rightPose.isPresent() && leftPose.isPresent())
+            return Optional.of(averagePoses(new TimedPose(leftPose.get().estimatedPose.toPose2d(), leftPose.get().timestampSeconds), new TimedPose(rightPose.get().estimatedPose.toPose2d(), rightPose.get().timestampSeconds)));
+        if (rightPose.isPresent())
+            return Optional.of(new TimedPose(rightPose.get().estimatedPose.toPose2d(), rightPose.get().timestampSeconds));
+        if (leftPose.isPresent())
+            return Optional.of(new TimedPose(leftPose.get().estimatedPose.toPose2d(), leftPose.get().timestampSeconds));
         return Optional.empty();
-        if (rightPose.isEmpty())
-        return Optional.of(new TimedPose(leftPose.get().estimatedPose.toPose2d(), leftPose.get().timestampSeconds));
-        if (leftPose.isEmpty())
-        return Optional.of(new TimedPose(rightPose.get().estimatedPose.toPose2d(), rightPose.get().timestampSeconds));
-        return Optional.of(averagePoses(new TimedPose(leftPose.get().estimatedPose.toPose2d(), leftPose.get().timestampSeconds), new TimedPose(rightPose.get().estimatedPose.toPose2d(), rightPose.get().timestampSeconds)));
+        //return Optional.of(averagePoses(new TimedPose(leftPose.get().estimatedPose.toPose2d(), leftPose.get().timestampSeconds), new TimedPose(rightPose.get().estimatedPose.toPose2d(), rightPose.get().timestampSeconds)));
         
     }
 
-    public Boolean LeftCameraConnected(boolean leftConnected){
-        if (leftCamera.isConnected()) leftConnected = true;
-            leftConnected = false;
-
-        return LeftCameraConnected(leftConnected);
+    public boolean leftCameraConnected(){
+        return leftCamera.isConnected();
     }
     
-    public Boolean RightCameraConnected(boolean rightConnected){
-        if (rightCamera.isConnected()) rightConnected = true;
-            rightConnected = false;
-
-        return RightCameraConnected(rightConnected);
+    public boolean rightCameraConnected(){
+        return rightCamera.isConnected();
     }
 
     public TimedPose averagePoses(TimedPose poseOne, TimedPose poseTwo){
-double timestamp = poseOne.timeStamp + poseTwo.timeStamp / 2;
-double x = poseOne.pose.getX() + poseTwo.pose.getX() / 2;
-double y = poseOne.pose.getY() + poseTwo.pose.getY() / 2;
-Rotation2d rotation = Rotation2d.fromDegrees(poseOne.pose.getRotation().getDegrees() + poseTwo.pose.getRotation().getDegrees() / 2);
-return new TimedPose(new Pose2d(x, y, rotation), timestamp);
+        double timestamp = poseOne.timeStamp + poseTwo.timeStamp / 2;
+        double x = poseOne.pose.getX() + poseTwo.pose.getX() / 2;
+        double y = poseOne.pose.getY() + poseTwo.pose.getY() / 2;
+        Rotation2d rotation = Rotation2d.fromDegrees(poseOne.pose.getRotation().getDegrees() + poseTwo.pose.getRotation().getDegrees() / 2);
+        return new TimedPose(new Pose2d(x, y, rotation), timestamp);
 }
 
     public class TimedPose{

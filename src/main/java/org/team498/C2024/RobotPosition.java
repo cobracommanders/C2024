@@ -37,6 +37,10 @@ public class RobotPosition {
         return Math.hypot(xDiff, yDiff);
     }
 
+    public static double distanceTo(Pose2d pose) {
+        return distanceTo(new Point(pose.getX(), pose.getY()));
+    }
+
     private static double distanceTo(Point point) {return distanceTo(point, drivetrain.getPose());}
 
     public static double calculateDegreesToTarget(Pose2d target) {

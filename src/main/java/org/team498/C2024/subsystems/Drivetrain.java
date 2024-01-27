@@ -22,12 +22,15 @@ import static org.team498.C2024.Constants.DrivetrainConstants.*;
 
 import java.util.Optional;
 
+import javax.swing.text.html.Option;
 
+import org.photonvision.EstimatedRobotPose;
 import org.team498.C2024.Constants;
 import org.team498.C2024.Constants.DrivetrainConstants.AngleConstants;
 import org.team498.C2024.Constants.DrivetrainConstants.PoseConstants;
 import org.team498.C2024.Ports;
 import org.team498.C2024.Robot;
+import org.team498.C2024.RobotPosition;
 import org.team498.C2024.subsystems.PhotonVision.TimedPose;
 import org.team498.lib.drivers.Gyro;
 import org.team498.lib.wpilib.ChassisSpeeds;
@@ -68,8 +71,8 @@ public class Drivetrain extends SubsystemBase {
         kinematics = new SwerveDriveKinematics(getModuleTranslations());
 
         poseEstimator = new SwerveDrivePoseEstimator(kinematics, Rotation2d.fromDegrees(getYaw()), getModulePositions(), new Pose2d(), 
-            VecBuilder.fill(Units.inchesToMeters(3), Units.inchesToMeters(3), Math.toDegrees(4)), // Odometry standard deviation
-            VecBuilder.fill(Units.inchesToMeters(10), Units.inchesToMeters(10), Math.toDegrees(15))); // Vision standard deviation
+            VecBuilder.fill(Units.inchesToMeters(3), Units.inchesToMeters(3), Math.toRadians(4)), // Odometry standard deviation
+            VecBuilder.fill(Units.inchesToMeters(10), Units.inchesToMeters(10), Math.toRadians(15))); // Vision standard deviation
 
         stateSetpoints = getModuleStates();
 
@@ -78,15 +81,26 @@ public class Drivetrain extends SubsystemBase {
     @Override
     public void periodic() {
         field2d.setRobotPose(getPose().getX(), getPose().getY(), getPose().getRotation().plus(Rotation2d.fromDegrees(180)));
-        Optional<TimedPose> visionPose = PhotonVision.getInstance().getEstimatedPose();
-        if (visionPose.isPresent())
-        poseEstimator.addVisionMeasurement(visionPose.get().pose, visionPose.get().timeStamp);
+        // Optional<TimedPose> visionPose = PhotonVision.getInstance().getEstimatedPose();
+        // if (visionPose.isPresent())
+        // poseEstimator.addVisionMeasurement(visionPose.get().pose, visionPose.get().timeStamp);
+        Optional<EstimatedRobotPose> leftPose = PhotonVision.getInstance().leftEstimatedPose();
+        Optional<EstimatedRobotPose> rightPose = PhotonVision.getInstance().rightEstimatedPose();
+        EstimatedRobotPose resultPose = null;
+        if (leftPose.isPresent() && rightPose.isPresent())
+            resultPose = getClosestPose(leftPose.get(), rightPose.get());
+        else if (leftPose.isPresent())
+            resultPose = leftPose.get();
+        else if (rightPose.isPresent())
+            resultPose = rightPose.get();
+        if (resultPose != null)
+            poseEstimator.addVisionMeasurement(resultPose.estimatedPose.toPose2d(), resultPose.timestampSeconds);
         SmartDashboard.putData(field2d);
         SmartDashboard.putNumber("Yaw", getYaw());
         SmartDashboard.putNumber("Angle Setpoint", angleController.getSetpoint().position);
         
-        SmartDashboard.putBoolean("left Camera Connected", LeftCameraConnected().leftConnected);
-        SmartDashboard.putBoolean("right camera connected",RightCameraConnected().rightConnected);
+        SmartDashboard.putBoolean("left Camera Connected", PhotonVision.getInstance().leftCameraConnected());
+        SmartDashboard.putBoolean("right camera connected", PhotonVision.getInstance().rightCameraConnected());
         for (int i = 0; i < modules.length; i++) {
             //modules[i].setBrakeMode(RobotState.isEnabled());
             SmartDashboard.putNumber(i + " CanCoder Value", modules[i].getAngle());
@@ -102,6 +116,12 @@ public class Drivetrain extends SubsystemBase {
         for (int i = 0; i < modules.length; i++) {
             modules[i].enableBrakeMode(setBrake);
         }
+    }
+
+    private EstimatedRobotPose getClosestPose(EstimatedRobotPose leftPose, EstimatedRobotPose rightPose){
+        double leftDistance = RobotPosition.distanceTo(leftPose.estimatedPose.toPose2d());
+        double rightDistance = RobotPosition.distanceTo(rightPose.estimatedPose.toPose2d());
+        return (leftDistance > rightDistance) ? rightPose : leftPose;
     }
 
     public void drive(double vx, double vy, double degreesPerSecond, boolean fieldOriented) {
