@@ -1,48 +1,58 @@
 package org.team498.C2024;
 
 public enum State {
-    IDLE(Shooter.IDLE, Hopper.IDLE, Intake.IDLE, IntakeRollers.IDLE),
-    SOURCE(Shooter.SOURCE, Hopper.IDLE, Intake.INTAKE, IntakeRollers.IDLE),
-    INTAKE(Shooter.IDLE, Hopper.REVERSE, Intake.INTAKE, IntakeRollers.INTAKE),
-    OUTTAKE(Shooter.IDLE, Hopper.FORWARD, Intake.OUTTAKE, IntakeRollers.OUTTAKE),
-    AMP(Shooter.AMP, Hopper.FORWARD, Intake.OUTTAKE, IntakeRollers.IDLE),
-    SUBWOOFER(Shooter.SUBWOOFER, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE),
-    PODIUM(Shooter.PODIUM, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE),
-    CRESCENDO(Shooter.CRESCENDO, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE),
-    CANCEL_AMP(Shooter.CANCEL_AMP, Hopper.IDLE, Intake.IDLE, IntakeRollers.IDLE);
+    IDLE(Shooter.IDLE, Hopper.IDLE, Intake.IDLE, IntakeRollers.IDLE, Kicker.IDLE),
+    SOURCE(Shooter.SOURCE, Hopper.IDLE, Intake.INTAKE, IntakeRollers.IDLE, Kicker.IDLE),
+    INTAKE(Shooter.IDLE, Hopper.REVERSE, Intake.INTAKE, IntakeRollers.INTAKE, Kicker.IDLE),
+    OUTTAKE(Shooter.IDLE, Hopper.FORWARD, Intake.OUTTAKE, IntakeRollers.OUTTAKE, Kicker.IDLE),
+    AMP(Shooter.AMP, Hopper.FORWARD, Intake.OUTTAKE, IntakeRollers.IDLE, Kicker.IDLE),
+    SUBWOOFER(Shooter.SUBWOOFER, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.IDLE),
+    PODIUM(Shooter.PODIUM, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.IDLE),
+    CRESCENDO(Shooter.CRESCENDO, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.IDLE),
+    CANCEL_AMP(Shooter.CANCEL_AMP, Hopper.IDLE, Intake.IDLE, IntakeRollers.IDLE, Kicker.IDLE);
 
     public final Shooter shooter;
     public final Hopper hopper;
     public final Intake intake;
     public final IntakeRollers intakeRollers;
+    public final Kicker kicker;
 
 
-    State(Shooter shooter, Hopper hopper, Intake intake, IntakeRollers intakeRollers) {
+    State(Shooter shooter, Hopper hopper, Intake intake, IntakeRollers intakeRollers, Kicker kicker) {
         this.shooter = shooter;
         this.hopper = hopper;
         this.intake = intake;
         this.intakeRollers = intakeRollers;
+        this.kicker = kicker;
     }
 
     public enum Shooter {
-        IDLE(0, 0, 0, 0),
-        SUBWOOFER(0, 0, 0, 0),
-        AMP(0, 0, 0, 0),
-        PODIUM(0, 0, 0, 0),
-        CRESCENDO(0, 0, 0,0),
-        SOURCE(0, 0, 0, 0),
-        CANCEL_AMP(0, 0, 0 ,0);
+        IDLE(0, 0, 0),
+        SUBWOOFER(0, 0, 0),
+        AMP(0, 0, 0),
+        PODIUM(0, 0, 0),
+        CRESCENDO(0, 0, 0),
+        SOURCE(0, 0, 0),
+        CANCEL_AMP(0, 0, 0);
 
         public final double topSpeed;
         public final double bottomSpeed;
         public final double angle;
-        public final double kickerSpeed;
 
-        Shooter(double topSpeed, double angle, double bottomSpeed, double kickerSpeed) {
+        Shooter(double topSpeed, double angle, double bottomSpeed) {
             this.bottomSpeed = bottomSpeed;
             this.topSpeed = topSpeed;
-            this.kickerSpeed = kickerSpeed;
             this.angle = angle;
+        }
+    }
+
+    public enum Kicker {
+    IDLE(0);
+
+
+    public final double speed;
+        Kicker(double speed){
+            this.speed = speed;
         }
     }
 

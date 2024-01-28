@@ -17,8 +17,6 @@ public class PrepareSpeaker extends SequentialCommandGroup {
             new TargetDrive(FieldPositions.blueSpeaker.toPose2d()),
             new SetShooterNextState(),
             new MoveHopper(1),
-            new SetState(State.IDLE),
-            new SetShooterNextState(),
             new SetState(State.CRESCENDO)
 
             //new SetShooterNextState()

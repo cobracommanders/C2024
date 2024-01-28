@@ -119,7 +119,6 @@ public class Shooter extends SubsystemBase {
         rightSpeed = state.topSpeed; // update setpoint
         leftSpeed = state.bottomSpeed;
         angle = state.angle;
-        kickerSpeed = state.kickerSpeed;
         rightControllere.setSetpoint(this.leftSpeed); // update pController
         leftController.setSetpoint(this.rightSpeed);
         angleController.setSetpoint(this.angle);
