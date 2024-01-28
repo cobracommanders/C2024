@@ -8,7 +8,8 @@ public enum State {
     AMP(Shooter.AMP, Hopper.FORWARD, Intake.OUTTAKE, IntakeRollers.IDLE),
     SUBWOOFER(Shooter.SUBWOOFER, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE),
     PODIUM(Shooter.PODIUM, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE),
-    CRESCENDO(Shooter.CRESCENDO, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE);
+    CRESCENDO(Shooter.CRESCENDO, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE),
+    CANCEL_AMP(Shooter.CANCEL_AMP, Hopper.IDLE, Intake.IDLE, IntakeRollers.IDLE);
 
     public final Shooter shooter;
     public final Hopper hopper;
@@ -29,7 +30,8 @@ public enum State {
         AMP(0, 0, 0, 0),
         PODIUM(0, 0, 0, 0),
         CRESCENDO(0, 0, 0,0),
-        SOURCE(0, 0, 0, 0);
+        SOURCE(0, 0, 0, 0),
+        CANCEL_AMP(0, 0, 0 ,0);
 
         public final double topSpeed;
         public final double bottomSpeed;

@@ -14,10 +14,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 public class PrepareToScore extends SequentialCommandGroup {
     public PrepareToScore(){
         super(
-            new ConditionalCommand(new InstantCommand(()-> Drivetrain.getInstance().setAngleGoal(90 + Robot.rotationOffset)), new TargetDrive(FieldPositions.blueSpeaker.toPose2d()), ()-> StateController.getInstance().getState() == State.AMP),
-            new ConditionalCommand(null, null, null),
-            new SetScoringState()
-            //new SetShooterNextState()
+            new SetScoringState(),
+            new ConditionalCommand(new PrepareAmp(), new PrepareSpeaker(), ()-> StateController.getInstance().getState() == State.AMP)
         );
     }
 }

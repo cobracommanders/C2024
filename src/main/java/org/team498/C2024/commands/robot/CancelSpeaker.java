@@ -11,15 +11,14 @@ import org.team498.C2024.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-public class PrepareSpeaker extends SequentialCommandGroup {
-    public PrepareSpeaker(){
+public class CancelSpeaker extends SequentialCommandGroup {
+    public CancelSpeaker(){
         super(
-            new TargetDrive(FieldPositions.blueSpeaker.toPose2d()),
+            new SetState(State.OUTTAKE),
             new SetShooterNextState(),
-            new MoveHopper(1),
+            new MoveHopper(-1),
             new SetState(State.IDLE),
-            new SetShooterNextState(),
-            new SetState(State.CRESCENDO)
+            new SetShooterNextState()
 
             //new SetShooterNextState()
         );
