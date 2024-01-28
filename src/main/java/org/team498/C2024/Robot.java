@@ -1,7 +1,6 @@
 package org.team498.C2024;
 
 
-import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -14,6 +13,7 @@ import org.team498.C2024.commands.auto.PathPlannerTest;
 import org.team498.C2024.commands.auto.PracticeAuto;
 import org.team498.C2024.commands.auto.TestAuto;
 import org.team498.C2024.subsystems.Drivetrain;
+import org.team498.C2024.subsystems.Limelight;
 import org.team498.lib.auto.Auto;
 import org.team498.lib.drivers.Blinkin;
 import org.team498.lib.drivers.Gyro;
@@ -60,6 +60,7 @@ public class Robot extends TimedRobot{
         controls.configureOperatorCommands();
         PathLib.SL1Note1.getClass();
         drivetrain.enableBrakeMode(false);
+        Limelight.getInstance();
     }
 
     @Override

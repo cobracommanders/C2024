@@ -3,12 +3,15 @@ package org.team498.C2024.subsystems;
 import org.team498.C2024.Ports;
 import org.team498.C2024.State;
 import org.team498.C2024.Constants.IntakeConstants;
-import org.team498.lib.drivers.LazySparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DutyCycle;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 /*
  * This is an example Flywheel subsystem that can be used for reference while writing your own subsystems :)
@@ -23,12 +26,13 @@ public class Intake extends SubsystemBase {
     // Motors will almost always be private because they will only be controlled using public methods. There should be NO global use where motors 
     private final CANSparkMax motor; // Declaration for a NEO or NEO550 brushless motor
     private final RelativeEncoder encoder; //Declaration for a Built-in NEO/NEO550 encoder
+    private final DutyCycle angleEncoder;
 
     private final PIDController pidController; //Declaration for a P Controller
-    private final SimpleMotorFeedforward feedforward;
+    private final ArmFeedforward feedforward;
 
     // Variables will store the current properties of the subsystem
-    private double speed;
+    private double setpoint;
     private State.Intake currentState;
     
     // Constructor: Configure Motor Controller settings and  
@@ -37,10 +41,11 @@ public class Intake extends SubsystemBase {
         // motor = new LazySparkMax(Ports.IntakePorts.LMOTOR, MotorType.kBrushless);
         motor = new CANSparkMax(Ports.IntakePorts.LMOTOR, MotorType.kBrushless);
         encoder = motor.getEncoder(); //this can be left or right motor, whichever is most convenient
+        angleEncoder = new DutyCycle(new DigitalInput(Ports.IntakePorts.ANGLE_ENCODER));
 
         // Use the subsystems constants to instantiate PID and Feedforward
         pidController = new PIDController(IntakeConstants.P, IntakeConstants.I, IntakeConstants.D);
-        feedforward = new SimpleMotorFeedforward(IntakeConstants.S, IntakeConstants.V, IntakeConstants.G);
+        feedforward = new ArmFeedforward(IntakeConstants.S, IntakeConstants.G, IntakeConstants.V);
 
         // reset motor defaults to ensure all settings are clear
         motor.restoreFactoryDefaults();
@@ -55,9 +60,8 @@ public class Intake extends SubsystemBase {
         // This condition will reduce CPU utilization when the motor is not meant to run and save power because 
         // it will not actively deccelerate the wheel
         double speed; // We will use this variable to keep track of our desired speed
-        speed = feedforward.calculate(this.speed); // adjust the setpoint to account for physical motor properties using feedforward
-        speed = pidController.calculate(encoder.getVelocity(), speed); // adjust for feedback error using proportional gain
-        set(speed / IntakeConstants.MAX_RPM); // set the motor behavior using set() to interact with the controllers
+        speed = pidController.calculate(getAngle(), this.setpoint) + feedforward.calculate(getAngle(),0); // adjust for feedback error using proportional gain
+        set(speed); // set the motor behavior using set() to interact with the controllers
         // We divide by MAX_RPM to scale to {-1, 1}
     }
 
@@ -69,12 +73,17 @@ public class Intake extends SubsystemBase {
     // Every subsystem has a setState() method that configures local properties to match the desired state
     public void setState(State.Intake state) {
         currentState = state;
-        speed = state.speed; // update state
-        pidController.setSetpoint(this.speed); // update pController
+        setpoint = state.speed; // update state
+        pidController.setSetpoint(this.setpoint); // update pController
+    }
+    
+    public double getAngle() {
+        return angleEncoder.getOutput();
     }
 
     public boolean atSetpoint(){
         return pidController.atSetpoint();
+    
     }
 
     // We do NOT use the preset methods for following and inverting motors in case of flash failure 

@@ -1,13 +1,8 @@
 package org.team498.C2024.commands.auto;
 
-import java.util.function.BooleanSupplier;
-
 import org.team498.C2024.PathLib;
 import org.team498.C2024.commands.drivetrain.PathPlannerFollower;
-import org.team498.C2024.commands.drivetrain.SlowDrive;
 import org.team498.C2024.commands.robot.FullScore;
-import org.team498.C2024.commands.robot.PrepareToScore;
-import org.team498.C2024.commands.robot.Score;
 import org.team498.lib.auto.Auto;
 
 import edu.wpi.first.math.geometry.Pose2d;

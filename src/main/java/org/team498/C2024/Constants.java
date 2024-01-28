@@ -96,6 +96,12 @@ public final class Constants {
         public static final double MAX_RPM = 0;
     }
 
+    public static final class HopperConstants {
+        public static final double P = 0;
+        public static final double I = 0;
+        public static final double D = 0;
+    }
+
     public static final class ClimberConstants {
 
             public static final double MAX_RPM = 0;

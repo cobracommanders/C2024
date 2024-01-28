@@ -64,24 +64,24 @@ public class RobotPosition {
     }
 
     public static double distanceToSpeaker(){
-        return distanceTo(FieldPositions.blueSpeaker);
+        return distanceTo(FieldPositions.blueSpeaker, getFuturePose());
     }
 
     private static Transform2d getVelocity(double loopCycles) {
         var currentSpeeds = drivetrain.getCurrentSpeeds();
         return new Transform2d(new Translation2d(
-            currentSpeeds.vxMetersPerSecond * (Robot.DEFAULT_PERIOD * loopCycles),
-            currentSpeeds.vyMetersPerSecond * (Robot.DEFAULT_PERIOD * loopCycles)),
+            -currentSpeeds.vxMetersPerSecond * (Robot.DEFAULT_PERIOD * loopCycles),
+            -currentSpeeds.vyMetersPerSecond * (Robot.DEFAULT_PERIOD * loopCycles)),
             Rotation2d.fromRadians(currentSpeeds.omegaRadiansPerSecond * (Robot.DEFAULT_PERIOD * loopCycles)));
     }
 
-    private static Transform2d getVelocitySquared(double loopCycles) {
-        var currentSpeeds = drivetrain.getCurrentSpeeds();
-        var x = currentSpeeds.vxMetersPerSecond * (Robot.DEFAULT_PERIOD * loopCycles);
-        var y = currentSpeeds.vyMetersPerSecond * (Robot.DEFAULT_PERIOD * loopCycles);
-        var r = Rotation2d.fromRadians(currentSpeeds.omegaRadiansPerSecond * (Robot.DEFAULT_PERIOD * loopCycles));
-        return new Transform2d(new Translation2d(Math.copySign(x * x, x), Math.copySign(y * y, y)), r);
-    }
+    // private static Transform2d getVelocitySquared(double loopCycles) {
+    //     var currentSpeeds = drivetrain.getCurrentSpeeds();
+    //     var x = currentSpeeds.vxMetersPerSecond * (Robot.DEFAULT_PERIOD * loopCycles);
+    //     var y = currentSpeeds.vyMetersPerSecond * (Robot.DEFAULT_PERIOD * loopCycles);
+    //     var r = Rotation2d.fromRadians(currentSpeeds.omegaRadiansPerSecond * (Robot.DEFAULT_PERIOD * loopCycles));
+    //     return new Transform2d(new Translation2d(Math.copySign(x * x, x), Math.copySign(y * y, y)), r);
+    //}
 
     public static  double calculateDegreesToSpeaker(){
         Pose2d blueSpeaker = FieldPositions.blueSpeaker.toPose2d();
@@ -89,7 +89,42 @@ public class RobotPosition {
         return calculateDegreesToTarget(blueSpeaker);
     }
 
+    public static  double calculateDegreesToNote(Point note){
+        Pose2d notePose = note.toPose2d();
+        if (Robot.alliance.get() == Alliance.Red) return calculateDegreesToTarget(PoseUtil.flip(notePose));
+        return calculateDegreesToTarget(notePose);
+    }
+
+    public static double calculateLimelightAngleToNote(double distance, double thetaInitialGuessRadians) {
+        double axisHeight = 1; // height of Limelight's pivot above the target
+        double r = 0.25; // length of the lever
+        double theta = thetaInitialGuessRadians; // initial guess for theta
+        double tolerance = 1; // how close we need to get
+        double maxIterations = 100; // to prevent infinite loops
+        double f_theta, df_theta;
+    
+        for (int i = 0; i < maxIterations; i++) {
+            f_theta = Math.tan(theta) + (r * Math.sin(theta) + axisHeight) / (distance - r * Math.cos(theta));
+            df_theta = 1 / (Math.cos(theta) * Math.cos(theta)) + 
+                       (r * Math.cos(theta) * (distance - r * Math.cos(theta)) + 
+                       (r * Math.sin(theta) + axisHeight) * r * Math.sin(theta)) / 
+                       ((distance - r * Math.cos(theta)) * (distance - r * Math.cos(theta)));
+    
+            if (Math.abs(f_theta) < tolerance)
+                break;
+    
+            theta -= f_theta / df_theta; // Newton's method
+        }
+    
+        return theta; // return the angle in radians
+    }
+    
+
+
     public static Pose2d getFuturePose(double loopCycles) {
         return drivetrain.getPose().transformBy(getVelocity(loopCycles));
+    }
+    public static Pose2d getFuturePose() {
+        return drivetrain.getPose().transformBy(getVelocity(15));
     }
 }

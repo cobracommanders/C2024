@@ -4,7 +4,6 @@ import org.team498.C2024.Robot;
 import org.team498.C2024.RobotPosition;
 import org.team498.C2024.subsystems.Drivetrain;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import java.util.function.BooleanSupplier;

@@ -8,8 +8,6 @@ import org.team498.C2024.commands.robot.FullScore;
 import org.team498.C2024.commands.robot.LoadGround;
 import org.team498.C2024.commands.robot.PrepareToScore;
 import org.team498.C2024.commands.robot.Score;
-import org.team498.C2024.commands.robot.SetState;
-import org.team498.C2024.subsystems.Intake;
 import org.team498.lib.auto.Auto;
 
 import edu.wpi.first.math.geometry.Pose2d;

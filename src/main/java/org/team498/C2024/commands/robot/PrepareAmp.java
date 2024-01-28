@@ -11,12 +11,11 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-public class PrepareToScore extends SequentialCommandGroup {
-    public PrepareToScore(){
+public class PrepareAmp extends SequentialCommandGroup {
+    public PrepareAmp(){
         super(
-            new ConditionalCommand(new InstantCommand(()-> Drivetrain.getInstance().setAngleGoal(90 + Robot.rotationOffset)), new TargetDrive(FieldPositions.blueSpeaker.toPose2d()), ()-> StateController.getInstance().getState() == State.AMP),
-            new ConditionalCommand(null, null, null),
-            new SetScoringState()
+            new InstantCommand(()-> Drivetrain.getInstance().setAngleGoal(90 + Robot.rotationOffset))
+
             //new SetShooterNextState()
         );
     }

@@ -1,8 +1,6 @@
 package org.team498.C2024.commands.robot;
 
 import org.team498.C2024.State;
-import org.team498.C2024.commands.SetHopperNextState;
-import org.team498.C2024.commands.SetShooterNextState;
 import org.team498.C2024.commands.drivetrain.SlowDrive;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;

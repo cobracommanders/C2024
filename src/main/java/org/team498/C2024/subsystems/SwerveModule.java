@@ -1,17 +1,13 @@
 package org.team498.C2024.subsystems;
 
 import static org.team498.C2024.Constants.DrivetrainConstants.DRIVE_WHEEL_CIRCUMFERENCE;
-import static org.team498.C2024.Constants.DrivetrainConstants.DRIVE_WHEEL_DIAMETER;
 import static org.team498.C2024.Constants.DrivetrainConstants.MK4I_DRIVE_REDUCTION_L3;
 import static org.team498.C2024.Constants.DrivetrainConstants.MK4I_STEER_REDUCTION_L3;
 
-import org.team498.lib.drivers.LazyTalonFX;
 import org.team498.lib.util.Falcon500Conversions;
 
-import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;

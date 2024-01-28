@@ -24,20 +24,22 @@ public enum State {
     }
 
     public enum Shooter {
-        IDLE(0, 0, 0),
-        SUBWOOFER(0, 0, 0),
-        AMP(0, 0, 0),
-        PODIUM(0, 0, 0),
-        CRESCENDO(0, 0, 0),
-        SOURCE(0, 0, 0);
+        IDLE(0, 0, 0, 0),
+        SUBWOOFER(0, 0, 0, 0),
+        AMP(0, 0, 0, 0),
+        PODIUM(0, 0, 0, 0),
+        CRESCENDO(0, 0, 0,0),
+        SOURCE(0, 0, 0, 0);
 
         public final double topSpeed;
         public final double bottomSpeed;
         public final double angle;
+        public final double kickerSpeed;
 
-        Shooter(double topSpeed, double angle, double bottomSpeed) {
+        Shooter(double topSpeed, double angle, double bottomSpeed, double kickerSpeed) {
             this.bottomSpeed = bottomSpeed;
             this.topSpeed = topSpeed;
+            this.kickerSpeed = kickerSpeed;
             this.angle = angle;
         }
     }

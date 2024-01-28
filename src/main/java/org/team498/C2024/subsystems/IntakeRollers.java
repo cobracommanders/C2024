@@ -2,13 +2,9 @@ package org.team498.C2024.subsystems;
 
 import org.team498.C2024.Ports;
 import org.team498.C2024.State;
-import org.team498.lib.drivers.LazySparkMax;
-
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 /*
  * This is an example Flywheel subsystem that can be used for reference while writing your own subsystems :)
@@ -22,7 +18,7 @@ public class IntakeRollers extends SubsystemBase {
 
     // Motors will almost always be private because they will only be controlled using public methods. There should be NO global use where motors 
     private final CANSparkMax motor; // Declaration for a NEO or NEO550 brushless motor
-    private final RelativeEncoder encoder; //Declaration for a Built-in NEO/NEO550 encoder
+   // private final RelativeEncoder encoder; //Declaration for a Built-in NEO/NEO550 encoder
 
     // Variables will store the current properties of the subsystem
     private double setpoint;
@@ -32,7 +28,7 @@ public class IntakeRollers extends SubsystemBase {
     // Instantiate all objects (assign values to every variable and object)
     public IntakeRollers() {
         motor = new CANSparkMax(Ports.IntakeRollersPorts.MOTOR, MotorType.kBrushless);
-        encoder = motor.getEncoder(); //this can be left or right motor, whichever is most convenient
+        //encoder = motor.getEncoder(); //this can be left or right motor, whichever is most convenient
         
         // reset motor defaults to ensure all settings are clear
         motor.restoreFactoryDefaults();
@@ -60,12 +56,6 @@ public class IntakeRollers extends SubsystemBase {
     public void setState(State.IntakeRollers state) {
         currentState = state; // update state
         setpoint = state.speed; // update setpoint
-    }
-
-    public boolean atSetpoint(){
-        double currentSpeed = encoder.getVelocity();
-        double threshold = setpoint;
-        return Math.abs(currentSpeed - setpoint) <=threshold;
     }
 
     // We do NOT use the preset methods for following and inverting motors in case of flash failure 

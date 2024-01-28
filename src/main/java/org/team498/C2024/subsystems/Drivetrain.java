@@ -22,16 +22,14 @@ import static org.team498.C2024.Constants.DrivetrainConstants.*;
 
 import java.util.Optional;
 
-import javax.swing.text.html.Option;
-
 import org.photonvision.EstimatedRobotPose;
 import org.team498.C2024.Constants;
+import org.team498.C2024.Constants.DrivetrainConstants;
 import org.team498.C2024.Constants.DrivetrainConstants.AngleConstants;
 import org.team498.C2024.Constants.DrivetrainConstants.PoseConstants;
 import org.team498.C2024.Ports;
 import org.team498.C2024.Robot;
 import org.team498.C2024.RobotPosition;
-import org.team498.C2024.subsystems.PhotonVision.TimedPose;
 import org.team498.lib.drivers.Gyro;
 import org.team498.lib.wpilib.ChassisSpeeds;
 
@@ -133,7 +131,7 @@ public class Drivetrain extends SubsystemBase {
         speeds.vyMetersPerSecond = yLimiter.calculate(speeds.vyMetersPerSecond);
         speeds = updateSpeeds(speeds);
         stateSetpoints = kinematics.toSwerveModuleStates(speeds);
-
+        SwerveDriveKinematics.desaturateWheelSpeeds(stateSetpoints, DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND);
         setModuleStates(stateSetpoints);
     }
 
@@ -156,7 +154,7 @@ public class Drivetrain extends SubsystemBase {
 
     public SwerveModuleState[] getModuleStates() {
         var states = new SwerveModuleState[modules.length];
-        for (int i = 0; i < modules.length; i++) states[i] = new SwerveModuleState(modules[i].getSpeed(), Rotation2d.fromDegrees(modules[i].getAngle()));
+        for (int i = 0; i < modules.length; i++) states[i] = new SwerveModuleState(modules[i].getDriveMotorSpeed(), Rotation2d.fromDegrees(modules[i].getAngle()));
         return states;
     }
 

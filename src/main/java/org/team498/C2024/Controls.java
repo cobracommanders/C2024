@@ -34,8 +34,8 @@ public class Controls {
         driver.Y().onTrue(runOnce(() -> Drivetrain.getInstance().setPose(new Pose2d(15.07, 5.55, Rotation2d.fromDegrees(0 + Robot.rotationOffset)))));
         // driver.B().onTrue(new LoadGround())
         //     .onFalse(new ReturnToIdle());
-        driver.leftBumper().onTrue(new PrepareToScore())
-            .onFalse(new ReturnToIdle());
+        // driver.leftBumper().onTrue(new PrepareToScore())
+        //     .onFalse(new ReturnToIdle());
         // driver.rightTrigger().onTrue(new Score());
 
 
@@ -49,7 +49,7 @@ public class Controls {
         // operator.leftTrigger().onTrue(new LoadSource())
         //     .onFalse(new ReturnToIdle());
         // operator.rightBumper().onTrue(runOnce(() -> StateController.getInstance().setNextLoadingOption(LoadingOption.SOURCE)));
-        operator.rightTrigger().onTrue(new CollectSource())
-            .onFalse(new ReturnToIdle());
+        // operator.rightTrigger().onTrue(new CollectSource())
+        //     .onFalse(new ReturnToIdle());
     }
 }

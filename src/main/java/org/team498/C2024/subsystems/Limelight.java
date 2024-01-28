@@ -1,42 +1,46 @@
 package org.team498.C2024.subsystems;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
+
+import org.team498.lib.LimelightHelpers;
+import org.team498.lib.LimelightHelpers.LimelightTarget_Detector;
 
 public class Limelight extends SubsystemBase{
-    private double x;
-    private double y;
-    private double area;
-    private double minimum;
-    private double maximum;
-
-    NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-    NetworkTableEntry tx = table.getEntry("tx");
-    NetworkTableEntry ty = table.getEntry("ty");
-    NetworkTableEntry ta = table.getEntry("ta");
+   private double xMax = 15;
+   private double xMin = -15;
+   private double yMax = 15;
+   private double yMin = -15;
+   private boolean hasCenteredTarget = false;
 
     public void periodic(){
-        x = tx.getDouble(0.0);
-        y = ty.getDouble(0.0);
-        area = ta.getDouble(0.0);
-        maximum = 0;
-        minimum = 0;
+        hasCenteredTarget = false;
+        for (LimelightTarget_Detector target : getResults()) {
+            if (isCentered(target.tx,target.ty)) hasCenteredTarget = true;
+        }
+        SmartDashboard.putBoolean("Limelight Target", hasCenteredTarget);
     }
 
-    public boolean isCentered(){
-        if (getX() > maximum || getX() < minimum)
+    public boolean hasCenteredTarget(){
+        return hasCenteredTarget;
+    }
+
+    public LimelightTarget_Detector[] getResults(){
+        return LimelightHelpers.getLatestResults("limelight").targetingResults.targets_Detector;
+
+    }
+
+
+    public boolean isCentered(double x, double y){
+        if ((x > xMax || x < xMin) || (y > yMax || y < yMin))
         return false;
         return true;
     }
-
-    public double getX(){
-        return x;
-    }
-    public double getY(){
-        return y;
-    }
-    public double getArea(){
-        return area;
+    
+    private static Limelight instance;
+    
+    public static Limelight getInstance(){
+        if (instance == null)
+        instance = new Limelight();
+        return instance;
     }
 }
