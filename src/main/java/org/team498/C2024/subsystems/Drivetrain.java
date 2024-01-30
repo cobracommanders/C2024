@@ -175,7 +175,7 @@ public void setPositionGoal(Pose2d pose) {xController.setSetpoint(pose.getX()); 
     public boolean atAngleGoal() {return Math.abs(angleController.getPositionError()) < AngleConstants.EPSILON;}
 
     public Pose2d getPose() {return poseEstimator.getEstimatedPosition();}
-    public void setPose(Pose2d pose) {poseEstimator.resetPosition(Rotation2d.fromDegrees(getYaw() + 180), getModulePositions(), pose);}
+    public void setPose(Pose2d pose) {poseEstimator.resetPosition(Rotation2d.fromDegrees(getYaw()), getModulePositions(), pose);}
     public double getYaw() {return gyro.yaw();}
     public void setYaw(double angle) {gyro.setYaw(angle); angleController.reset(angle);}
     /** Return a double array with a value for yaw pitch and roll in that order */
