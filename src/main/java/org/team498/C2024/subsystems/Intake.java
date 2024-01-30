@@ -32,8 +32,9 @@ public class Intake extends SubsystemBase {
     private final ArmFeedforward feedforward;
 
     // Variables will store the current properties of the subsystem
-    private double setpoint;
+    
     private State.Intake currentState;
+    private double setpoint;
     
     // Constructor: Configure Motor Controller settings and  
     // Instantiate all objects (assign values to every variable and object)
@@ -65,32 +66,27 @@ public class Intake extends SubsystemBase {
         // We divide by MAX_RPM to scale to {-1, 1}
     }
 
-    // Getter method to retrieve current State
-    public State.Intake getState() {
-        return currentState;
+    public void set(double speed) {
+        motor.set(speed);
     }
 
-    // Every subsystem has a setState() method that configures local properties to match the desired state
     public void setState(State.Intake state) {
         currentState = state;
         setpoint = state.speed; // update state
         pidController.setSetpoint(this.setpoint); // update pController
     }
-    
-    public double getAngle() {
-        return angleEncoder.getOutput();
+
+    // Getter method to retrieve current State
+    public State.Intake getState() {
+        return currentState;
     }
 
     public boolean atSetpoint(){
         return pidController.atSetpoint();
-    
     }
-
-    // We do NOT use the preset methods for following and inverting motors in case of flash failure 
-    // (Ask Caleb about that if you're curious)
-    // Use a method to define motor control in relevant groups
-    public void set(double speed) {
-        motor.set(speed);
+    
+    public double getAngle() {
+        return angleEncoder.getOutput();
     }
     
     // Using static instances to reference the flywheel object ensures that we only use ONE FLywheel throughout the code 

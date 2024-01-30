@@ -25,7 +25,7 @@ public final class Ports {
         public static final int LEFT_MOTOR = 31;
         public static final int RIGHT_MOTOR = 32;
         public static final int ANGLE_MOTOR = 33;
-        public static final int KICKER_MOTOR = 34;
+        public static final int FEED_MOTOR = 34;
         public static final int ANGLE_ENCODER = 0;//DIO
     }
 

@@ -29,21 +29,24 @@ public class Shooter extends SubsystemBase {
     private final TalonFX leftMotor; // Declaration for a NEO or NEO550 brushless motor
     private final TalonFX rightMotor; // We use left / right descriptors to make identification easier in testing and communication
     private final CANSparkMax angleMotor; //Declaration for a Built-in NEO/NEO550 encoder
-    private final CANSparkMax kickerMotor;
+    private final CANSparkMax feedMotor;
+    
+    private final DutyCycle angleEncoder;
 
     private final PIDController rightControllere; //Declaration for a P Controller
     private final PIDController leftController; 
+    private final PIDController feedController;
+    private final PIDController angleController;
+
     private final SimpleMotorFeedforward rightFeedForward;
     private final SimpleMotorFeedforward leftFeedForward;
-    private final PIDController angleController;
     private final ArmFeedforward angleFeedForward;
-    private final DutyCycle angleEncoder;
 
     // Variables will store the current properties of the subsystem
     private double rightSpeed;
     private double leftSpeed;
     private double angle;
-    private double kickerSpeed;
+    private double feedSpeed;
     private State.Shooter currentState;
     
     // Constructor: Configure Motor Controller settings and  
@@ -51,28 +54,34 @@ public class Shooter extends SubsystemBase {
     public Shooter() {
         leftMotor = new TalonFX(Ports.ShooterPorts.LEFT_MOTOR);
         rightMotor = new TalonFX(Ports.ShooterPorts.RIGHT_MOTOR);
-        kickerMotor = new CANSparkMax(Ports.ShooterPorts.KICKER_MOTOR, MotorType.kBrushless);
+        feedMotor = new CANSparkMax(Ports.ShooterPorts.FEED_MOTOR, MotorType.kBrushless);
         angleMotor = new CANSparkMax(Ports.ShooterPorts.ANGLE_MOTOR, MotorType.kBrushless); //this can be left or right motor, whichever is most convenient
+        
+        angleEncoder = new DutyCycle(new DigitalInput(Ports.ShooterPorts.ANGLE_ENCODER));
 
         // Use the subsystems constants to instantiate PID and Feedforward
         rightControllere = new PIDController(Constants.ShooterConstants.P,Constants.ShooterConstants.I, Constants.ShooterConstants.D);
         leftController = new PIDController(Constants.ShooterConstants.P,Constants.ShooterConstants.I, Constants.ShooterConstants.D);
+        feedController = new PIDController(Constants.ShooterConstants.fP, Constants.ShooterConstants.fI, Constants.ShooterConstants.fD);
+        angleController = new PIDController(Constants.ShooterConstants.AngleConstants.P, Constants.ShooterConstants.AngleConstants.I, Constants.ShooterConstants.AngleConstants.D);
+
         rightFeedForward = new SimpleMotorFeedforward(Constants.ShooterConstants.S, Constants.ShooterConstants.V, Constants.ShooterConstants.A);
         leftFeedForward = new SimpleMotorFeedforward(Constants.ShooterConstants.S, Constants.ShooterConstants.V, Constants.ShooterConstants.A);
-        angleController = new PIDController(Constants.ShooterConstants.AngleConstants.P, Constants.ShooterConstants.AngleConstants.I, Constants.ShooterConstants.AngleConstants.D);
         angleFeedForward = new ArmFeedforward(Constants.ShooterConstants.AngleConstants.S, Constants.ShooterConstants.AngleConstants.G, Constants.ShooterConstants.AngleConstants.V);
-        angleEncoder = new DutyCycle(new DigitalInput(Ports.ShooterPorts.ANGLE_ENCODER));
+        
 
         // reset motor defaults to ensure all settings are clear
-        leftMotor.getConfigurator().apply(new TalonFXConfiguration());
         rightMotor.getConfigurator().apply(new TalonFXConfiguration());
+        leftMotor.getConfigurator().apply(new TalonFXConfiguration());
+        feedMotor.restoreFactoryDefaults();
         angleMotor.restoreFactoryDefaults();
 
         // Instantiate variables to intitial values
-        rightSpeed = State.Shooter.IDLE.topSpeed;
-        leftSpeed = State.Shooter.IDLE.bottomSpeed;
-        angle = State.Shooter.IDLE.angle;
         currentState = State.Shooter.IDLE;
+        rightSpeed = State.Shooter.IDLE.rightSpeed;
+        leftSpeed = State.Shooter.IDLE.leftSpeed;
+        feedSpeed = State.Shooter.IDLE.feedSpeed;
+        angle = State.Shooter.IDLE.angle;
     }
 
     // This method will run every 10-20 milliseconds (about 50-100 times in one second)
@@ -81,27 +90,51 @@ public class Shooter extends SubsystemBase {
         // This condition will reduce CPU utilization when the motor is not meant to run and save power because 
         // it will not actively deccelerate the wheel
         if (currentState == State.Shooter.CRESCENDO){
-            this.leftSpeed = calculateBottomSpeed(RobotPosition.distanceToSpeaker());
-            this.rightSpeed = calculateTopSpeed(RobotPosition.distanceToSpeaker());
+            this.rightSpeed = calculateRightSpeed(RobotPosition.distanceToSpeaker());
+            this.leftSpeed = calculateLeftSpeed(RobotPosition.distanceToSpeaker());
+            this.feedSpeed = State.Shooter.CRESCENDO.feedSpeed;
             this.angle = calculateAngle(RobotPosition.distanceToSpeaker());
         }
 
-        double leftShooterSpeed; // We will use this variable to keep track of our desired speed
         double rightShooterSpeed;
+        double leftShooterSpeed; // We will use this variable to keep track of our desired speed
+        double feedShooterSpeed;
         double angleSpeed;
-        rightShooterSpeed = rightFeedForward.calculate(this.leftSpeed); // adjust the setpoint to account for physical motor properties using feedforward
-        leftShooterSpeed = leftFeedForward.calculate(this.rightSpeed);
-        rightShooterSpeed = rightControllere.calculate(rightMotor.getVelocity().getValueAsDouble(), this.rightSpeed); // adjust for feedback error using proportional gain
-        leftShooterSpeed = leftController.calculate(leftMotor.getVelocity().getValueAsDouble(), this.leftSpeed);
-        set(leftShooterSpeed / Constants.ShooterConstants.MAX_RPM, rightShooterSpeed / Constants.ShooterConstants.MAX_RPM); // set the motor behavior using set() to interact with the controllers
+
+        rightShooterSpeed = rightControllere.calculate(rightMotor.getVelocity().getValueAsDouble(), this.rightSpeed) + rightFeedForward.calculate(this.rightSpeed); // adjust for feedback error using proportional gain
+        leftShooterSpeed = leftController.calculate(leftMotor.getVelocity().getValueAsDouble(), this.leftSpeed) + leftFeedForward.calculate(this.leftSpeed);
+        feedShooterSpeed = feedController.calculate(feedSpeed);
         angleSpeed = angleController.calculate(getAngle(), this.angle) + angleFeedForward.calculate(angle, 0);
+
+        set(leftShooterSpeed / Constants.ShooterConstants.MAX_RPM, rightShooterSpeed / Constants.ShooterConstants.MAX_RPM); // set the motor behavior using set() to interact with the controllers
+        setFeed(feedShooterSpeed);
         setAngle(angleSpeed);
-        setKicker(kickerSpeed);
         // We divide by MAX_RPM to scale to {-1, 1}
     }
+    
+    private void set(double topSpeed, double bottomSpeed) {
+        leftMotor.set(bottomSpeed);
+        rightMotor.set(-topSpeed); // invert speed on right side (assuming the motor is facing opposite the left)
+    }
 
-    private void setKicker(double speed){
-        kickerMotor.set(speed);
+    private void setFeed(double speed){
+        feedMotor.set(speed);
+    }
+    
+    private void setAngle(double speed){
+        angleMotor.set(speed);
+    }
+
+    public void setState(State.Shooter state) {
+        currentState = state; // update state
+        rightSpeed = state.rightSpeed; // update setpoint
+        leftSpeed = state.leftSpeed;
+        feedSpeed = state.feedSpeed;
+        angle = state.angle;
+        rightControllere.setSetpoint(this.leftSpeed); // update pController
+        leftController.setSetpoint(this.rightSpeed);
+        feedController.setSetpoint(this.feedSpeed);
+        angleController.setSetpoint(this.angle);
     }
 
     // Getter method to retrieve current State
@@ -109,45 +142,28 @@ public class Shooter extends SubsystemBase {
         return currentState;
     }
 
-    public double getAngle() {
-        return angleEncoder.getOutput();
-    }
-
-    // Every subsystem has a setState() method that configures local properties to match the desired state
-    public void setState(State.Shooter state) {
-        currentState = state; // update state
-        rightSpeed = state.topSpeed; // update setpoint
-        leftSpeed = state.bottomSpeed;
-        angle = state.angle;
-        rightControllere.setSetpoint(this.leftSpeed); // update pController
-        leftController.setSetpoint(this.rightSpeed);
-        angleController.setSetpoint(this.angle);
-    }
-
     public boolean atSetpoint(){
         return leftController.atSetpoint() && rightControllere.atSetpoint() && angleController.atSetpoint();
     }
 
-    // We do NOT use the preset methods for following and inverting motors in case of flash failure 
-    // (Ask Caleb about that if you're curious)
-    // Use a method to define motor control in relevant groups
-    private void set(double topSpeed, double bottomSpeed) {
-        leftMotor.set(bottomSpeed);
-        rightMotor.set(-topSpeed); // invert speed on right side (assuming the motor is facing opposite the left)
+    public double getAngle() {
+        return angleEncoder.getOutput();
     }
-    private void setAngle(double speed){
-        angleMotor.set(speed);
+
+
+    private double calculateRightSpeed(double distance){
+        return 0;
+    }
+
+    private double calculateLeftSpeed(double distance){
+        return 0;
+    }    
+    
+    private double calculateFeedSpeed(double distance){
+        return 0;
     }
 
     private double calculateAngle(double distance){
-        return 0;
-    }
-
-    private double calculateTopSpeed(double distance){
-        return 0;
-    }
-
-    private double calculateBottomSpeed(double distance){
         return 0;
     }
     

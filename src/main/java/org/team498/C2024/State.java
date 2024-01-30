@@ -27,21 +27,23 @@ public enum State {
     }
 
     public enum Shooter {
-        IDLE(0, 0, 0),
-        SUBWOOFER(0, 0, 0),
-        AMP(0, 0, 0),
-        PODIUM(0, 0, 0),
-        CRESCENDO(0, 0, 0),
-        SOURCE(0, 0, 0),
-        CANCEL_AMP(0, 0, 0);
+        IDLE(0, 0, 0, 0),
+        SUBWOOFER(0, 0, 0, 0),
+        AMP(0, 0, 0, 0),
+        PODIUM(0, 0, 0, 0),
+        CRESCENDO(0, 0, 0, 0),
+        SOURCE(0, 0, 0, 0),
+        CANCEL_AMP(0, 0, 0, 0);
 
-        public final double topSpeed;
-        public final double bottomSpeed;
+        public final double rightSpeed;
+        public final double leftSpeed;
+        public final double feedSpeed;
         public final double angle;
 
-        Shooter(double topSpeed, double angle, double bottomSpeed) {
-            this.bottomSpeed = bottomSpeed;
-            this.topSpeed = topSpeed;
+        Shooter(double topSpeed, double bottomSpeed, double feedSpeed, double angle) {
+            this.rightSpeed = topSpeed;
+            this.leftSpeed = bottomSpeed;
+            this.feedSpeed = feedSpeed;
             this.angle = angle;
         }
     }
