@@ -2,8 +2,10 @@ package org.team498.C2024.commands.drivetrain;
 
 import org.team498.C2024.Robot;
 import org.team498.C2024.RobotPosition;
+import org.team498.C2024.StateController;
 import org.team498.C2024.subsystems.Drivetrain;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import java.util.function.BooleanSupplier;
@@ -18,8 +20,8 @@ public class HybridDrive extends Command {
     private final DoubleSupplier xTranslationSupplier;
     private final DoubleSupplier yTranslationSupplier;
     private final DoubleSupplier rotationSupplier;
-    private final BooleanSupplier slowDriveSupplier;
-    private final BooleanSupplier targetDriveSupplier;
+    // private final BooleanSupplier slowDriveSupplier;
+    // private final BooleanSupplier targetDriveSupplier;
     private final DoubleSupplier povAngle;
     private double desiredAngle;
     private double rotationVelocity;
@@ -30,15 +32,16 @@ public class HybridDrive extends Command {
     public HybridDrive(DoubleSupplier xTranslationSupplier,
                         DoubleSupplier yTranslationSupplier,
                         DoubleSupplier rotationSupplier,
-                        DoubleSupplier povAngle,
-                        BooleanSupplier slowDriveSupplier, 
-                        BooleanSupplier targetDriveSupplier) {
+                        DoubleSupplier povAngle
+                        // BooleanSupplier slowDriveSupplier, 
+                        // BooleanSupplier targetDriveSupplier
+                        ) {
         this.xTranslationSupplier = xTranslationSupplier;
         this.yTranslationSupplier = yTranslationSupplier;
         this.rotationSupplier = rotationSupplier;
-        this.slowDriveSupplier = slowDriveSupplier;
+        // this.slowDriveSupplier = slowDriveSupplier;
         this.povAngle = povAngle;
-        this.targetDriveSupplier = targetDriveSupplier;
+        // this.targetDriveSupplier = targetDriveSupplier;
 
         addRequirements(drivetrain);
     }
@@ -53,10 +56,16 @@ public class HybridDrive extends Command {
 
     @Override
     public void execute() {
-        double speed = slowDriveSupplier.getAsBoolean() ? 0.5 : 1;
+        boolean slowDrive = StateController.getInstance().getSlowDrive();
+        boolean hasTargetDrive = StateController.getInstance().getTargetDriveActive();
+        Pose2d targetDrive = StateController.getInstance().getTargetDrive();
+
+        double speed = slowDrive ? 0.5 : 1;
+        
         double xTranslation = xTranslationSupplier.getAsDouble() * MAX_VELOCITY_METERS_PER_SECOND * Robot.coordinateFlip * speed;
         double yTranslation = yTranslationSupplier.getAsDouble() * MAX_VELOCITY_METERS_PER_SECOND * Robot.coordinateFlip * speed;
         double rotation = Math.copySign(Math.pow(rotationSupplier.getAsDouble(), 3), rotationSupplier.getAsDouble()) * MAX_ANGULAR_SPEED_DEGREES_PER_SECOND * speed;
+        
 
         if (drivetrain.atAngleGoal()) isPOVControlled = false;
 
@@ -89,7 +98,7 @@ public class HybridDrive extends Command {
             isPOVControlled = true;
         }
         
-        if (targetDriveSupplier.getAsBoolean()) desiredAngle = RobotPosition.calculateDegreesToSpeaker();
+        if (hasTargetDrive) desiredAngle = RobotPosition.calculateDegreesToTarget(targetDrive);
         drivetrain.setAngleGoal(desiredAngle);
     
 

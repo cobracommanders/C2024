@@ -29,13 +29,13 @@ public class IntakeRollers extends SubsystemBase {
     public IntakeRollers() {
         motor = new CANSparkMax(Ports.IntakeRollersPorts.MOTOR, MotorType.kBrushless);
         //encoder = motor.getEncoder(); //this can be left or right motor, whichever is most convenient
-        
-        // reset motor defaults to ensure all settings are clear
-        motor.restoreFactoryDefaults();
 
         // Instantiate variables to intitial values
         setpoint = 0;
         currentState = State.IntakeRollers.IDLE;
+
+        // reset motor defaults to ensure all settings are clear
+        motor.restoreFactoryDefaults();
     }
 
     // This method will run every 10-20 milliseconds (about 50-100 times in one second)
@@ -47,22 +47,19 @@ public class IntakeRollers extends SubsystemBase {
         set(speed);
     }
 
-    // Getter method to retrieve current State
-    public State.IntakeRollers getState() {
-        return currentState;
+
+    private void set(double speed) {
+        motor.set(speed);
     }
 
-    // Every subsystem has a setState() method that configures local properties to match the desired state
     public void setState(State.IntakeRollers state) {
         currentState = state; // update state
         setpoint = state.speed; // update setpoint
     }
 
-    // We do NOT use the preset methods for following and inverting motors in case of flash failure 
-    // (Ask Caleb about that if you're curious)
-    // Use a method to define motor control in relevant groups
-    private void set(double speed) {
-        motor.set(speed);
+    // Getter method to retrieve current State
+    public State.IntakeRollers getState() {
+        return currentState;
     }
     
     // Using static instances to reference the flywheel object ensures that we only use ONE FLywheel throughout the code 

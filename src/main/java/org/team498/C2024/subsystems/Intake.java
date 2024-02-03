@@ -48,11 +48,11 @@ public class Intake extends SubsystemBase {
         pidController = new PIDController(IntakeConstants.P, IntakeConstants.I, IntakeConstants.D);
         feedforward = new ArmFeedforward(IntakeConstants.S, IntakeConstants.G, IntakeConstants.V);
 
-        // reset motor defaults to ensure all settings are clear
-        motor.restoreFactoryDefaults();
-
         // Instantiate variables to intitial values
         currentState = State.Intake.IDLE;
+
+        // reset motor defaults to ensure all settings are clear
+        motor.restoreFactoryDefaults();
     }
 
     // This method will run every 10-20 milliseconds (about 50-100 times in one second)

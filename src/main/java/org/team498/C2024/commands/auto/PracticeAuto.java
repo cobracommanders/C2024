@@ -2,6 +2,7 @@ package org.team498.C2024.commands.auto;
 
 import org.team498.C2024.PathLib;
 import org.team498.C2024.commands.drivetrain.PathPlannerFollower;
+import org.team498.C2024.commands.drivetrain.SlowDrive;
 import org.team498.C2024.commands.robot.FullScore;
 import org.team498.lib.auto.Auto;
 
@@ -14,12 +15,15 @@ public class PracticeAuto implements Auto{
     @Override
     public Command getCommand() {
         return new SequentialCommandGroup(
-            // new SlowDrive(true),
             new ParallelCommandGroup(
                 new PathPlannerFollower(PathLib.SL1Note1),
-                new FullScore()
+                new SequentialCommandGroup(
+                    new SlowDrive(true),
+                    new FullScore(),
+                    new SlowDrive(false)
+                )
             )
-            // new SlowDrive(false)
+            
         );
     }
 

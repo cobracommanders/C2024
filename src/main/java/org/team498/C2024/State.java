@@ -9,7 +9,9 @@ public enum State {
     SUBWOOFER(Shooter.SUBWOOFER, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.IDLE),
     PODIUM(Shooter.PODIUM, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.IDLE),
     CRESCENDO(Shooter.CRESCENDO, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.IDLE),
-    CANCEL_AMP(Shooter.CANCEL_AMP, Hopper.IDLE, Intake.IDLE, IntakeRollers.IDLE, Kicker.IDLE);
+    CANCEL_AMP(Shooter.IDLE, Hopper.IDLE, Intake.IDLE, IntakeRollers.IDLE, Kicker.REVERSE),
+    CANCEL_SPEAKER(Shooter.IDLE, Hopper.IDLE, Intake.IDLE, IntakeRollers.IDLE, Kicker.FORWARD),
+    TRACK_NOTE(Shooter.VISION, Hopper.REVERSE, Intake.INTAKE, IntakeRollers.INTAKE, Kicker.IDLE);
 
     public final Shooter shooter;
     public final Hopper hopper;
@@ -33,7 +35,8 @@ public enum State {
         PODIUM(0, 0, 0, 0),
         CRESCENDO(0, 0, 0, 0),
         SOURCE(0, 0, 0, 0),
-        CANCEL_AMP(0, 0, 0, 0);
+        CANCEL_AMP(0, 0, 0, 0),
+        VISION(0, 0, 0, 0);
 
         public final double rightSpeed;
         public final double leftSpeed;
@@ -49,7 +52,9 @@ public enum State {
     }
 
     public enum Kicker {
-    IDLE(0);
+        IDLE(0),
+        REVERSE(0),
+        FORWARD(0);
 
 
     public final double speed;

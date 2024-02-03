@@ -5,8 +5,11 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+
 import org.team498.lib.field.Point;
 import org.team498.lib.field.Rectangle;
+import org.team498.lib.util.PoseUtil;
 
 import java.util.LinkedList;
 import java.util.Map;
@@ -18,27 +21,36 @@ public final class FieldPositions {
     public static final double midline = width / 2;
 
     public static final Point blueSpeaker = new Point(0.16, 5.57);
+    // public static final Point blueAmp = new Point(1.82, 8.10);
 
     public static final Point[] blueNotes = {
-        new Point(2.89, 4.107),
-        new Point(2.89, 5.552),
         new Point(2.89, 6.997),
+        new Point(2.89, 5.552),
+        new Point(2.89, 4.107)
     };
 
     public static final Point[] midNotes = {
-        new Point(8.28, 0.771),
-        new Point(8.28, 2.441),
-        new Point(8.28, 4.109),
+        new Point(8.28, 7.445),
         new Point(8.28, 5.782),
-        new Point(8.28, 7.445)
+        new Point(8.28, 4.109),
+        new Point(8.28, 2.441),
+        new Point(8.28, 0.771)
     };
 
 
     public static final Point[] redNotes = {
-        new Point(13.665, 4.107),
+        new Point(13.665, 6.997),
         new Point(13.665, 5.552),
-        new Point(13.665, 6.997)
+        new Point(13.665, 4.107)
     };
+
+    public static Pose2d getSpeaker(){
+        return Robot.alliance.get() == Alliance.Blue ? blueSpeaker.toPose2d() : PoseUtil.flip(blueSpeaker.toPose2d());
+    }
+    
+    // public static Pose2d getAmp(){
+    //     return Robot.alliance.get() == Alliance.Blue ? blueSpeaker.toPose2d() : PoseUtil.flip(blueSpeaker.toPose2d());
+    // }
 
     public static Point flip(Point input) {
         return new Point(midline + (midline - input.x), input.y);

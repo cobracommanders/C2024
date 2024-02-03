@@ -1,5 +1,5 @@
 package org.team498.C2024.commands.drivetrain;
-import org.team498.C2024.Robot;
+import org.team498.C2024.StateController;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
@@ -13,6 +13,6 @@ public class SlowDrive extends InstantCommand{
 
     @Override
     public void execute() {
-        Robot.slowDrive = this.slowDrive;
+        StateController.getInstance().setSlowDrive(slowDrive);;
     }
 }

@@ -1,5 +1,6 @@
 package org.team498.C2024.commands.drivetrain;
-import java.util.Optional;
+
+import org.team498.C2024.StateController;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -18,10 +19,6 @@ public class TargetDrive extends InstantCommand{
 
     @Override
     public void execute() {
-        if (targetPose == null) {
-            PathPlannerFollower.targetPose = Optional.empty();
-        } else {
-            PathPlannerFollower.targetPose = Optional.of(this.targetPose);
-        }
+        StateController.getInstance().setTargetDrive(targetPose);
     }
 }

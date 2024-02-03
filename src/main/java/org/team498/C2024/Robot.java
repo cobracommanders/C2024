@@ -26,8 +26,6 @@ public class Robot extends TimedRobot{
     public static final double DEFAULT_PERIOD = 0.02;
     public static int coordinateFlip = 1;
     public static int rotationOffset = 0;
-    
-    public static boolean slowDrive;
 
     public static Optional<Alliance> alliance = Optional.empty();
     public static final Controls controls = new Controls();

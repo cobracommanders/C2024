@@ -45,16 +45,16 @@ public class Hopper extends SubsystemBase {
         beamBreak = new DigitalInput(HopperPorts.BEAM_BREAk);
         pidController = new PIDController(HopperConstants.P, HopperConstants.I, HopperConstants.D);
         pidController.setTolerance(0.1);
-        
-        // reset motor defaults to ensure all settings are clear
-        topMotor.restoreFactoryDefaults();
-        bottomMotor.restoreFactoryDefaults();
+
 
         // Instantiate variables to intitial values
         setpoint = 0;
         currentState = State.Hopper.IDLE;
         pidEnabled = false;
         beamBreakEnabled = true;
+
+        topMotor.restoreFactoryDefaults();
+        bottomMotor.restoreFactoryDefaults();
     }
 
     // This method will run every 10-20 milliseconds (about 50-100 times in one second)
@@ -72,10 +72,14 @@ public class Hopper extends SubsystemBase {
         // it will not actively deccelerate the wheel 
     }
 
-    public void setPosition(double position){
-        bottomEncoder.setPosition(0);
-        pidEnabled = true;
-        pidController.setSetpoint(position);
+    private void set(double speed) {
+        topMotor.set(speed);
+        bottomMotor.set(speed);
+    }
+
+     public void setState(State.Hopper state) {
+        currentState = state; // update state
+        setpoint = state.speed; // update setpoint
     }
 
     // Getter method to retrieve current State
@@ -83,22 +87,14 @@ public class Hopper extends SubsystemBase {
         return currentState;
     }
 
-    // Every subsystem has a setState() method that configures local properties to match the desired state
-    public void setState(State.Hopper state) {
-        currentState = state; // update state
-        setpoint = state.speed; // update setpoint
-    }
-
     public boolean atSetpoint(){
         return pidController.atSetpoint();
     }
 
-    // We do NOT use the preset methods for following and inverting motors in case of flash failure 
-    // (Ask Caleb about that if you're curious)
-    // Use a method to define motor control in relevant groups
-    private void set(double speed) {
-        topMotor.set(speed);
-        bottomMotor.set(speed);
+    public void setPosition(double position){
+        bottomEncoder.setPosition(0);
+        pidEnabled = true;
+        pidController.setSetpoint(position);
     }
 
     public boolean getBeamBreak(){

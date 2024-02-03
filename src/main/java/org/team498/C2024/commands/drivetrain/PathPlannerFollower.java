@@ -5,10 +5,9 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 
-import java.util.Optional;
-
 import org.team498.C2024.Robot;
 import org.team498.C2024.RobotPosition;
+import org.team498.C2024.StateController;
 import org.team498.C2024.subsystems.Drivetrain;
 import org.team498.lib.util.PoseUtil;
 import org.team498.lib.wpilib.ChassisSpeeds;
@@ -22,8 +21,7 @@ public class PathPlannerFollower extends Command {
     private final Timer trajectoryTimer = new Timer();
     private double currentTime;
     private double dt;
-    private boolean slowDrive;
-    public static Optional<Pose2d> targetPose;
+    private StateController stateController = StateController.getInstance();
 
     public PathPlannerFollower(PathPlannerTrajectory trajectory) {
         this.drivetrain = Drivetrain.getInstance();
@@ -37,28 +35,15 @@ public class PathPlannerFollower extends Command {
         trajectoryTimer.start();
         currentTime = 0;
         dt = 0;
-        targetPose = Optional.empty();
-        slowDrive = false;
-
-        // Display the trajectory on the driver station dashboard
-        // List<Pose2d> poses = new LinkedList<>();
-        // List<State> trajectoryStates = trajectory.getStates();
-        // for (int i = 0; i < trajectoryStates.size(); i += trajectoryStates.size() / 60) {
-        //     if (Robot.alliance.get() == Alliance.Blue) {
-        //         poses.add(PoseUtil.toPose2d(trajectoryStates.get(i).positionMeters));
-        //     } else {
-        //         poses.add(PoseUtil.flip(PoseUtil.toPose2d(trajectoryStates.get(i).positionMeters)));
-        //     }
-        // }
-
-
     }
 
     // boolean hasReset = false;
 
     @Override
     public void execute() {
-        slowDrive = Robot.slowDrive;
+        boolean slowDrive = stateController.getSlowDrive();
+        Pose2d targetPose = stateController.getTargetDrive();
+        boolean hasTargetDrive = stateController.getTargetDriveActive();
         dt = trajectoryTimer.get();
         trajectoryTimer.restart();
         currentTime += slowDrive ? dt / 2 : dt;
@@ -66,10 +51,10 @@ public class PathPlannerFollower extends Command {
 
         if (Robot.alliance.get() == Alliance.Blue) {
             drivetrain.setPositionGoal(new Pose2d(state.positionMeters.getX(), state.positionMeters.getY(), state.targetHolonomicRotation));
-            if (targetPose.isPresent()) drivetrain.setAngleGoal(RobotPosition.calculateDegreesToTarget(targetPose.get()));
+            if (hasTargetDrive) drivetrain.setAngleGoal(RobotPosition.calculateDegreesToTarget(targetPose));
         } else {
             drivetrain.setPositionGoal(PoseUtil.flip(new Pose2d(state.positionMeters.getX(), state.positionMeters.getY(), state.targetHolonomicRotation)));
-            if (targetPose.isPresent()) drivetrain.setAngleGoal(RobotPosition.calculateDegreesToTarget(PoseUtil.flip(targetPose.get())));
+            if (hasTargetDrive) drivetrain.setAngleGoal(RobotPosition.calculateDegreesToTarget(PoseUtil.flip(targetPose)));
         }
         ChassisSpeeds speeds = drivetrain.calculatePositionSpeed();
         drivetrain.drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, true);

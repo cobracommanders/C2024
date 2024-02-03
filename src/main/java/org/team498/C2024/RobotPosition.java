@@ -95,28 +95,11 @@ public class RobotPosition {
         return calculateDegreesToTarget(notePose);
     }
 
-    public static double calculateLimelightAngleToNote(double distance, double thetaInitialGuessRadians) {
-        double axisHeight = 1; // height of Limelight's pivot above the target
-        double r = 0.25; // length of the lever
-        double theta = thetaInitialGuessRadians; // initial guess for theta
-        double tolerance = 1; // how close we need to get
-        double maxIterations = 100; // to prevent infinite loops
-        double f_theta, df_theta;
-    
-        for (int i = 0; i < maxIterations; i++) {
-            f_theta = Math.tan(theta) + (r * Math.sin(theta) + axisHeight) / (distance - r * Math.cos(theta));
-            df_theta = 1 / (Math.cos(theta) * Math.cos(theta)) + 
-                       (r * Math.cos(theta) * (distance - r * Math.cos(theta)) + 
-                       (r * Math.sin(theta) + axisHeight) * r * Math.sin(theta)) / 
-                       ((distance - r * Math.cos(theta)) * (distance - r * Math.cos(theta)));
-    
-            if (Math.abs(f_theta) < tolerance)
-                break;
-    
-            theta -= f_theta / df_theta; // Newton's method
-        }
-    
-        return theta; // return the angle in radians
+    public static double calculateLimelightAngleToNote(double distance) {
+        return 0;
+    }
+    public static double calculateLimelightAngleToNote(Point note) {
+        return calculateLimelightAngleToNote(distanceTo(note));
     }
     
 

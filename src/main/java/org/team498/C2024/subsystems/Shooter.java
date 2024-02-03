@@ -4,6 +4,8 @@ import org.team498.C2024.Constants;
 import org.team498.C2024.Ports;
 import org.team498.C2024.RobotPosition;
 import org.team498.C2024.State;
+import org.team498.C2024.StateController;
+
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.CANSparkMax;
@@ -68,13 +70,6 @@ public class Shooter extends SubsystemBase {
         rightFeedForward = new SimpleMotorFeedforward(Constants.ShooterConstants.S, Constants.ShooterConstants.V, Constants.ShooterConstants.A);
         leftFeedForward = new SimpleMotorFeedforward(Constants.ShooterConstants.S, Constants.ShooterConstants.V, Constants.ShooterConstants.A);
         angleFeedForward = new ArmFeedforward(Constants.ShooterConstants.AngleConstants.S, Constants.ShooterConstants.AngleConstants.G, Constants.ShooterConstants.AngleConstants.V);
-        
-
-        // reset motor defaults to ensure all settings are clear
-        rightMotor.getConfigurator().apply(new TalonFXConfiguration());
-        leftMotor.getConfigurator().apply(new TalonFXConfiguration());
-        feedMotor.restoreFactoryDefaults();
-        angleMotor.restoreFactoryDefaults();
 
         // Instantiate variables to intitial values
         currentState = State.Shooter.IDLE;
@@ -82,6 +77,12 @@ public class Shooter extends SubsystemBase {
         leftSpeed = State.Shooter.IDLE.leftSpeed;
         feedSpeed = State.Shooter.IDLE.feedSpeed;
         angle = State.Shooter.IDLE.angle;
+
+        // reset motor defaults to ensure all settings are clear
+        rightMotor.getConfigurator().apply(new TalonFXConfiguration());
+        leftMotor.getConfigurator().apply(new TalonFXConfiguration());
+        feedMotor.restoreFactoryDefaults();
+        angleMotor.restoreFactoryDefaults();
     }
 
     // This method will run every 10-20 milliseconds (about 50-100 times in one second)
@@ -94,6 +95,10 @@ public class Shooter extends SubsystemBase {
             this.leftSpeed = calculateLeftSpeed(RobotPosition.distanceToSpeaker());
             this.feedSpeed = State.Shooter.CRESCENDO.feedSpeed;
             this.angle = calculateAngle(RobotPosition.distanceToSpeaker());
+        }
+
+        if (currentState == State.Shooter.VISION) {
+            this.angle = RobotPosition.calculateLimelightAngleToNote(StateController.getInstance().getNote());
         }
 
         double rightShooterSpeed;

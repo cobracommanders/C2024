@@ -48,8 +48,8 @@ public class PhotonVision {
     
     public PhotonVision(){
         PhotonCamera.setVersionCheckEnabled(false);
-        rightCamera = new PhotonCamera("top camera");
-        leftCamera = new PhotonCamera("bottom camera");
+        rightCamera = new PhotonCamera("blue 1 camera");
+        leftCamera = new PhotonCamera("red 1 camera");
         // rightInputs = new CameraInputs();
         // leftInputs = new CameraInputs();
 
