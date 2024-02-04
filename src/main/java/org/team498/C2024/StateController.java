@@ -3,9 +3,12 @@ package org.team498.C2024;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
+import org.team498.C2024.commands.robot.scoring.Score;
 import org.team498.lib.field.Point;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class StateController extends SubsystemBase {
@@ -73,7 +76,7 @@ public class StateController extends SubsystemBase {
     // target drive
     public void setTargetDrive(Pose2d target) {
         if (target == null) targetDrive = null;
-        targetDrive = ()-> target;
+        else targetDrive = ()-> target;
     }
     public Pose2d getTargetDrive() {
         if (targetDrive == null) return null;
@@ -88,6 +91,10 @@ public class StateController extends SubsystemBase {
     }
     public boolean getSlowDrive() {
         return slowDrive.getAsBoolean();
+    }
+
+    public boolean isScoring(){
+        return CommandScheduler.getInstance().isScheduled(new Score());
     }
 
     private static StateController instance;

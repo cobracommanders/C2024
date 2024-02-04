@@ -6,21 +6,12 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-/*
- * This is an example Flywheel subsystem that can be used for reference while writing your own subsystems :)
- * The mechanism uses two NEO brushless motors controlled by Spark Maxes
- * They are mounted opposite each other and power a single-wheel flywheel with velocity control
- * While this code is for a Flywheel, the ideas here can be used for any velocity-based subsystem
- */
+
 public class IntakeRollers extends SubsystemBase {
-    // all variable/object declaration goes at the top of the class. 
-    // They can be instantiated (given values) later, but they must be declared here
 
-    // Motors will almost always be private because they will only be controlled using public methods. There should be NO global use where motors 
-    private final CANSparkMax motor; // Declaration for a NEO or NEO550 brushless motor
-   // private final RelativeEncoder encoder; //Declaration for a Built-in NEO/NEO550 encoder
+    private final CANSparkMax motor;
+   // private final RelativeEncoder encoder;
 
-    // Variables will store the current properties of the subsystem
     private double setpoint;
     private State.IntakeRollers currentState;
     
@@ -38,20 +29,22 @@ public class IntakeRollers extends SubsystemBase {
         motor.restoreFactoryDefaults();
     }
 
-    // This method will run every 10-20 milliseconds (about 50-100 times in one second)
     @Override
     public void periodic() {
-        // This condition will reduce CPU utilization when the motor is not meant to run and save power because 
-        // it will not actively deccelerate the wheel
         double speed = setpoint;
         set(speed);
     }
 
-
+    //sets Motor Speed
     private void set(double speed) {
         motor.set(speed);
     }
 
+
+    /**
+     * sets state of IntakeRollers
+     * sets Setpoint to Speed
+     */
     public void setState(State.IntakeRollers state) {
         currentState = state; // update state
         setpoint = state.speed; // update setpoint
@@ -62,8 +55,6 @@ public class IntakeRollers extends SubsystemBase {
         return currentState;
     }
     
-    // Using static instances to reference the flywheel object ensures that we only use ONE FLywheel throughout the code 
-    // This makes it very easy to access the flywheel object
     private static IntakeRollers instance;
 
     public static IntakeRollers getInstance() {

@@ -36,30 +36,55 @@ public class SwerveModule {
         configCANCoder(encoder);
         enableBrakeMode(true);
     }
+
+    //sets drive and steer motors to brake mode
     public void enableBrakeMode(boolean setBrake) {
         drive.setNeutralMode(setBrake ? NeutralModeValue.Brake : NeutralModeValue.Coast);
         steer.setNeutralMode(setBrake ? NeutralModeValue.Brake : NeutralModeValue.Coast);
     }
+
+    /**
+     * sets swerve module state and sets motor setpoints
+     */
     public void setState(SwerveModuleState state) {
         currentTarget = optimize(state, Falcon500Conversions.falconToDegrees(steer.getPosition().getValueAsDouble(), MK4I_STEER_REDUCTION_L3));
-
+        //sets setpoints for drive and steer motors
         drive.setControl(new VelocityVoltage(currentTarget.speedMetersPerSecond * MK4I_DRIVE_REDUCTION_L3 * MK4I_DRIVE_REDUCTION_L3 / Units.inchesToMeters(DRIVE_WHEEL_CIRCUMFERENCE)));
         steer.setControl(new PositionVoltage(Falcon500Conversions.degreesToFalcon(currentTarget.angle.getDegrees(), MK4I_STEER_REDUCTION_L3)));
     }
+
+    /**
+     * sets positions for encoders
+    */
     public void updateIntegratedEncoder() {
         steer.setPosition(Falcon500Conversions.degreesToFalcon(getAngle(), MK4I_STEER_REDUCTION_L3));
         steer.setControl(new PositionVoltage(Falcon500Conversions.degreesToFalcon(getAngle(), MK4I_STEER_REDUCTION_L3)));
     }
+
+    /**
+     * returns current speed in meters per second
+     */
     public double getSpeed(){
         return currentTarget.speedMetersPerSecond;
     }
+
+    /**
+     * returns velocity of drive motors
+     */
     public double getDriveMotorSpeed() {
         return drive.getVelocity().getValueAsDouble() * Units.inchesToMeters(DRIVE_WHEEL_CIRCUMFERENCE) / 6.12;
     }
+
+    /**
+     * returns swerve module position in degrees
+     */
     public double getPosition(){
         return Falcon500Conversions.falconToDegrees(drive.getPosition().getValueAsDouble(), MK4I_DRIVE_REDUCTION_L3) / 360 * Units.inchesToMeters(DRIVE_WHEEL_CIRCUMFERENCE);
    }
 
+   /**
+    * returns angle in degrees
+    */
    public double getAngle(){
     return encoder.getAbsolutePosition().getValueAsDouble() * 360;
    }

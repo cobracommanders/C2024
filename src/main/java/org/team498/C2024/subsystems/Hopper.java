@@ -11,27 +11,18 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-/*
- * This is an example Flywheel subsystem that can be used for reference while writing your own subsystems :)
- * The mechanism uses two NEO brushless motors controlled by Spark Maxes
- * They are mounted opposite each other and power a single-wheel flywheel with velocity control
- * While this code is for a Flywheel, the ideas here can be used for any velocity-based subsystem
- */
-public class Hopper extends SubsystemBase {
-    // all variable/object declaration goes at the top of the class. 
-    // They can be instantiated (given values) later, but they must be declared here
 
-    // Motors will almost always be private because they will only be controlled using public methods. There should be NO global use where motors 
-    private final CANSparkMax topMotor; // Declaration for a NEO or NEO550 brushless motor
+public class Hopper extends SubsystemBase {
+
+    private final CANSparkMax topMotor;
     private final CANSparkMax bottomMotor;
-    private final RelativeEncoder topEncoder; //Declaration for a Built-in NEO/NEO550 encoder
+    private final RelativeEncoder topEncoder;
     private final RelativeEncoder bottomEncoder;
     private final PIDController pidController;
     private final DigitalInput beamBreak;
     private boolean beamBreakEnabled;
     private boolean pidEnabled;
 
-    // Variables will store the current properties of the subsystem
     private double setpoint;
     private State.Hopper currentState;
     
@@ -57,7 +48,6 @@ public class Hopper extends SubsystemBase {
         bottomMotor.restoreFactoryDefaults();
     }
 
-    // This method will run every 10-20 milliseconds (about 50-100 times in one second)
     @Override
     public void periodic() {
         if(pidController.atSetpoint()) pidEnabled = false;
@@ -68,8 +58,6 @@ public class Hopper extends SubsystemBase {
             double speed = setpoint;
             set(speed);
         }
-        // This condition will reduce CPU utilization when the motor is not meant to run and save power because 
-        // it will not actively deccelerate the wheel 
     }
 
     private void set(double speed) {
@@ -78,8 +66,10 @@ public class Hopper extends SubsystemBase {
     }
 
      public void setState(State.Hopper state) {
-        currentState = state; // update state
-        setpoint = state.speed; // update setpoint
+        // update state
+        currentState = state;
+        // update setpoint
+        setpoint = state.speed;
     }
 
     // Getter method to retrieve current State
@@ -87,33 +77,47 @@ public class Hopper extends SubsystemBase {
         return currentState;
     }
 
+    /**
+     * returns true if pidController is at setpoint
+     */
     public boolean atSetpoint(){
         return pidController.atSetpoint();
     }
 
+    /**
+     * resets encoder, enables PID and sets PID setpoint
+     */
     public void setPosition(double position){
         bottomEncoder.setPosition(0);
         pidEnabled = true;
         pidController.setSetpoint(position);
     }
 
+    /**
+     * return true if beambreak sensor is active
+     */
     public boolean getBeamBreak(){
         return beamBreak.get();
     }
+
+    /**
+     * returns true if the beambreak is enabled
+     */
     public boolean isBeamBreakEnabled(){
         return beamBreakEnabled;
     }
 
+    /**
+     * enables or disables beambreak
+     * @param isEnabled true if enabling
+     */
     public void setBeamBreakEnabled(boolean isEnabled){
         beamBreakEnabled = isEnabled;
     }
-    
-    // Using static instances to reference the flywheel object ensures that we only use ONE FLywheel throughout the code 
-    // This makes it very easy to access the flywheel object
     private static Hopper instance;
 
     public static Hopper getInstance() {
-        if (instance == null) instance = new Hopper(); // Make sure there is an instance (this will only run once)
+        if (instance == null) instance = new Hopper(); 
         return instance;
     }
 }

@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 public class ReturnToIdle extends SequentialCommandGroup {
     public ReturnToIdle(){
         super(
+            //Sets states to IDLE
             new SetState(State.IDLE),
             new ParallelCommandGroup(
                 new SetHopperNextState(),

@@ -59,7 +59,7 @@ public class Drivetrain extends SubsystemBase {
             new SwerveModule(Ports.DrivetrainPorts.BR_DRIVE, Ports.DrivetrainPorts.BR_STEER, Ports.DrivetrainPorts.BR_CANCODER, Ports.Accessories.DriveBus, BR_MODULE_OFFSET) 
         };
 
-         angleController.enableContinuousInput(-180, 180);
+        angleController.enableContinuousInput(-180, 180);
         angleController.setTolerance(0);
         angleController.reset(getYaw());
         xController.setTolerance(0);
@@ -129,7 +129,7 @@ public class Drivetrain extends SubsystemBase {
 
         speeds.vxMetersPerSecond = xLimiter.calculate(speeds.vxMetersPerSecond);
         speeds.vyMetersPerSecond = yLimiter.calculate(speeds.vyMetersPerSecond);
-        speeds = updateSpeeds(speeds);
+        //speeds = updateSpeeds(speeds);
         stateSetpoints = kinematics.toSwerveModuleStates(speeds);
         SwerveDriveKinematics.desaturateWheelSpeeds(stateSetpoints, DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND);
         setModuleStates(stateSetpoints);

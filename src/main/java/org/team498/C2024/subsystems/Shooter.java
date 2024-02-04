@@ -35,7 +35,7 @@ public class Shooter extends SubsystemBase {
     
     private final DutyCycle angleEncoder;
 
-    private final PIDController rightControllere; //Declaration for a P Controller
+    private final PIDController rightController; //Declaration for a P Controller
     private final PIDController leftController; 
     private final PIDController feedController;
     private final PIDController angleController;
@@ -49,6 +49,8 @@ public class Shooter extends SubsystemBase {
     private double leftSpeed;
     private double angle;
     private double feedSpeed;
+    private boolean isManual;
+    private double manualSpeed;
     private State.Shooter currentState;
     
     // Constructor: Configure Motor Controller settings and  
@@ -62,7 +64,7 @@ public class Shooter extends SubsystemBase {
         angleEncoder = new DutyCycle(new DigitalInput(Ports.ShooterPorts.ANGLE_ENCODER));
 
         // Use the subsystems constants to instantiate PID and Feedforward
-        rightControllere = new PIDController(Constants.ShooterConstants.P,Constants.ShooterConstants.I, Constants.ShooterConstants.D);
+        rightController = new PIDController(Constants.ShooterConstants.P,Constants.ShooterConstants.I, Constants.ShooterConstants.D);
         leftController = new PIDController(Constants.ShooterConstants.P,Constants.ShooterConstants.I, Constants.ShooterConstants.D);
         feedController = new PIDController(Constants.ShooterConstants.fP, Constants.ShooterConstants.fI, Constants.ShooterConstants.fD);
         angleController = new PIDController(Constants.ShooterConstants.AngleConstants.P, Constants.ShooterConstants.AngleConstants.I, Constants.ShooterConstants.AngleConstants.D);
@@ -77,6 +79,11 @@ public class Shooter extends SubsystemBase {
         leftSpeed = State.Shooter.IDLE.leftSpeed;
         feedSpeed = State.Shooter.IDLE.feedSpeed;
         angle = State.Shooter.IDLE.angle;
+
+        rightController.setTolerance(5);
+        leftController.setTolerance(5);
+        feedController.setTolerance(5);
+        angleController.setTolerance(0.1);
 
         // reset motor defaults to ensure all settings are clear
         rightMotor.getConfigurator().apply(new TalonFXConfiguration());
@@ -97,19 +104,23 @@ public class Shooter extends SubsystemBase {
             this.angle = calculateAngle(RobotPosition.distanceToSpeaker());
         }
 
-        if (currentState == State.Shooter.VISION) {
+        else if (currentState == State.Shooter.VISION) {
             this.angle = RobotPosition.calculateLimelightAngleToNote(StateController.getInstance().getNote());
         }
+
 
         double rightShooterSpeed;
         double leftShooterSpeed; // We will use this variable to keep track of our desired speed
         double feedShooterSpeed;
         double angleSpeed;
 
-        rightShooterSpeed = rightControllere.calculate(rightMotor.getVelocity().getValueAsDouble(), this.rightSpeed) + rightFeedForward.calculate(this.rightSpeed); // adjust for feedback error using proportional gain
+        rightShooterSpeed = rightController.calculate(rightMotor.getVelocity().getValueAsDouble(), this.rightSpeed) + rightFeedForward.calculate(this.rightSpeed); // adjust for feedback error using proportional gain
         leftShooterSpeed = leftController.calculate(leftMotor.getVelocity().getValueAsDouble(), this.leftSpeed) + leftFeedForward.calculate(this.leftSpeed);
         feedShooterSpeed = feedController.calculate(feedSpeed);
         angleSpeed = angleController.calculate(getAngle(), this.angle) + angleFeedForward.calculate(angle, 0);
+
+        if (isManual)
+            angleSpeed = manualSpeed;
 
         set(leftShooterSpeed / Constants.ShooterConstants.MAX_RPM, rightShooterSpeed / Constants.ShooterConstants.MAX_RPM); // set the motor behavior using set() to interact with the controllers
         setFeed(feedShooterSpeed);
@@ -117,26 +128,37 @@ public class Shooter extends SubsystemBase {
         // We divide by MAX_RPM to scale to {-1, 1}
     }
     
+    //sets top speed and bottom speed
     private void set(double topSpeed, double bottomSpeed) {
         leftMotor.set(bottomSpeed);
         rightMotor.set(-topSpeed); // invert speed on right side (assuming the motor is facing opposite the left)
     }
 
+    //sets speed for feedForward
     private void setFeed(double speed){
         feedMotor.set(speed);
     }
     
+    //sets speed for angleMotor
     private void setAngle(double speed){
         angleMotor.set(speed);
     }
 
+    public void setAngleManual(boolean isManual, double speed){
+        this.isManual = isManual;
+        this.manualSpeed = speed;
+    }
+
+    /**
+     * sets states for PID controllers and motor speeds
+     */
     public void setState(State.Shooter state) {
         currentState = state; // update state
         rightSpeed = state.rightSpeed; // update setpoint
         leftSpeed = state.leftSpeed;
         feedSpeed = state.feedSpeed;
         angle = state.angle;
-        rightControllere.setSetpoint(this.leftSpeed); // update pController
+        rightController.setSetpoint(this.leftSpeed); // update pController
         leftController.setSetpoint(this.rightSpeed);
         feedController.setSetpoint(this.feedSpeed);
         angleController.setSetpoint(this.angle);
@@ -147,10 +169,16 @@ public class Shooter extends SubsystemBase {
         return currentState;
     }
 
+    /**
+     * returns leftController, rightController, and angleController setpoints
+     */
     public boolean atSetpoint(){
-        return leftController.atSetpoint() && rightControllere.atSetpoint() && angleController.atSetpoint();
+        return leftController.atSetpoint() && rightController.atSetpoint() && angleController.atSetpoint();
     }
 
+    /**
+     * returns angle of angleEncoder
+     */
     public double getAngle() {
         return angleEncoder.getOutput();
     }

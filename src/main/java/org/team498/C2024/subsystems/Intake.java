@@ -13,25 +13,17 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycle;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-/*
- * This is an example Flywheel subsystem that can be used for reference while writing your own subsystems :)
- * The mechanism uses two NEO brushless motors controlled by Spark Maxes
- * They are mounted opposite each other and power a single-wheel flywheel with velocity control
- * While this code is for a Flywheel, the ideas here can be used for any velocity-based subsystem
- */
-public class Intake extends SubsystemBase {
-    // all variable/object declaration goes at the top of the class. 
-    // They can be instantiated (given values) later, but they must be declared here
 
-    // Motors will almost always be private because they will only be controlled using public methods. There should be NO global use where motors 
-    private final CANSparkMax motor; // Declaration for a NEO or NEO550 brushless motor
-    private final RelativeEncoder encoder; //Declaration for a Built-in NEO/NEO550 encoder
+public class Intake extends SubsystemBase {
+
+    private final CANSparkMax motor;
+    private final RelativeEncoder encoder;
     private final DutyCycle angleEncoder;
 
-    private final PIDController pidController; //Declaration for a P Controller
+    private final PIDController pidController;
     private final ArmFeedforward feedforward;
-
-    // Variables will store the current properties of the subsystem
+    private boolean isManual;
+    private double manualSpeed;
     
     private State.Intake currentState;
     private double setpoint;
@@ -44,36 +36,46 @@ public class Intake extends SubsystemBase {
         encoder = motor.getEncoder(); //this can be left or right motor, whichever is most convenient
         angleEncoder = new DutyCycle(new DigitalInput(Ports.IntakePorts.ANGLE_ENCODER));
 
-        // Use the subsystems constants to instantiate PID and Feedforward
         pidController = new PIDController(IntakeConstants.P, IntakeConstants.I, IntakeConstants.D);
         feedforward = new ArmFeedforward(IntakeConstants.S, IntakeConstants.G, IntakeConstants.V);
 
         // Instantiate variables to intitial values
         currentState = State.Intake.IDLE;
 
+        pidController.setTolerance(0.01);
+
         // reset motor defaults to ensure all settings are clear
         motor.restoreFactoryDefaults();
     }
 
-    // This method will run every 10-20 milliseconds (about 50-100 times in one second)
     @Override
     public void periodic() {
-        // This condition will reduce CPU utilization when the motor is not meant to run and save power because 
-        // it will not actively deccelerate the wheel
-        double speed; // We will use this variable to keep track of our desired speed
+        // We will use this variable to keep track of our desired speed
+        double speed;
         speed = pidController.calculate(getAngle(), this.setpoint) + feedforward.calculate(getAngle(),0); // adjust for feedback error using proportional gain
-        set(speed); // set the motor behavior using set() to interact with the controllers
-        // We divide by MAX_RPM to scale to {-1, 1}
+        if (isManual) speed = manualSpeed;
+        set(speed);
     }
 
+    /**
+     * sets Motor Speed
+     */
     public void set(double speed) {
         motor.set(speed);
     }
 
+    /**
+     * sets state for speed and sets PID controller to setpoint
+     */
     public void setState(State.Intake state) {
         currentState = state;
         setpoint = state.speed; // update state
         pidController.setSetpoint(this.setpoint); // update pController
+    }
+
+    public void setAngleManual(boolean isManual, double speed){
+        this.isManual = isManual;
+        this.manualSpeed = speed;
     }
 
     // Getter method to retrieve current State
@@ -81,10 +83,16 @@ public class Intake extends SubsystemBase {
         return currentState;
     }
 
+    /**
+     *returns PID controller when it reaches setpoint
+     */
     public boolean atSetpoint(){
         return pidController.atSetpoint();
     }
-    
+
+    /**
+     * returns encoder angle
+     */
     public double getAngle() {
         return angleEncoder.getOutput();
     }

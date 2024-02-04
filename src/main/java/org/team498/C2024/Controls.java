@@ -3,17 +3,19 @@ package org.team498.C2024;
 import org.team498.C2024.Constants.OIConstants;
 import org.team498.C2024.StateController.LoadingOption;
 import org.team498.C2024.StateController.ScoringOption;
+import org.team498.C2024.commands.SetIntakeManual;
+import org.team498.C2024.commands.SetShooterManual;
 import org.team498.C2024.commands.drivetrain.HybridDrive;
 import org.team498.C2024.commands.drivetrain.SlowDrive;
 import org.team498.C2024.commands.drivetrain.TargetDrive;
-import org.team498.C2024.commands.robot.CancelAmp;
-import org.team498.C2024.commands.robot.CancelSpeaker;
-import org.team498.C2024.commands.robot.CollectSource;
-import org.team498.C2024.commands.robot.LoadGround;
-import org.team498.C2024.commands.robot.LoadSource;
-import org.team498.C2024.commands.robot.PrepareToScore;
 import org.team498.C2024.commands.robot.ReturnToIdle;
-import org.team498.C2024.commands.robot.Score;
+import org.team498.C2024.commands.robot.loading.CollectSource;
+import org.team498.C2024.commands.robot.loading.LoadGround;
+import org.team498.C2024.commands.robot.loading.LoadSource;
+import org.team498.C2024.commands.robot.scoring.CancelAmp;
+import org.team498.C2024.commands.robot.scoring.CancelSpeaker;
+import org.team498.C2024.commands.robot.scoring.PrepareToScore;
+import org.team498.C2024.commands.robot.scoring.Score;
 import org.team498.C2024.subsystems.Drivetrain;
 import org.team498.lib.drivers.Xbox;
 
@@ -50,7 +52,7 @@ public class Controls {
         driver.A().onTrue(runOnce(() -> Drivetrain.getInstance().setYaw(0 + Robot.rotationOffset)));
         driver.B().onTrue(runOnce(() -> Drivetrain.getInstance().setPose(new Pose2d(15.18, 1.32, Rotation2d.fromDegrees(0 + Robot.rotationOffset)))));
         driver.Y().onTrue(runOnce(() -> Drivetrain.getInstance().setPose(new Pose2d(15.07, 5.55, Rotation2d.fromDegrees(0 + Robot.rotationOffset)))));
-        // driver.B().onTrue(new LoadGround())
+        // driver.leftTrigger().onTrue(new LoadGround())
         //     .onFalse(new ReturnToIdle());
         // driver.leftBumper().onTrue(new PrepareToScore())
         //     .onFalse( new ConditionalCommand(new CancelAmp(), new CancelSpeaker(), ()-> StateController.getInstance().getState() == State.AMP));
@@ -60,6 +62,8 @@ public class Controls {
     }
 
     public void configureOperatorCommands() {
+        // operator.start().toggleOnTrue(new SetShooterManual(true, operator::leftY));
+        // operator.back().toggleOnTrue(new SetIntakeManual(true, operator::rightY));
         // operator.X().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.CRESCENDO)));
         // operator.A().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.SUBWOOFER)));
         // operator.B().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.PODIUM)));

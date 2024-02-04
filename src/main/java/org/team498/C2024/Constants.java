@@ -69,11 +69,11 @@ public final class Constants {
 
     public static final class ShooterConstants {
         // fP, fI, fD are the feedMotor Constants for the shooter
-        public static final double fP = 0;
+        public static final double fP = .005;
         public static final double fI = 0;
         public static final double fD = 0;
         // P, I, D are the flywheel Constants for the shooter
-        public static final double P = 0;
+        public static final double P = .005;
         public static final double I = 0;
         public static final double D = 0;
         public static final double S = 0;
@@ -92,17 +92,16 @@ public final class Constants {
     }
 
     public static final class IntakeConstants {
-        public static final double P = 0;
+        public static final double P = 1;
         public static final double I = 0;
         public static final double D = 0;
         public static final double S = 0;
         public static final double V = 0;
-        public static final double G = 0;
-        public static final double MAX_RPM = 0;
+        public static final double G = 0.05;
     }
 
     public static final class HopperConstants {
-        public static final double P = 0;
+        public static final double P = 0.2;
         public static final double I = 0;
         public static final double D = 0;
     }
