@@ -97,7 +97,7 @@ public final class Constants {
         public static final double D = 0;
         public static final double S = 0;
         public static final double V = 0;
-        public static final double G = 0.05;
+        public static final double G = 0.1;
     }
 
     public static final class HopperConstants {

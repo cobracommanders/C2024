@@ -4,10 +4,10 @@ import org.team498.C2024.PathLib;
 import org.team498.C2024.StateController;
 import org.team498.C2024.StateController.ScoringOption;
 import org.team498.C2024.commands.drivetrain.PathPlannerFollower;
-import org.team498.C2024.commands.robot.FullScore;
-import org.team498.C2024.commands.robot.LoadGround;
-import org.team498.C2024.commands.robot.PrepareToScore;
-import org.team498.C2024.commands.robot.Score;
+import org.team498.C2024.commands.robot.loading.LoadGround;
+import org.team498.C2024.commands.robot.scoring.FullScore;
+import org.team498.C2024.commands.robot.scoring.PrepareToScore;
+import org.team498.C2024.commands.robot.scoring.Score;
 import org.team498.lib.auto.Auto;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -22,6 +22,23 @@ public class FiveNotesAtFreddys implements Auto{
     public Command getCommand() {
 
         return new SequentialCommandGroup(
+            /**
+             * Starts in Scoring Location 1
+             * Scores Pre Loaded Note
+             * Drives to First Note
+             * Intakes Note 1
+             * Scores Note 1
+             * Drives to second Note
+             * Intakes Note 2
+             * Scores Note 2
+             * Drives to Note 3
+             * Intakes Note 3
+             * Scores Note 3
+             * Drives to Middle Note 5
+             * Intakes Middle Note 5
+             * Drives to Note 3
+             * Scores Middle Note 5
+             */
             new FullScore(),
             new ParallelCommandGroup(
                 new PathPlannerFollower(PathLib.SL1toNote1),

@@ -25,9 +25,11 @@ public class StateController extends SubsystemBase {
     public enum LoadingOption{GROUND, SOURCE}
 
     public void setState(State state){
+        //Updates the current state
         currentState = state;
     }
 
+    //gets the current state of the Robot
     public State getState(){
         return currentState;
     }
@@ -35,10 +37,19 @@ public class StateController extends SubsystemBase {
     public State getNextScoringState() {
         State state;
 
+        //Sets State to the next Scoring Option
         state = switch (nextScoringOption) {
+
+            //if nextScoringOption is AMP, it sets the State to AMP
             case AMP -> State.AMP;
+
+            //if nextScoringOption is PODIUM, it sets the State to PODIUM
             case PODIUM -> State.PODIUM;
+
+            //if nextScoringOption is SUBWOOFER, it sets the State to SUBWOOFER
             case SUBWOOFER -> State.SUBWOOFER;
+
+            //if nextScoringOption is CRESCENDO, it sets the State to CRESCENDO
             case CRESCENDO -> State.CRESCENDO;
         };
 
@@ -48,47 +59,70 @@ public class StateController extends SubsystemBase {
     public State getNextLoadingState(){
         State state;
 
+        //Sets state to nextLoadingOption
         state = switch (nextLoadingOption) {
+
+            //if nextLoading option is SOURCE, then it sets state to SOURCE
             case SOURCE -> State.SOURCE;
+
+            //if nextLoadingOption is INTAKE, then it sets state to INTAKE
             case GROUND -> State.INTAKE;
         };
+
         return state;
     }
+
+    //Updates nextScoringOption
     public void setNextScoringOption(ScoringOption scoringOption){
         nextScoringOption = scoringOption;
     }
+
+    //returns nextScoringOption
     public ScoringOption getNextScoringOption(){
         return nextScoringOption;
     }
 
+    //Updates nextLoadingOption
     public void setNextLoadingOption(LoadingOption loadingOption) {
         nextLoadingOption = loadingOption;
     }
+
+    //returns nextLoadingOption
     public LoadingOption getNextLoadingOption(){
         return nextLoadingOption;
     }
+
+    //Updates the current note / position of note
     public void setNote(Point note) {
         currentNote = note;
     }
+
+    //returs current not / position of note
     public Point getNote() {
         return currentNote;
     }
-    // target drive
+
+    // target drive - aims at speaker while driving
     public void setTargetDrive(Pose2d target) {
         if (target == null) targetDrive = null;
         else targetDrive = ()-> target;
     }
+
     public Pose2d getTargetDrive() {
         if (targetDrive == null) return null;
         return targetDrive.get();
     }
+
+    //returns target drive if it is active
     public boolean getTargetDriveActive() {
         return targetDrive != null;
     }
+
     //slow drive
     public void setSlowDrive(boolean isSlow) {
         slowDrive = ()-> isSlow;
     }
+
     public boolean getSlowDrive() {
         return slowDrive.getAsBoolean();
     }

@@ -62,7 +62,7 @@ public class Hopper extends SubsystemBase {
 
     private void set(double speed) {
         topMotor.set(speed);
-        bottomMotor.set(speed);
+        bottomMotor.set(-speed);
     }
 
      public void setState(State.Hopper state) {
