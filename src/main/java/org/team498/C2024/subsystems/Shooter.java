@@ -7,9 +7,11 @@ import org.team498.C2024.State;
 import org.team498.C2024.StateController;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.ColorSensorV3.ColorSensorResolution;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
@@ -33,7 +35,7 @@ public class Shooter extends SubsystemBase {
     private final CANSparkMax angleMotor; //Declaration for a Built-in NEO/NEO550 encoder
     private final CANSparkMax feedMotor;
     
-    private final DutyCycle angleEncoder;
+    private final CANcoder angleEncoder;
 
     private final PIDController rightController; //Declaration for a P Controller
     private final PIDController leftController; 
@@ -61,7 +63,7 @@ public class Shooter extends SubsystemBase {
         feedMotor = new CANSparkMax(Ports.ShooterPorts.FEED_MOTOR, MotorType.kBrushless);
         angleMotor = new CANSparkMax(Ports.ShooterPorts.ANGLE_MOTOR, MotorType.kBrushless); //this can be left or right motor, whichever is most convenient
         
-        angleEncoder = new DutyCycle(new DigitalInput(Ports.ShooterPorts.ANGLE_ENCODER));
+        angleEncoder = new CANcoder(Ports.ShooterPorts.ANGLE_ENCODER);
 
         // Use the subsystems constants to instantiate PID and Feedforward
         rightController = new PIDController(Constants.ShooterConstants.P,Constants.ShooterConstants.I, Constants.ShooterConstants.D);
@@ -180,7 +182,11 @@ public class Shooter extends SubsystemBase {
      * returns angle of angleEncoder
      */
     public double getAngle() {
-        return angleEncoder.getOutput();
+        return angleEncoder.getAbsolutePosition().getValueAsDouble();
+    }
+
+    public boolean shooterState(){
+        return getState() == State.Shooter.CRESCENDO || getState() == State.Shooter.PODIUM || getState() == State.Shooter.SUBWOOFER;
     }
 
 

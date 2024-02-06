@@ -14,10 +14,13 @@ import org.team498.C2024.commands.auto.PathPlannerTest;
 import org.team498.C2024.commands.auto.PracticeAuto;
 import org.team498.C2024.commands.auto.TestAuto;
 import org.team498.C2024.subsystems.Drivetrain;
+import org.team498.C2024.subsystems.Hopper;
 import org.team498.C2024.subsystems.Limelight;
+import org.team498.C2024.subsystems.Shooter;
 import org.team498.lib.auto.Auto;
 import org.team498.lib.drivers.Blinkin;
 import org.team498.lib.drivers.Gyro;
+import org.team498.lib.drivers.Blinkin.BlinkinColor;
 import org.team498.lib.util.PoseUtil;
 import java.util.List;
 import java.util.Optional;
@@ -77,6 +80,18 @@ public class Robot extends TimedRobot{
             rotationOffset = alliance.get() == Alliance.Blue
                              ? 0
                              : 180;
+        }
+
+        if (DriverStation.isEnabled()) {
+            if(Shooter.getInstance().atSetpoint() && Shooter.getInstance().shooterState() && !Hopper.getInstance().isPidEnabled()) 
+                blinkin.setColor(BlinkinColor.SOLID_DARK_GREEN);
+            else blinkin.setColor(BlinkinColor.SOLID_HOT_PINK);
+        }
+        else { 
+            if (RobotPosition.isNear(autoToRun.getInitialPose(), 1))
+                blinkin.setColor(BlinkinColor.SOLID_DARK_GREEN);
+            else blinkin.setColor(BlinkinColor.SOLID_HOT_PINK);
+
         }
     }
 

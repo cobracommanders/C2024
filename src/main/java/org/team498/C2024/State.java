@@ -28,6 +28,7 @@ public enum State {
         this.kicker = kicker;
     }
 
+    //Sets Speed and Angle for Shooter
     public enum Shooter {
         IDLE(0, 0, 0, 0),
         SUBWOOFER(0, 0, 0, 0),
@@ -51,6 +52,7 @@ public enum State {
         }
     }
 
+    //Sets Speeds for Kicker
     public enum Kicker {
         IDLE(0),
         //REVERSE is for PODIUM, SUBWOOFER, and CRESCENDO
@@ -65,6 +67,7 @@ public enum State {
         }
     }
 
+    //Sets Speeds for Hopper
     public enum Hopper {
         IDLE(0),
         FORWARD(.5),
@@ -77,6 +80,7 @@ public enum State {
         }
     }
 
+    //Sets Positions for Intake
     public enum Intake {
         IDLE(0),
         INTAKE(0),
@@ -90,6 +94,7 @@ public enum State {
         
     }
 
+    //Sets Speeds for IntakeRollers
     public enum IntakeRollers {
         IDLE(0),
         INTAKE(1),

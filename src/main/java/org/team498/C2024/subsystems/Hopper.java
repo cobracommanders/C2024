@@ -77,6 +77,10 @@ public class Hopper extends SubsystemBase {
         return currentState;
     }
 
+    public boolean isPidEnabled(){
+        return pidEnabled;
+    }
+
     /**
      * returns true if pidController is at setpoint
      */
