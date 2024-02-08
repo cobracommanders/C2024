@@ -15,7 +15,7 @@ public final class Constants {
     }
 
     public static final class DrivetrainConstants {
-        public static final double MAX_VELOCITY_METERS_PER_SECOND = 5.5;
+        public static final double MAX_VELOCITY_METERS_PER_SECOND = 16.5;
         public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 20; //TODO: test for best traction/speed
 
         public static final double MAX_AUTO_VELOCITY = 3;
