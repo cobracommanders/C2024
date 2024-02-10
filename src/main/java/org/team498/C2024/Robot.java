@@ -1,6 +1,7 @@
 package org.team498.C2024;
 
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -65,10 +66,13 @@ public class Robot extends TimedRobot{
         Limelight.getInstance();
     }
 
+    //DigitalInput beamBreak = new DigitalInput(0);
+
     @Override
     public void robotPeriodic() {
         CommandScheduler.getInstance().run();
         SmartDashboard.putData(autoChooser);
+        //SmartDashboard.putBoolean("is beamBreak enabled", beamBreak.get());
 
         if (alliance.isEmpty()) {
             alliance = DriverStation.getAlliance();
