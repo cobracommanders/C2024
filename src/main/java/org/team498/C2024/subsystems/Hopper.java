@@ -58,6 +58,7 @@ public class Hopper extends SubsystemBase {
             double speed = setpoint;
             set(speed);
         }
+        SmartDashboard.putBoolean("Beambreak",getBeamBreak());
     }
 
     private void set(double speed) {

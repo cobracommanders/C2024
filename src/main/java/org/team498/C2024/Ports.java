@@ -26,14 +26,14 @@ public final class Ports {
         public static final int RIGHT_MOTOR = 32;
         public static final int ANGLE_MOTOR = 33;
         public static final int FEED_MOTOR = 34;
-        public static final int ANGLE_ENCODER = 0;//DIO
+        public static final int ANGLE_ENCODER = 1;//DIO
     }
 
     public static class HopperPorts {
         public static final int TOP_MOTOR = 40;
         public static final int BOTTOM_MOTOR = 42;
         public static final int ENCODER = 41;
-        public static final int BEAM_BREAk = 43;
+        public static final int BEAM_BREAk = 0;
     }
 
     public static class IntakePorts {
