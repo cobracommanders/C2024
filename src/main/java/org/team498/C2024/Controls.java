@@ -4,11 +4,13 @@ import org.team498.C2024.Constants.OIConstants;
 import org.team498.C2024.StateController.LoadingOption;
 import org.team498.C2024.StateController.ScoringOption;
 import org.team498.C2024.commands.SetIntakeManual;
+import org.team498.C2024.commands.SetKickerNextState;
 import org.team498.C2024.commands.SetShooterManual;
 import org.team498.C2024.commands.drivetrain.HybridDrive;
 import org.team498.C2024.commands.drivetrain.SlowDrive;
 import org.team498.C2024.commands.drivetrain.TargetDrive;
 import org.team498.C2024.commands.robot.ReturnToIdle;
+import org.team498.C2024.commands.robot.SetState;
 import org.team498.C2024.commands.robot.loading.CollectSource;
 import org.team498.C2024.commands.robot.loading.LoadGround;
 import org.team498.C2024.commands.robot.loading.LoadSource;
@@ -52,8 +54,8 @@ public class Controls {
         driver.A().onTrue(runOnce(() -> Drivetrain.getInstance().setYaw(0 + Robot.rotationOffset)));
         driver.B().onTrue(runOnce(() -> Drivetrain.getInstance().setPose(new Pose2d(15.18, 1.32, Rotation2d.fromDegrees(0 + Robot.rotationOffset)))));
         driver.Y().onTrue(runOnce(() -> Drivetrain.getInstance().setPose(new Pose2d(15.07, 5.55, Rotation2d.fromDegrees(0 + Robot.rotationOffset)))));
-        // driver.leftTrigger().onTrue(new LoadGround())
-        //     .onFalse(new ReturnToIdle());
+        driver.leftTrigger().onTrue(new LoadGround())
+            .onFalse(new ReturnToIdle());
         // driver.leftBumper().onTrue(new PrepareToScore())
         //     .onFalse( new ConditionalCommand(new CancelAmp(), new CancelSpeaker(), ()-> StateController.getInstance().getState() == State.AMP));
         // driver.rightTrigger().onTrue(new Score());
@@ -62,8 +64,17 @@ public class Controls {
     }
 
     public void configureOperatorCommands() {
-        // operator.start().toggleOnTrue(new SetShooterManual(true, operator::leftY));
+        operator.start().toggleOnTrue(new SetShooterManual(true, operator::leftY, ()-> 0.25));
         // operator.back().toggleOnTrue(new SetIntakeManual(true, operator::rightY));
+        operator.back().toggleOnTrue(new SetShooterManual(true, operator::leftY, ()-> 0.5));
+        operator.A().toggleOnTrue(new SetShooterManual(true, operator::leftY, ()-> 1.0));
+        operator.B().toggleOnTrue(new SetShooterManual(true, operator::leftY, ()-> 0.0));
+        operator.Y().toggleOnTrue(new SetState(State.AMP).andThen(new SetKickerNextState()));
+        operator.X().toggleOnTrue(new SetState(State.SUBWOOFER).andThen(new SetKickerNextState()));
+        operator.rightBumper().toggleOnTrue(new SetState(State.IDLE).andThen(new SetKickerNextState()));
+
+
+
         // operator.X().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.CRESCENDO)));
         // operator.A().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.SUBWOOFER)));
         // operator.B().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.PODIUM)));

@@ -1,24 +1,24 @@
 package org.team498.C2024.subsystems;
 
+import org.team498.C2024.Constants;
 import org.team498.C2024.Ports;
 import org.team498.C2024.State;
 import org.team498.C2024.Constants.IntakeConstants;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.SparkAbsoluteEncoder.Type;
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkAbsoluteEncoder;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DutyCycle;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {
 
     private final CANSparkMax motor;
-    private final RelativeEncoder encoder;
-    private final DutyCycle angleEncoder;
+    private final SparkAbsoluteEncoder angleEncoder;
 
     private final PIDController pidController;
     private final ArmFeedforward feedforward;
@@ -32,9 +32,8 @@ public class Intake extends SubsystemBase {
     // Instantiate all objects (assign values to every variable and object)
     public Intake() {
         // motor = new LazySparkMax(Ports.IntakePorts.LMOTOR, MotorType.kBrushless);
-        motor = new CANSparkMax(Ports.IntakePorts.LMOTOR, MotorType.kBrushless);
-        encoder = motor.getEncoder(); //this can be left or right motor, whichever is most convenient
-        angleEncoder = new DutyCycle(new DigitalInput(Ports.IntakePorts.ANGLE_ENCODER));
+        motor = new CANSparkMax(Ports.IntakePorts.MOTOR, MotorType.kBrushless);
+        angleEncoder = motor.getAbsoluteEncoder(Type.kDutyCycle);
 
         pidController = new PIDController(IntakeConstants.P, IntakeConstants.I, IntakeConstants.D);
         feedforward = new ArmFeedforward(IntakeConstants.S, IntakeConstants.G, IntakeConstants.V);
@@ -50,9 +49,10 @@ public class Intake extends SubsystemBase {
 
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("Intake Position", getPosition());
         // We will use this variable to keep track of our desired speed
-        double speed;
-        speed = pidController.calculate(getAngle(), this.setpoint) + feedforward.calculate(getAngle(),0); // adjust for feedback error using proportional gain
+        double speed = 0;
+        //speed = pidController.calculate(getAngle(), this.setpoint) + feedforward.calculate(getAngle(),0); // adjust for feedback error using proportional gain
         if (isManual) speed = manualSpeed;
         set(speed);
     }
@@ -73,7 +73,7 @@ public class Intake extends SubsystemBase {
         pidController.setSetpoint(this.setpoint); // update pController
     }
 
-    public void setAngleManual(boolean isManual, double speed){
+    public void setPositionManual(boolean isManual, double speed){
         this.isManual = isManual;
         this.manualSpeed = speed;
     }
@@ -87,14 +87,14 @@ public class Intake extends SubsystemBase {
      *returns PID controller when it reaches setpoint
      */
     public boolean atSetpoint(){
-        return pidController.atSetpoint();
+        return true;//pidController.atSetpoint();
     }
 
     /**
      * returns encoder angle
      */
-    public double getAngle() {
-        return angleEncoder.getOutput();
+    public double getPosition() {
+        return angleEncoder.getPosition() - Constants.IntakeConstants.ENCODER_OFFSET;
     }
     
     // Using static instances to reference the flywheel object ensures that we only use ONE FLywheel throughout the code 

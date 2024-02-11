@@ -82,17 +82,17 @@ public class Drivetrain extends SubsystemBase {
         // Optional<TimedPose> visionPose = PhotonVision.getInstance().getEstimatedPose();
         // if (visionPose.isPresent())
         // poseEstimator.addVisionMeasurement(visionPose.get().pose, visionPose.get().timeStamp);
-        Optional<EstimatedRobotPose> leftPose = PhotonVision.getInstance().leftEstimatedPose();
-        Optional<EstimatedRobotPose> rightPose = PhotonVision.getInstance().rightEstimatedPose();
-        EstimatedRobotPose resultPose = null;
-        if (leftPose.isPresent() && rightPose.isPresent())
-            resultPose = getClosestPose(leftPose.get(), rightPose.get());
-        else if (leftPose.isPresent())
-            resultPose = leftPose.get();
-        else if (rightPose.isPresent())
-            resultPose = rightPose.get();
-        if (resultPose != null)
-            poseEstimator.addVisionMeasurement(resultPose.estimatedPose.toPose2d(), resultPose.timestampSeconds);
+        // Optional<EstimatedRobotPose> leftPose = PhotonVision.getInstance().leftEstimatedPose();
+        // Optional<EstimatedRobotPose> rightPose = PhotonVision.getInstance().rightEstimatedPose();
+        // EstimatedRobotPose resultPose = null;
+        // if (leftPose.isPresent() && rightPose.isPresent())
+        //     resultPose = getClosestPose(leftPose.get(), rightPose.get());
+        // else if (leftPose.isPresent())
+        //     resultPose = leftPose.get();
+        // else if (rightPose.isPresent())
+        //     resultPose = rightPose.get();
+        // if (resultPose != null)
+        //     poseEstimator.addVisionMeasurement(resultPose.estimatedPose.toPose2d(), resultPose.timestampSeconds);
         SmartDashboard.putData(field2d);
         SmartDashboard.putNumber("Yaw", getYaw());
         SmartDashboard.putNumber("Angle Setpoint", angleController.getSetpoint().position);

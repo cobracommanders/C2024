@@ -37,7 +37,7 @@ public class IntakeRollers extends SubsystemBase {
 
     //sets Motor Speed
     private void set(double speed) {
-        motor.set(speed);
+        motor.set(-speed);
     }
 
 

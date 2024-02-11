@@ -17,7 +17,7 @@ public class Kicker extends SubsystemBase {
     // Constructor: Configure Motor Controller settings and  
     // Instantiate all objects (assign values to every variable and object)
     public Kicker() {
-        motor = new CANSparkMax(Ports.HopperPorts.TOP_MOTOR, MotorType.kBrushless);
+        motor = new CANSparkMax(Ports.KickerPorts.MOTOR, MotorType.kBrushless);
 
         // Instantiate variables to intitial values
         setpoint = 0;
@@ -36,7 +36,7 @@ public class Kicker extends SubsystemBase {
 
     //sets motor speeds
     private void set(double speed) {
-        motor.set(speed);
+        motor.set(-speed);
     }
 
     /**

@@ -64,7 +64,7 @@ public class Hopper extends SubsystemBase {
 
     private void set(double speed) {
         topMotor.set(speed);
-        bottomMotor.set(-speed);
+        bottomMotor.set(speed);
     }
 
      public void setState(State.Hopper state) {
@@ -110,7 +110,7 @@ public class Hopper extends SubsystemBase {
      * returns true if the beambreak is enabled
      */
     public boolean isBeamBreakEnabled(){
-        return beamBreakEnabled;
+        return false;//return beamBreakEnabled;
     }
 
     /**

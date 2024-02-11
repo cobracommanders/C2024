@@ -15,7 +15,7 @@ public final class Constants {
     }
 
     public static final class DrivetrainConstants {
-        public static final double MAX_VELOCITY_METERS_PER_SECOND = 16.5;
+        public static final double MAX_VELOCITY_METERS_PER_SECOND = 5.94;
         public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 20; //TODO: test for best traction/speed
 
         public static final double MAX_AUTO_VELOCITY = 3;
@@ -88,6 +88,8 @@ public final class Constants {
             public static final double S = 0;
             public static final double V = 0;
             public static final double G = 0;
+
+            public static final double ANGLE_OFFSET = 0;
         }
     }
 
@@ -98,6 +100,8 @@ public final class Constants {
         public static final double S = 0;
         public static final double V = 0;
         public static final double G = 0.1;
+
+        public static final double ENCODER_OFFSET = 0;
     }
 
     public static final class HopperConstants {

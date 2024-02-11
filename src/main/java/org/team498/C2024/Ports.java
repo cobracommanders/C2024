@@ -26,26 +26,29 @@ public final class Ports {
         public static final int RIGHT_MOTOR = 32;
         public static final int ANGLE_MOTOR = 33;
         public static final int FEED_MOTOR = 34;
-        public static final int ANGLE_ENCODER = 1;//DIO
+        public static final int ANGLE_ENCODER = 35;//DIO
     }
 
     public static class HopperPorts {
         public static final int TOP_MOTOR = 40;
         public static final int BOTTOM_MOTOR = 42;
         public static final int ENCODER = 41;
-        public static final int BEAM_BREAk = 0;
+        public static final int BEAM_BREAk = 0; //DIO
+    }
+    public static class KickerPorts {
+        public static final int MOTOR = 43;
     }
 
     public static class IntakePorts {
-        public static final int LMOTOR = 50;
-        public static final int RMOTOR = 51;
-        public static final int ANGLE_ENCODER = 52;
+        public static final int MOTOR = 50;
+        public static final int ANGLE_ENCODER = 2;
     }
 
     public static class IntakeRollersPorts {
         public static final int MOTOR = 53;
 
     }
+    
 
     public static class Accessories {
         public static final int BLINKIN = 9; // PWM

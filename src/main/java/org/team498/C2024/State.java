@@ -3,7 +3,7 @@ package org.team498.C2024;
 public enum State {
     IDLE(Shooter.IDLE, Hopper.IDLE, Intake.IDLE, IntakeRollers.IDLE, Kicker.IDLE),
     SOURCE(Shooter.SOURCE, Hopper.IDLE, Intake.INTAKE, IntakeRollers.IDLE, Kicker.IDLE),
-    INTAKE(Shooter.IDLE, Hopper.REVERSE, Intake.INTAKE, IntakeRollers.INTAKE, Kicker.IDLE),
+    INTAKE(Shooter.IDLE, Hopper.REVERSE, Intake.INTAKE, IntakeRollers.INTAKE, Kicker.REVERSE),
     OUTTAKE(Shooter.IDLE, Hopper.FORWARD, Intake.OUTTAKE, IntakeRollers.OUTTAKE, Kicker.IDLE),
     AMP(Shooter.AMP, Hopper.FORWARD, Intake.OUTTAKE, IntakeRollers.IDLE, Kicker.FORWARD),
     SUBWOOFER(Shooter.SUBWOOFER, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.REVERSE),
@@ -56,9 +56,9 @@ public enum State {
     public enum Kicker {
         IDLE(0),
         //REVERSE is for PODIUM, SUBWOOFER, and CRESCENDO
-        REVERSE(-0.75),
+        REVERSE(-1),
         //FORWARD is for AMP
-        FORWARD(0.75);
+        FORWARD(1);
 
 
     public final double speed;
@@ -70,8 +70,8 @@ public enum State {
     //Sets Speeds for Hopper
     public enum Hopper {
         IDLE(0),
-        FORWARD(.5),
-        REVERSE(-.5);
+        FORWARD(1),
+        REVERSE(-1);
 
         public final double speed;
 

@@ -4,6 +4,7 @@ import org.team498.C2024.State;
 import org.team498.C2024.commands.SetHopperNextState;
 import org.team498.C2024.commands.SetIntakeNextState;
 import org.team498.C2024.commands.SetIntakeRollersNextState;
+import org.team498.C2024.commands.SetKickerNextState;
 import org.team498.C2024.commands.robot.SetState;
 import org.team498.C2024.commands.robot.StoreNote;
 import org.team498.C2024.subsystems.Hopper;
@@ -25,10 +26,11 @@ public class LoadGround extends SequentialCommandGroup{
                     new WaitCommand(.1),
                     new SetIntakeRollersNextState()
                 ),
+                // new SetKickerNextState(),
                 new SetIntakeNextState()
             ),
             // If the BeamBreak is enabled then it stores the Note and if it's not enabled then it Sets the hopper to the next state
-            new ConditionalCommand(new StoreNote(), new SetHopperNextState(), ()-> Hopper.getInstance().isBeamBreakEnabled())
+            new ConditionalCommand(new StoreNote(), new SetHopperNextState(), Hopper.getInstance()::isBeamBreakEnabled)
         );
     }
 }

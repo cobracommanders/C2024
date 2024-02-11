@@ -38,13 +38,13 @@ public class PhotonVision {
             new Translation3d(Units.inchesToMeters(10.25),
                 -Units.inchesToMeters(18.5),
                 Units.inchesToMeters(-3.4)),
-            new Rotation3d(0, 30, 0));
+            new Rotation3d(Units.degreesToRadians(30), 0, 0));
 
     private final Transform3d leftCameraPose = new Transform3d(
         new Translation3d(Units.inchesToMeters(10.25),
             Units.inchesToMeters(18.5),
             Units.inchesToMeters(-3.4)),
-        new Rotation3d(0, 30, 0));
+        new Rotation3d(Units.degreesToRadians(30), 0, 0));
     
     public PhotonVision(){
         PhotonCamera.setVersionCheckEnabled(false);

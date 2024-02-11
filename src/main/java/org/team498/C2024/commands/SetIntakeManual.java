@@ -19,11 +19,11 @@ public class SetIntakeManual extends Command{
 
     @Override
     public void execute() {
-        intake.setAngleManual(isManual, speed.getAsDouble());
+        intake.setPositionManual(isManual, speed.getAsDouble());
     }
 
     @Override
     public void end(boolean interrupted) {
-        intake.setAngleManual(false, 0);
+        intake.setPositionManual(false, 0);
     }
 }
