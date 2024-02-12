@@ -110,7 +110,7 @@ public class Hopper extends SubsystemBase {
      * returns true if the beambreak is enabled
      */
     public boolean isBeamBreakEnabled(){
-        return false;//return beamBreakEnabled;
+        return beamBreakEnabled;
     }
 
     /**

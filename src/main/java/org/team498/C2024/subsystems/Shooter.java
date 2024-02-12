@@ -5,6 +5,7 @@ import org.team498.C2024.Ports;
 import org.team498.C2024.RobotPosition;
 import org.team498.C2024.State;
 import org.team498.C2024.StateController;
+import org.team498.C2024.Constants.ShooterConstants.AngleConstants;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
@@ -19,6 +20,8 @@ import com.revrobotics.ColorSensorV3.ColorSensorResolution;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.Unit;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycle;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -61,6 +64,8 @@ public class Shooter extends SubsystemBase {
     private double manualSpeedLeft;
     private double manualSpeedFeed;
     private State.Shooter currentState;
+
+    private boolean isActivated = false;
     
     // Constructor: Configure Motor Controller settings and  
     // Instantiate all objects (assign values to every variable and object)
@@ -89,10 +94,10 @@ public class Shooter extends SubsystemBase {
         feedSpeed = State.Shooter.IDLE.feedSpeed;
         angle = State.Shooter.IDLE.angle;
 
-        rightController.setTolerance(5);
-        leftController.setTolerance(5);
-        feedController.setTolerance(5);
-        angleController.setTolerance(0.1);
+        rightController.setTolerance(0.1);
+        leftController.setTolerance(0.1);
+        feedController.setTolerance(0.1);
+        angleController.setTolerance(1.5);
 
         // reset motor defaults to ensure all settings are clear
         rightMotor.getConfigurator().apply(new TalonFXConfiguration().withCurrentLimits(new CurrentLimitsConfigs().withSupplyCurrentLimit(60).withSupplyCurrentLimitEnable(true)));
@@ -113,14 +118,14 @@ public class Shooter extends SubsystemBase {
         // This condition will reduce CPU utilization when the motor is not meant to run and save power because 
         // it will not actively deccelerate the wheel
         if (currentState == State.Shooter.CRESCENDO){
-            // this.rightSpeed = calculateRightSpeed(RobotPosition.distanceToSpeaker());
-            // this.leftSpeed = calculateLeftSpeed(RobotPosition.distanceToSpeaker());
-            // this.feedSpeed = State.Shooter.CRESCENDO.feedSpeed;
-            // this.angle = calculateAngle(RobotPosition.distanceToSpeaker());
+            this.rightSpeed = calculateRightSpeed(RobotPosition.distanceToSpeaker());
+            this.leftSpeed = calculateLeftSpeed(RobotPosition.distanceToSpeaker());
+            this.feedSpeed = State.Shooter.CRESCENDO.feedSpeed;
+            this.angle = calculateAngle(RobotPosition.distanceToSpeaker());
         }
 
         else if (currentState == State.Shooter.VISION) {
-            // this.angle = RobotPosition.calculateLimelightAngleToNote(StateController.getInstance().getNote());
+            this.angle = RobotPosition.calculateLimelightAngleToNote(StateController.getInstance().getNote());
         }
 
 
@@ -129,20 +134,32 @@ public class Shooter extends SubsystemBase {
         double feedShooterSpeed = 0;
         double angleSpeed = 0;
 
-        // rightShooterSpeed = rightController.calculate(rightMotor.getVelocity().getValueAsDouble(), this.rightSpeed) + rightFeedForward.calculate(this.rightSpeed); // adjust for feedback error using proportional gain
-        // leftShooterSpeed = leftController.calculate(leftMotor.getVelocity().getValueAsDouble(), this.leftSpeed) + leftFeedForward.calculate(this.leftSpeed);
-        // feedShooterSpeed = feedController.calculate(feedSpeed);
-        // angleSpeed = angleController.calculate(getAngle(), this.angle) + angleFeedForward.calculate(angle, 0);
+        if (isActivated) {
+            // rightShooterSpeed = rightController.calculate(getRightSpeedMPS(), this.rightSpeed) + rightFeedForward.calculate(this.rightSpeed); // adjust for feedback error using proportional gain
+            // leftShooterSpeed = leftController.calculate(getLeftSpeedMPS(), this.leftSpeed) + leftFeedForward.calculate(this.leftSpeed);
+            // feedShooterSpeed = feedController.calculate(feedSpeed);
+            // angleSpeed = angleController.calculate(getAngle(), this.angle);
+            rightShooterSpeed = rightSpeed;
+            leftShooterSpeed = leftSpeed;
+            feedShooterSpeed = feedSpeed;
+            angleSpeed = angleController.calculate(getAngle(), this.angle);
+        }
 
-        if (isManual)
+        if (isManual) {
             angleSpeed = manualSpeed;
             rightShooterSpeed = manualSpeedRight;
             leftShooterSpeed = manualSpeedLeft;
             feedShooterSpeed = manualSpeedFeed;
-        set(manualSpeedRight, manualSpeedLeft);
-        // set(leftShooterSpeed / Constants.ShooterConstants.MAX_RPM, rightShooterSpeed / Constants.ShooterConstants.MAX_RPM); // set the motor behavior using set() to interact with the controllers
+
+        }
+            
+        // set(manualSpeedRight, manualSpeedLeft);
+        set(leftShooterSpeed, rightShooterSpeed); // set the motor behavior using set() to interact with the controllers
         setFeed(feedShooterSpeed);
-        setAngle(angleSpeed);
+        if ((getAngle() < AngleConstants.MIN_ANGLE && angleSpeed < 0) || (getAngle() > AngleConstants.MAX_ANGLE && angleSpeed > 0)) {
+            angleSpeed = 0;
+        }
+        setAngle(angleSpeed + angleFeedForward.calculate(getAngle(), 0));
         // We divide by MAX_RPM to scale to {-1, 1}
     }
     
@@ -159,7 +176,7 @@ public class Shooter extends SubsystemBase {
     
     //sets speed for angleMotor
     private void setAngle(double speed){
-        angleMotor.set(speed);
+        angleMotor.set(-speed);
     }
 
     public void setAngleManual(boolean isManual, double speed, double flywheelSpeed){
@@ -174,6 +191,7 @@ public class Shooter extends SubsystemBase {
      * sets states for PID controllers and motor speeds
      */
     public void setState(State.Shooter state) {
+        isActivated = true;
         currentState = state; // update state
         rightSpeed = state.rightSpeed; // update setpoint
         leftSpeed = state.leftSpeed;
@@ -194,7 +212,8 @@ public class Shooter extends SubsystemBase {
      * returns leftController, rightController, and angleController setpoints
      */
     public boolean atSetpoint(){
-        return true;//return leftController.atSetpoint() && rightController.atSetpoint() && angleController.atSetpoint();
+        return angleController.atSetpoint();
+        // return leftController.atSetpoint() && rightController.atSetpoint() && angleController.atSetpoint();
     }
 
     /**
@@ -203,6 +222,12 @@ public class Shooter extends SubsystemBase {
     public double getAngle() {
         return angleEncoder.getAbsolutePosition().getValueAsDouble() * 360;
     }
+    public double getLeftSpeedMPS() {
+        return leftMotor.getVelocity().getValueAsDouble() * Units.inchesToMeters(2 * 2 * Math.PI);
+    }
+    public double getRightSpeedMPS() {
+        return rightMotor.getVelocity().getValueAsDouble() * Units.inchesToMeters(2 * 2 * Math.PI);
+    }
 
     public boolean shooterState(){
         return getState() == State.Shooter.CRESCENDO || getState() == State.Shooter.PODIUM || getState() == State.Shooter.SUBWOOFER;
@@ -210,11 +235,15 @@ public class Shooter extends SubsystemBase {
 
 
     private double calculateRightSpeed(double distance){
-        return 0;
+        double v = 0;
+        double theta = 0;
+        return offsetVelocity(RobotPosition.getSpeakerRelativeVelocity(), v, theta);
     }
 
     private double calculateLeftSpeed(double distance){
-        return 0;
+        double v = 0;
+        double theta = 0;
+        return offsetVelocity(RobotPosition.getSpeakerRelativeVelocity(), v, theta);
     }    
     
     private double calculateFeedSpeed(double distance){
@@ -222,7 +251,16 @@ public class Shooter extends SubsystemBase {
     }
 
     private double calculateAngle(double distance){
-        return 0;
+        double v = 0;
+        double theta = 0;
+        return offsetAngle(RobotPosition.getSpeakerRelativeVelocity(), v, theta);
+    }
+
+    private double offsetAngle(double r, double v, double theta) {
+        return Math.atan2(v * Math.sin(Units.degreesToRadians(theta)), v * Math.cos(Units.degreesToRadians(theta)) - r);
+    }
+    private double offsetVelocity(double r, double v, double theta) {
+        return Math.sqrt(Math.pow(v * Math.sin(Units.degreesToRadians(theta)), 2) + Math.pow(v * Math.cos(Units.degreesToRadians(theta)) - r, 2));
     }
     
     // Using static instances to reference the flywheel object ensures that we only use ONE FLywheel throughout the code 

@@ -128,7 +128,7 @@ public class StateController extends SubsystemBase {
     }
 
     public boolean isScoring(){
-        return CommandScheduler.getInstance().isScheduled(new Score());
+        return CommandScheduler.getInstance().isScheduled(Controls.scoreCommand);
     }
 
     private static StateController instance;

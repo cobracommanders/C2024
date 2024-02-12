@@ -110,4 +110,16 @@ public class RobotPosition {
     public static Pose2d getFuturePose() {
         return drivetrain.getPose().transformBy(getVelocity(15));
     }
+    public static Transform2d getFutureVelocity() {
+        return getVelocity(15);
+    }
+    public static double getSpeakerRelativeVelocity() {
+        Transform2d speaker = getFutureVelocity().plus(getFuturePose().minus(FieldPositions.getSpeaker()));
+        double x = speaker.getX();
+        double y = speaker.getY();
+        double r = Math.sqrt(x * x + y * y);
+        return r;
+        // double theta = Math.asin(y / r);
+
+    }
 }

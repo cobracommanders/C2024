@@ -24,6 +24,7 @@ import org.team498.lib.drivers.Xbox;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
@@ -31,6 +32,8 @@ import static edu.wpi.first.wpilibj2.command.Commands.*;
 public class Controls {
     public final Xbox driver = new Xbox(OIConstants.DRIVER_CONTROLLER_ID);
     public final Xbox operator = new Xbox(OIConstants.OPERATOR_CONTROLLER_ID);
+
+    public static final Command scoreCommand = new Score();
 
     public Controls() {
         driver.setDeadzone(0.15);
@@ -46,38 +49,43 @@ public class Controls {
     public void configureDriverCommands() {
         driver.rightBumper().onTrue(new SlowDrive(true))
             .onFalse(new SlowDrive(false));
-        driver.leftBumper().onTrue(new ConditionalCommand(
-                runOnce(()->Drivetrain.getInstance().setAngleGoal(90)),
-                runOnce(()->StateController.getInstance().setTargetDrive(FieldPositions.getSpeaker())), 
-                ()-> StateController.getInstance().getState() == State.AMP))
-            .onFalse(new TargetDrive(null));
+        // driver.leftBumper().onTrue(new ConditionalCommand(
+        //         runOnce(()->Drivetrain.getInstance().setAngleGoal(90)),
+        //         runOnce(()->StateController.getInstance().setTargetDrive(FieldPositions.getSpeaker())), 
+        //         ()-> StateController.getInstance().getState() == State.AMP))
+        //     .onFalse(new TargetDrive(null));
         driver.A().onTrue(runOnce(() -> Drivetrain.getInstance().setYaw(0 + Robot.rotationOffset)));
         driver.B().onTrue(runOnce(() -> Drivetrain.getInstance().setPose(new Pose2d(15.18, 1.32, Rotation2d.fromDegrees(0 + Robot.rotationOffset)))));
         driver.Y().onTrue(runOnce(() -> Drivetrain.getInstance().setPose(new Pose2d(15.07, 5.55, Rotation2d.fromDegrees(0 + Robot.rotationOffset)))));
         driver.leftTrigger().onTrue(new LoadGround())
             .onFalse(new ReturnToIdle());
-        // driver.leftBumper().onTrue(new PrepareToScore())
-        //     .onFalse( new ConditionalCommand(new CancelAmp(), new CancelSpeaker(), ()-> StateController.getInstance().getState() == State.AMP));
-        // driver.rightTrigger().onTrue(new Score());
-
-
+        driver.leftBumper().onTrue(new PrepareToScore())
+            .onFalse(runOnce(()-> {
+                    if (!StateController.getInstance().isScoring()) {
+                        CommandScheduler.getInstance().schedule(new ConditionalCommand(new CancelAmp(), new CancelSpeaker(), ()-> StateController.getInstance().getState() == State.AMP));
+                    }
+                }   
+            ));
+        driver.rightTrigger().onTrue(runOnce(()-> CommandScheduler.getInstance().schedule(scoreCommand)));//.onFalse(runOnce(()-> scoreCommand.cancel()));
     }
 
     public void configureOperatorCommands() {
-        operator.start().toggleOnTrue(new SetShooterManual(true, operator::leftY, ()-> 0.25));
-        // operator.back().toggleOnTrue(new SetIntakeManual(true, operator::rightY));
-        operator.back().toggleOnTrue(new SetShooterManual(true, operator::leftY, ()-> 0.5));
-        operator.A().toggleOnTrue(new SetShooterManual(true, operator::leftY, ()-> 1.0));
-        operator.B().toggleOnTrue(new SetShooterManual(true, operator::leftY, ()-> 0.0));
-        operator.Y().toggleOnTrue(new SetState(State.AMP).andThen(new SetKickerNextState()));
-        operator.X().toggleOnTrue(new SetState(State.SUBWOOFER).andThen(new SetKickerNextState()));
-        operator.rightBumper().toggleOnTrue(new SetState(State.IDLE).andThen(new SetKickerNextState()));
+        operator.start().toggleOnTrue(new SetShooterManual(true, operator::leftY, ()-> 0));
+        operator.back().toggleOnTrue(new SetIntakeManual(true, operator::rightY));
+        // operator.back().toggleOnTrue(new SetShooterManual(true, operator::leftY, ()-> 0.5));
+        // operator.A().toggleOnTrue(new SetShooterManual(true, operator::leftY, ()-> 1.0));
+        // operator.B().toggleOnTrue(new SetShooterManual(true, operator::leftY, ()-> 0.0));
+        // operator.Y().toggleOnTrue(new SetState(State.AMP).andThen(new SetKickerNextState()));
+        // operator.X().toggleOnTrue(new SetState(State.SUBWOOFER).andThen(new SetKickerNextState()));
+        // operator.rightBumper().toggleOnTrue(new SetState(State.IDLE).andThen(new SetKickerNextState()));
 
 
 
         // operator.X().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.CRESCENDO)));
-        // operator.A().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.SUBWOOFER)));
-        // operator.B().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.PODIUM)));
+        operator.A().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.SUBWOOFER)));
+        operator.B().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.PODIUM)));
+        operator.Y().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.AMP)));
+
         // operator.leftBumper().onTrue(runOnce(() -> StateController.getInstance().setNextLoadingOption(LoadingOption.GROUND)));
         // operator.leftTrigger().onTrue(new LoadSource())
         //     .onFalse(new ReturnToIdle());

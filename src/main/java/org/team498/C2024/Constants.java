@@ -79,33 +79,36 @@ public final class Constants {
         public static final double S = 0;
         public static final double V = 0;
         public static final double A = 0;
-        public static final double MAX_RPM = 0;
+        public static final double MAX_RPM = 1;
+        public static final double MAX_MPS = 1;
 
         public static final class AngleConstants{
-            public static final double P = 0;
+            public static final double P = 0.10;
             public static final double I = 0;
-            public static final double D = 0;
+            public static final double D = 0.0;
             public static final double S = 0;
             public static final double V = 0;
-            public static final double G = 0;
+            public static final double G = 0.065;
+            public static final double MAX_ANGLE = 78;
+            public static final double MIN_ANGLE = 36;
 
-            public static final double ANGLE_OFFSET = 0;
+            public static final double ANGLE_OFFSET = 0.0933;
         }
     }
 
     public static final class IntakeConstants {
         public static final double P = 1;
         public static final double I = 0;
-        public static final double D = 0;
+        public static final double D = 0.15;
         public static final double S = 0;
         public static final double V = 0;
         public static final double G = 0.1;
 
-        public static final double ENCODER_OFFSET = 0;
+        public static final double ENCODER_OFFSET = 0.056;
     }
 
     public static final class HopperConstants {
-        public static final double P = 0.2;
+        public static final double P = 0.3;
         public static final double I = 0;
         public static final double D = 0;
     }

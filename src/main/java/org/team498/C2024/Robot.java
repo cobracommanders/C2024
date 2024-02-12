@@ -72,6 +72,7 @@ public class Robot extends TimedRobot{
     public void robotPeriodic() {
         CommandScheduler.getInstance().run();
         SmartDashboard.putData(autoChooser);
+        SmartDashboard.putBoolean("is Scoring", StateController.getInstance().isScoring());
         //SmartDashboard.putBoolean("is beamBreak enabled", beamBreak.get());
 
         if (alliance.isEmpty()) {

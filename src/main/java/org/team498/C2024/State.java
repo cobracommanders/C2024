@@ -3,9 +3,9 @@ package org.team498.C2024;
 public enum State {
     IDLE(Shooter.IDLE, Hopper.IDLE, Intake.IDLE, IntakeRollers.IDLE, Kicker.IDLE),
     SOURCE(Shooter.SOURCE, Hopper.IDLE, Intake.INTAKE, IntakeRollers.IDLE, Kicker.IDLE),
-    INTAKE(Shooter.IDLE, Hopper.REVERSE, Intake.INTAKE, IntakeRollers.INTAKE, Kicker.REVERSE),
+    INTAKE(Shooter.IDLE, Hopper.REVERSE, Intake.INTAKE, IntakeRollers.INTAKE, Kicker.IDLE),
     OUTTAKE(Shooter.IDLE, Hopper.FORWARD, Intake.OUTTAKE, IntakeRollers.OUTTAKE, Kicker.IDLE),
-    AMP(Shooter.AMP, Hopper.FORWARD, Intake.OUTTAKE, IntakeRollers.IDLE, Kicker.FORWARD),
+    AMP(Shooter.AMP, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.FORWARD),
     SUBWOOFER(Shooter.SUBWOOFER, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.REVERSE),
     PODIUM(Shooter.PODIUM, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.REVERSE),
     CRESCENDO(Shooter.CRESCENDO, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.REVERSE),
@@ -30,14 +30,14 @@ public enum State {
 
     //Sets Speed and Angle for Shooter
     public enum Shooter {
-        IDLE(0, 0, 0, 0),
-        SUBWOOFER(0, 0, 0, 0),
-        AMP(0, 0, 0, 0),
-        PODIUM(0, 0, 0, 0),
-        CRESCENDO(0, 0, 0, 0),
-        SOURCE(0, 0, 0, 0),
-        CANCEL_AMP(0, 0, 0, 0),
-        VISION(0, 0, 0, 0);
+        IDLE(0, 0, 0, 40),
+        SUBWOOFER(1, 1, 1, 70),
+        AMP(0, 0, 0, 40),
+        PODIUM(1, 1, 1, 50),
+        CRESCENDO(0, 0, 0, 40),
+        SOURCE(0, 0, 0, 45),
+        CANCEL_AMP(0, 0, 0, 40),
+        VISION(0, 0, 0, 40);
 
         public final double rightSpeed;
         public final double leftSpeed;
@@ -70,8 +70,8 @@ public enum State {
     //Sets Speeds for Hopper
     public enum Hopper {
         IDLE(0),
-        FORWARD(1),
-        REVERSE(-1);
+        FORWARD(0.5),
+        REVERSE(-0.5);
 
         public final double speed;
 
@@ -82,8 +82,8 @@ public enum State {
 
     //Sets Positions for Intake
     public enum Intake {
-        IDLE(0),
-        INTAKE(0),
+        IDLE(0.254), //0.304
+        INTAKE(0.01),
         OUTTAKE(0);
 
         public final double speed;

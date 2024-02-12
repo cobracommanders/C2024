@@ -27,6 +27,8 @@ public class Intake extends SubsystemBase {
     
     private State.Intake currentState;
     private double setpoint;
+
+    private boolean isActivated = false;
     
     // Constructor: Configure Motor Controller settings and  
     // Instantiate all objects (assign values to every variable and object)
@@ -40,8 +42,11 @@ public class Intake extends SubsystemBase {
 
         // Instantiate variables to intitial values
         currentState = State.Intake.IDLE;
+        // setpoint = getPosition();
 
         pidController.setTolerance(0.01);
+        pidController.reset();
+        pidController.setSetpoint(getPosition());
 
         // reset motor defaults to ensure all settings are clear
         motor.restoreFactoryDefaults();
@@ -50,9 +55,11 @@ public class Intake extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Intake Position", getPosition());
+        SmartDashboard.putBoolean("Intake atSetpoint", pidController.atSetpoint());
+        SmartDashboard.putNumber("Manual Intake Speed", manualSpeed);
         // We will use this variable to keep track of our desired speed
         double speed = 0;
-        //speed = pidController.calculate(getAngle(), this.setpoint) + feedforward.calculate(getAngle(),0); // adjust for feedback error using proportional gain
+        if (isActivated) speed = pidController.calculate(getPosition(), this.setpoint) + feedforward.calculate(getPosition(),0); // adjust for feedback error using proportional gain
         if (isManual) speed = manualSpeed;
         set(speed);
     }
@@ -68,6 +75,7 @@ public class Intake extends SubsystemBase {
      * sets state for speed and sets PID controller to setpoint
      */
     public void setState(State.Intake state) {
+        isActivated = true;
         currentState = state;
         setpoint = state.speed; // update state
         pidController.setSetpoint(this.setpoint); // update pController
@@ -75,7 +83,7 @@ public class Intake extends SubsystemBase {
 
     public void setPositionManual(boolean isManual, double speed){
         this.isManual = isManual;
-        this.manualSpeed = speed;
+        this.manualSpeed = speed / 5;
     }
 
     // Getter method to retrieve current State
@@ -87,7 +95,7 @@ public class Intake extends SubsystemBase {
      *returns PID controller when it reaches setpoint
      */
     public boolean atSetpoint(){
-        return true;//pidController.atSetpoint();
+        return pidController.atSetpoint();
     }
 
     /**

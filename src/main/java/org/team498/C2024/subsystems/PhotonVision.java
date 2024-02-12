@@ -36,13 +36,13 @@ public class PhotonVision {
 
     private final Transform3d rightCameraPose = new Transform3d(
             new Translation3d(Units.inchesToMeters(10.25),
-                -Units.inchesToMeters(18.5),
+                Units.inchesToMeters(18.5),
                 Units.inchesToMeters(-3.4)),
             new Rotation3d(Units.degreesToRadians(30), 0, 0));
 
     private final Transform3d leftCameraPose = new Transform3d(
         new Translation3d(Units.inchesToMeters(10.25),
-            Units.inchesToMeters(18.5),
+            Units.inchesToMeters(-18.5),
             Units.inchesToMeters(-3.4)),
         new Rotation3d(Units.degreesToRadians(30), 0, 0));
     
@@ -68,14 +68,14 @@ public class PhotonVision {
     }
 
     public Optional<EstimatedRobotPose> rightEstimatedPose() {
-        if (rightPoseEstimator == null){
+        if (rightPoseEstimator == null || !rightCameraConnected()){
             return Optional.empty();
         }
         return rightPoseEstimator.update();
     }
 
     public Optional<EstimatedRobotPose> leftEstimatedPose() {
-        if (leftPoseEstimator == null){
+        if (leftPoseEstimator == null || !leftCameraConnected()){
             return Optional.empty();
         }
         
@@ -86,10 +86,12 @@ public class PhotonVision {
 
         boolean leftEnabled = leftCamera.isConnected();
         boolean rightEnabled = rightCamera.isConnected();
+
         Optional<EstimatedRobotPose> rightPose = Optional.empty();
-        if (rightEnabled) rightPose = rightEstimatedPose();
         Optional<EstimatedRobotPose> leftPose = Optional.empty();
+        if (rightEnabled) rightPose = rightEstimatedPose();
         if (leftEnabled) leftPose = leftEstimatedPose();
+
         if (rightPose.isPresent() && leftPose.isPresent())
             return Optional.of(averagePoses(new TimedPose(leftPose.get().estimatedPose.toPose2d(), leftPose.get().timestampSeconds), new TimedPose(rightPose.get().estimatedPose.toPose2d(), rightPose.get().timestampSeconds)));
         if (rightPose.isPresent())
