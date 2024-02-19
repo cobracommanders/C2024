@@ -1,6 +1,7 @@
 package org.team498.C2024;
 
 import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 import org.team498.C2024.commands.robot.scoring.Score;
@@ -20,6 +21,7 @@ public class StateController extends SubsystemBase {
 
     private Supplier<Pose2d> targetDrive = null;
     private BooleanSupplier slowDrive = ()-> false;
+    private DoubleSupplier angleOverride = null;
 
     public enum ScoringOption{AMP, PODIUM, SUBWOOFER, CRESCENDO}
     public enum LoadingOption{GROUND, SOURCE}
@@ -116,6 +118,20 @@ public class StateController extends SubsystemBase {
     //returns target drive if it is active
     public boolean getTargetDriveActive() {
         return targetDrive != null;
+    }
+    public void setAngleOverride(double target) {
+        if (target == -1) angleOverride = null;
+        else angleOverride = ()-> target;
+    }
+
+    public double getAngleOverride() {
+        if (angleOverride == null) return Double.NaN;
+        return angleOverride.getAsDouble();
+    }
+
+    //returns target drive if it is active
+    public boolean getAngleOverrideActive() {
+        return angleOverride != null;
     }
 
     //slow drive

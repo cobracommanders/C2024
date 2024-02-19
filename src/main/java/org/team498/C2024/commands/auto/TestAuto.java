@@ -14,7 +14,7 @@ public class TestAuto implements Auto{
     public Command getCommand() {
 
         return new SequentialCommandGroup(
-            new PathPlannerFollower(PathLib.MidSubwooferToFirstNote)
+            // new PathPlannerFollower(PathLib.MidSubwooferToFirstNote)
             // new PathPlannerFollower(PathLib.FirstNoteToFifthNote),
             // new PathPlannerFollower(PathLib.FifthNoteToSecondNoteUnderStage)
         );
@@ -22,7 +22,7 @@ public class TestAuto implements Auto{
 
     @Override
     public Pose2d getInitialPose() {
-        return PathLib.MidSubwooferToFirstNote.getInitialTargetHolonomicPose();
+        return new Pose2d();//PathLib.MidSubwooferToFirstNote.getInitialTargetHolonomicPose();
     }
     
 }

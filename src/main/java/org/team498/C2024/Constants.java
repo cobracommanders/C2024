@@ -1,6 +1,7 @@
 package org.team498.C2024;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 
 public final class Constants {
     public enum Mode {
@@ -69,46 +70,59 @@ public final class Constants {
 
     public static final class ShooterConstants {
         // fP, fI, fD are the feedMotor Constants for the shooter
-        public static final double fP = .005;
+        public static final double fP = 0.0003;
         public static final double fI = 0;
         public static final double fD = 0;
+        public static final double fV = 0.00025;
         // P, I, D are the flywheel Constants for the shooter
-        public static final double P = .005;
+        public static final double P = .001;
         public static final double I = 0;
         public static final double D = 0;
         public static final double S = 0;
-        public static final double V = 0;
+        public static final double V = 0.0005;
         public static final double A = 0;
-        public static final double MAX_RPM = 1;
-        public static final double MAX_MPS = 1;
+
+        // public static final double rP = .001;
+        // public static final double rI = 0;
+        // public static final double rD = 0;
+        // public static final double rS = 0;
+        // public static final double rV = 0.0005;
+        // public static final double rA = 0;
+
+        public static final double GEAR_RATIO = 18.0 / 55.0;
+        public static final double CIRCUMFERENCE = Units.inchesToMeters(3) * Math.PI;
+
+        
+        public static final double MAX_RPM = 6000 * GEAR_RATIO;
+        public static final double MAX_MPS = MAX_RPM * CIRCUMFERENCE;
 
         public static final class AngleConstants{
-            public static final double P = 0.10;
+            public static final double P = 0.07;
             public static final double I = 0;
             public static final double D = 0.0;
             public static final double S = 0;
             public static final double V = 0;
-            public static final double G = 0.065;
+            public static final double G = 0; //0.03
             public static final double MAX_ANGLE = 78;
-            public static final double MIN_ANGLE = 36;
+            public static final double MIN_ANGLE = 32;
 
-            public static final double ANGLE_OFFSET = 0.0933;
+            public static final double ANGLE_OFFSET = 0.07161433; //0.08792
         }
     }
 
     public static final class IntakeConstants {
-        public static final double P = 1;
+        public static final double P = 0.08;
         public static final double I = 0;
-        public static final double D = 0.15;
+        public static final double D = 0; //0.15
         public static final double S = 0;
         public static final double V = 0;
-        public static final double G = 0.1;
+        public static final double G = 0.12;
 
         public static final double ENCODER_OFFSET = 0.056;
     }
 
     public static final class HopperConstants {
-        public static final double P = 0.3;
+        public static final double P = 0.25;
         public static final double I = 0;
         public static final double D = 0;
     }

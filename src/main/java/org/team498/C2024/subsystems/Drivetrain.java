@@ -6,6 +6,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
@@ -70,7 +71,7 @@ public class Drivetrain extends SubsystemBase {
 
         poseEstimator = new SwerveDrivePoseEstimator(kinematics, Rotation2d.fromDegrees(getYaw()), getModulePositions(), new Pose2d(), 
             VecBuilder.fill(Units.inchesToMeters(3), Units.inchesToMeters(3), Math.toRadians(4)), // Odometry standard deviation
-            VecBuilder.fill(Units.inchesToMeters(10), Units.inchesToMeters(10), Math.toRadians(15))); // Vision standard deviation
+            VecBuilder.fill(Units.inchesToMeters(10), Units.inchesToMeters(10), Math.toRadians(10))); // Vision standard deviation
 
         stateSetpoints = getModuleStates();
 
@@ -78,7 +79,7 @@ public class Drivetrain extends SubsystemBase {
 
     @Override
     public void periodic() {
-        field2d.setRobotPose(getPose().getX(), getPose().getY(), getPose().getRotation().plus(Rotation2d.fromDegrees(180)));
+        field2d.setRobotPose(getPose().getX(), getPose().getY(), getPose().getRotation());
         // Optional<TimedPose> visionPose = PhotonVision.getInstance().getEstimatedPose();
         // if (visionPose.isPresent())
         // poseEstimator.addVisionMeasurement(visionPose.get().pose, visionPose.get().timeStamp);
@@ -93,9 +94,16 @@ public class Drivetrain extends SubsystemBase {
             resultPose = rightPose.get();
         if (resultPose != null)
             poseEstimator.addVisionMeasurement(resultPose.estimatedPose.toPose2d(), resultPose.timestampSeconds);
+        // if (leftPose.isPresent()) {
+        //     poseEstimator.addVisionMeasurement(leftPose.get().estimatedPose.toPose2d(), leftPose.get().timestampSeconds);
+        // }
+        // if (rightPose.isPresent()) {
+        //     poseEstimator.addVisionMeasurement(rightPose.get().estimatedPose.toPose2d(), rightPose.get().timestampSeconds);
+        // }
         SmartDashboard.putData(field2d);
         SmartDashboard.putNumber("Yaw", getYaw());
         SmartDashboard.putNumber("Angle Setpoint", angleController.getSetpoint().position);
+        SmartDashboard.putNumber("Distance To Speaker", RobotPosition.distanceToSpeaker());
         
         SmartDashboard.putBoolean("left Camera Connected", PhotonVision.getInstance().leftCameraConnected());
         SmartDashboard.putBoolean("right camera connected", PhotonVision.getInstance().rightCameraConnected());
@@ -108,7 +116,7 @@ public class Drivetrain extends SubsystemBase {
                 modules[i].updateIntegratedEncoder();
             }
         }
-        poseEstimator.update(Rotation2d.fromDegrees(getYaw() + 180), getModulePositions());
+        poseEstimator.update(Rotation2d.fromDegrees(getYaw()), getModulePositions());
     }
     public void enableBrakeMode(boolean setBrake) {
         for (int i = 0; i < modules.length; i++) {
@@ -120,6 +128,9 @@ public class Drivetrain extends SubsystemBase {
         double leftDistance = RobotPosition.distanceTo(leftPose.estimatedPose.toPose2d());
         double rightDistance = RobotPosition.distanceTo(rightPose.estimatedPose.toPose2d());
         return (leftDistance > rightDistance) ? rightPose : leftPose;
+    }
+    private Pose2d averagePoses(EstimatedRobotPose pose1, EstimatedRobotPose pose2) {
+        return new Pose2d(new Translation2d((pose1.estimatedPose.getX() + pose2.estimatedPose.getX()) / 2, (pose1.estimatedPose.getY() + pose2.estimatedPose.getY()) / 2), Rotation2d.fromDegrees((pose1.estimatedPose.getRotation().toRotation2d().getDegrees() + pose2.estimatedPose.getRotation().toRotation2d().getDegrees()) / 2));
     }
 
     public void drive(double vx, double vy, double degreesPerSecond, boolean fieldOriented) {
@@ -148,7 +159,7 @@ public class Drivetrain extends SubsystemBase {
 
     public SwerveModulePosition[] getModulePositions() {
         var positions = new SwerveModulePosition[modules.length];
-        for (int i = 0; i < modules.length; i++) positions[i] = new SwerveModulePosition(modules[i].getPosition(), Rotation2d.fromDegrees(modules[i].getAngle()));
+        for (int i = 0; i < modules.length; i++) positions[i] = new SwerveModulePosition(modules[i].getPosition(), Rotation2d.fromDegrees(modules[i].getAngle()).plus(Rotation2d.fromDegrees(180)));
         return positions;
     }
 

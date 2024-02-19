@@ -11,8 +11,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
-import org.team498.C2024.commands.auto.PathPlannerTest;
-import org.team498.C2024.commands.auto.PracticeAuto;
+import org.team498.C2024.commands.auto.FourNote;
+import org.team498.C2024.commands.auto.FourNoteFull;
 import org.team498.C2024.commands.auto.TestAuto;
 import org.team498.C2024.subsystems.Drivetrain;
 import org.team498.C2024.subsystems.Hopper;
@@ -41,14 +41,15 @@ public class Robot extends TimedRobot{
     //private final RobotState robotState = RobotState.getInstance();
 
     private final SendableChooser<Auto> autoChooser = new SendableChooser<Auto>();
-    private Auto autoToRun;
+    private Auto autoToRun = new FourNote();
 
-    private boolean matchStarted = false;
+    // private boolean matchStarted = false;
 
     private final List<Auto> autoOptions = List.of(
-           new TestAuto(),
-           new PathPlannerTest(),
-           new PracticeAuto()
+        new FourNote(),
+        new FourNoteFull()
+        //    new TestAuto(),
+        //    new PracticeAuto()
                                                   );
 
     @Override
@@ -56,24 +57,21 @@ public class Robot extends TimedRobot{
         //new PowerDistribution(1, PowerDistribution.ModuleType.kRev).close(); // Enables power distribution logging
         drivetrain.setYaw(0);
        // FieldPositions.displayAll();
-        autoChooser.setDefaultOption("Score", new TestAuto());
+        autoChooser.setDefaultOption("SL1 Note1", new TestAuto());
         autoOptions.forEach(auto -> autoChooser.addOption(auto.getName(), auto));
         controls.configureDefaultCommands();
         controls.configureDriverCommands();
         controls.configureOperatorCommands();
-        PathLib.SL1Note1.getClass();
+        // PathLib.SL1Note1.getClass();
         drivetrain.enableBrakeMode(false);
-        Limelight.getInstance();
+        // Limelight.getInstance();
     }
-
-    //DigitalInput beamBreak = new DigitalInput(0);
 
     @Override
     public void robotPeriodic() {
         CommandScheduler.getInstance().run();
         SmartDashboard.putData(autoChooser);
-        SmartDashboard.putBoolean("is Scoring", StateController.getInstance().isScoring());
-        //SmartDashboard.putBoolean("is beamBreak enabled", beamBreak.get());
+        // SmartDashboard.putBoolean("is Scoring", StateController.getInstance().isScoring());
 
         if (alliance.isEmpty()) {
             alliance = DriverStation.getAlliance();
@@ -93,9 +91,9 @@ public class Robot extends TimedRobot{
             else blinkin.setColor(BlinkinColor.SOLID_HOT_PINK);
         }
         else { 
-            if (RobotPosition.isNear(autoToRun.getInitialPose(), 1))
-                blinkin.setColor(BlinkinColor.SOLID_DARK_GREEN);
-            else blinkin.setColor(BlinkinColor.SOLID_HOT_PINK);
+            // if (RobotPosition.isNear(autoToRun.getInitialPose(), 1))
+            //     blinkin.setColor(BlinkinColor.SOLID_DARK_GREEN);
+            // else blinkin.setColor(BlinkinColor.SOLID_HOT_PINK);
 
         }
     }
@@ -113,19 +111,17 @@ public class Robot extends TimedRobot{
                          : 180;
 
 
-        if (!matchStarted) {
-            autoToRun = autoChooser.getSelected();
-            if (autoToRun != null) {
-               // robotState.setState(autoToRun.getInitialState());
-            }
-        }
-
-        Drivetrain.getInstance().stop();
+        // if (!matchStarted) {
+        //     autoToRun = autoChooser.getSelected();
+        //     if (autoToRun != null) {
+        //        // robotState.setState(autoToRun.getInitialState());
+        //     }
+        // }
     }
 
     @Override
     public void teleopInit() {
-        matchStarted = true;
+        // matchStarted = true;
         drivetrain.enableBrakeMode(true);
     }
 
@@ -146,10 +142,10 @@ public class Robot extends TimedRobot{
     @Override
     public void autonomousInit() {
         drivetrain.enableBrakeMode(true);
-        matchStarted = true;
+        // matchStarted = true;
 
-        if (autoToRun == null)
-            autoToRun = new TestAuto();
+        // if (autoToRun == null)
+            // autoToRun = new TestAuto();
 
         //autoToRun = new HighHighCone();
 

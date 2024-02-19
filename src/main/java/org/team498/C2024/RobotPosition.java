@@ -64,7 +64,9 @@ public class RobotPosition {
     }
 
     public static double distanceToSpeaker(){
-        return distanceTo(FieldPositions.blueSpeaker, getFuturePose());
+        Pose2d speakerPose = FieldPositions.getSpeaker();
+        Point speakerPoint = new Point(speakerPose.getX(), speakerPose.getY());
+        return distanceTo(speakerPoint, getFuturePose());
     }
 
     private static Transform2d getVelocity(double loopCycles) {

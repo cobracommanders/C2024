@@ -27,6 +27,7 @@ public class IntakeRollers extends SubsystemBase {
 
         // reset motor defaults to ensure all settings are clear
         motor.restoreFactoryDefaults();
+        // motor.setSmartCurrentLimit(50);
     }
 
     @Override

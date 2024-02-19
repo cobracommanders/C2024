@@ -14,6 +14,7 @@ import org.team498.C2024.commands.robot.SetState;
 import org.team498.C2024.commands.robot.loading.CollectSource;
 import org.team498.C2024.commands.robot.loading.LoadGround;
 import org.team498.C2024.commands.robot.loading.LoadSource;
+import org.team498.C2024.commands.robot.loading.Outtake;
 import org.team498.C2024.commands.robot.scoring.CancelAmp;
 import org.team498.C2024.commands.robot.scoring.CancelSpeaker;
 import org.team498.C2024.commands.robot.scoring.PrepareToScore;
@@ -49,11 +50,17 @@ public class Controls {
     public void configureDriverCommands() {
         driver.rightBumper().onTrue(new SlowDrive(true))
             .onFalse(new SlowDrive(false));
-        // driver.leftBumper().onTrue(new ConditionalCommand(
-        //         runOnce(()->Drivetrain.getInstance().setAngleGoal(90)),
-        //         runOnce(()->StateController.getInstance().setTargetDrive(FieldPositions.getSpeaker())), 
-        //         ()-> StateController.getInstance().getState() == State.AMP))
-        //     .onFalse(new TargetDrive(null));
+        driver.leftBumper().onTrue(new ConditionalCommand(
+                runOnce(()->StateController.getInstance().setAngleOverride(-90)),
+                new ConditionalCommand(
+                    runOnce(()-> {}),
+                    runOnce(()->StateController.getInstance().setTargetDrive(FieldPositions.getSpeaker())), 
+                    ()-> StateController.getInstance().getNextScoringState() == State.SUBWOOFER
+                ),
+                //runOnce(()->StateController.getInstance().setTargetDrive(FieldPositions.getSpeaker())),
+                
+                ()-> StateController.getInstance().getNextScoringState() == State.AMP))
+            .onFalse(new TargetDrive(null).alongWith(runOnce(()->StateController.getInstance().setAngleOverride(-1))));
         driver.A().onTrue(runOnce(() -> Drivetrain.getInstance().setYaw(0 + Robot.rotationOffset)));
         driver.B().onTrue(runOnce(() -> Drivetrain.getInstance().setPose(new Pose2d(15.18, 1.32, Rotation2d.fromDegrees(0 + Robot.rotationOffset)))));
         driver.Y().onTrue(runOnce(() -> Drivetrain.getInstance().setPose(new Pose2d(15.07, 5.55, Rotation2d.fromDegrees(0 + Robot.rotationOffset)))));
@@ -72,6 +79,8 @@ public class Controls {
     public void configureOperatorCommands() {
         operator.start().toggleOnTrue(new SetShooterManual(true, operator::leftY, ()-> 0));
         operator.back().toggleOnTrue(new SetIntakeManual(true, operator::rightY));
+        operator.leftTrigger().onTrue(new Outtake())
+            .onFalse(new ReturnToIdle());
         // operator.back().toggleOnTrue(new SetShooterManual(true, operator::leftY, ()-> 0.5));
         // operator.A().toggleOnTrue(new SetShooterManual(true, operator::leftY, ()-> 1.0));
         // operator.B().toggleOnTrue(new SetShooterManual(true, operator::leftY, ()-> 0.0));

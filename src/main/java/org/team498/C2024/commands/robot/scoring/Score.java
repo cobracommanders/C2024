@@ -16,9 +16,9 @@ public class Score extends SequentialCommandGroup {
             //Starts in CRESCENDO, SUBWOOFER, PODIUM, or AMP
 
             //Sets Hopper, Shooter and Kicker to Next state
+            new SetKickerNextState(),
             new SetHopperNextState(),
             new SetShooterNextState(),
-            new SetKickerNextState(),
 
             //Waits for Note to shoot
             new WaitCommand(1.5),

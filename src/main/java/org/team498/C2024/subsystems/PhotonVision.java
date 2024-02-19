@@ -36,20 +36,20 @@ public class PhotonVision {
 
     private final Transform3d rightCameraPose = new Transform3d(
             new Translation3d(Units.inchesToMeters(10.25),
-                Units.inchesToMeters(18.5),
-                Units.inchesToMeters(-3.4)),
+                Units.inchesToMeters(-3.4),
+                Units.inchesToMeters(18.5)),
             new Rotation3d(Units.degreesToRadians(30), 0, 0));
 
     private final Transform3d leftCameraPose = new Transform3d(
-        new Translation3d(Units.inchesToMeters(10.25),
-            Units.inchesToMeters(-18.5),
-            Units.inchesToMeters(-3.4)),
+        new Translation3d(Units.inchesToMeters(-10.25),
+            Units.inchesToMeters(-3.4),
+            Units.inchesToMeters(18.5)),
         new Rotation3d(Units.degreesToRadians(30), 0, 0));
     
     public PhotonVision(){
         PhotonCamera.setVersionCheckEnabled(false);
-        rightCamera = new PhotonCamera("blue 1 camera");
-        leftCamera = new PhotonCamera("red 1 camera");
+        rightCamera = new PhotonCamera("red 1 camera");
+        leftCamera = new PhotonCamera("blue 1 camera");
         // rightInputs = new CameraInputs();
         // leftInputs = new CameraInputs();
 

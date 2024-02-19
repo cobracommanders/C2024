@@ -42,11 +42,11 @@ public class Intake extends SubsystemBase {
 
         // Instantiate variables to intitial values
         currentState = State.Intake.IDLE;
-        // setpoint = getPosition();
+        setpoint = currentState.speed;
 
-        pidController.setTolerance(0.01);
+        pidController.setTolerance(0.15);
         pidController.reset();
-        pidController.setSetpoint(getPosition());
+        pidController.setSetpoint(setpoint);
 
         // reset motor defaults to ensure all settings are clear
         motor.restoreFactoryDefaults();
@@ -102,7 +102,7 @@ public class Intake extends SubsystemBase {
      * returns encoder angle
      */
     public double getPosition() {
-        return angleEncoder.getPosition() - Constants.IntakeConstants.ENCODER_OFFSET;
+        return (angleEncoder.getPosition() - Constants.IntakeConstants.ENCODER_OFFSET) * Math.PI * 2;
     }
     
     // Using static instances to reference the flywheel object ensures that we only use ONE FLywheel throughout the code 

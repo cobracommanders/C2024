@@ -5,7 +5,7 @@ public enum State {
     SOURCE(Shooter.SOURCE, Hopper.IDLE, Intake.INTAKE, IntakeRollers.IDLE, Kicker.IDLE),
     INTAKE(Shooter.IDLE, Hopper.REVERSE, Intake.INTAKE, IntakeRollers.INTAKE, Kicker.IDLE),
     OUTTAKE(Shooter.IDLE, Hopper.FORWARD, Intake.OUTTAKE, IntakeRollers.OUTTAKE, Kicker.IDLE),
-    AMP(Shooter.AMP, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.FORWARD),
+    AMP(Shooter.AMP, Hopper.AMP, Intake.IDLE, IntakeRollers.IDLE, Kicker.FORWARD),
     SUBWOOFER(Shooter.SUBWOOFER, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.REVERSE),
     PODIUM(Shooter.PODIUM, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.REVERSE),
     CRESCENDO(Shooter.CRESCENDO, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.REVERSE),
@@ -31,11 +31,11 @@ public enum State {
     //Sets Speed and Angle for Shooter
     public enum Shooter {
         IDLE(0, 0, 0, 40),
-        SUBWOOFER(1, 1, 1, 70),
+        SUBWOOFER(1200, 1500, 500, 57),
         AMP(0, 0, 0, 40),
-        PODIUM(1, 1, 1, 50),
-        CRESCENDO(0, 0, 0, 40),
-        SOURCE(0, 0, 0, 45),
+        PODIUM(1500, 1900, 500, 37),
+        CRESCENDO(0, 0, 0, 50),
+        SOURCE(0, 0, 0, 60),
         CANCEL_AMP(0, 0, 0, 40),
         VISION(0, 0, 0, 40);
 
@@ -44,9 +44,9 @@ public enum State {
         public final double feedSpeed;
         public final double angle;
 
-        Shooter(double topSpeed, double bottomSpeed, double feedSpeed, double angle) {
-            this.rightSpeed = topSpeed;
-            this.leftSpeed = bottomSpeed;
+        Shooter(double rightSpeed, double leftSpeed, double feedSpeed, double angle) {
+            this.rightSpeed = rightSpeed;
+            this.leftSpeed = leftSpeed;
             this.feedSpeed = feedSpeed;
             this.angle = angle;
         }
@@ -71,7 +71,8 @@ public enum State {
     public enum Hopper {
         IDLE(0),
         FORWARD(0.5),
-        REVERSE(-0.5);
+        REVERSE(-0.4),
+        AMP(-0.75);
 
         public final double speed;
 
@@ -82,9 +83,9 @@ public enum State {
 
     //Sets Positions for Intake
     public enum Intake {
-        IDLE(0.254), //0.304
+        IDLE(1.92), //0.304
         INTAKE(0.01),
-        OUTTAKE(0);
+        OUTTAKE(0.01);
 
         public final double speed;
         

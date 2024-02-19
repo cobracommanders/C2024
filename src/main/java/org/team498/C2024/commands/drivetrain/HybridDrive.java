@@ -58,7 +58,9 @@ public class HybridDrive extends Command {
     public void execute() {
         boolean slowDrive = StateController.getInstance().getSlowDrive();
         boolean hasTargetDrive = StateController.getInstance().getTargetDriveActive();
+        boolean hasAngleOverride = StateController.getInstance().getAngleOverrideActive();
         Pose2d targetDrive = StateController.getInstance().getTargetDrive();
+        double angleOverride = StateController.getInstance().getAngleOverride();
 
         double speed = slowDrive ? 0.5 : 1;
         
@@ -68,6 +70,7 @@ public class HybridDrive extends Command {
         
 
         if (drivetrain.atAngleGoal()) isPOVControlled = false;
+        // isPOVControlled = !drivetrain.atAngleGoal();
 
         if(rotation != 0){
             rotationVelocity = rotation * Robot.DEFAULT_PERIOD * 10;//Math.copySign(Math.sqrt(Math.abs(rotation)), rotation) * Robot.DEFAULT_PERIOD * 110;
@@ -99,8 +102,9 @@ public class HybridDrive extends Command {
         }
         
         if (hasTargetDrive) desiredAngle = RobotPosition.calculateDegreesToTarget(targetDrive);
+        
+        if (hasAngleOverride) desiredAngle = angleOverride;
         drivetrain.setAngleGoal(desiredAngle);
-    
 
         rotation = drivetrain.calculateAngleSpeed();
         // Set the robot to drive in field relative mode, with the rotation controlled by the snap controller

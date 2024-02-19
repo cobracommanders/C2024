@@ -5,6 +5,7 @@ import org.team498.C2024.Ports;
 import org.team498.C2024.RobotPosition;
 import org.team498.C2024.State;
 import org.team498.C2024.StateController;
+import org.team498.C2024.Constants.ShooterConstants;
 import org.team498.C2024.Constants.ShooterConstants.AngleConstants;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
@@ -51,6 +52,7 @@ public class Shooter extends SubsystemBase {
 
     private final SimpleMotorFeedforward rightFeedForward;
     private final SimpleMotorFeedforward leftFeedForward;
+    private final SimpleMotorFeedforward feedFeedforward;
     private final ArmFeedforward angleFeedForward;
 
     // Variables will store the current properties of the subsystem
@@ -65,7 +67,7 @@ public class Shooter extends SubsystemBase {
     private double manualSpeedFeed;
     private State.Shooter currentState;
 
-    private boolean isActivated = false;
+    private boolean isActivated = true;
     
     // Constructor: Configure Motor Controller settings and  
     // Instantiate all objects (assign values to every variable and object)
@@ -85,6 +87,7 @@ public class Shooter extends SubsystemBase {
 
         rightFeedForward = new SimpleMotorFeedforward(Constants.ShooterConstants.S, Constants.ShooterConstants.V, Constants.ShooterConstants.A);
         leftFeedForward = new SimpleMotorFeedforward(Constants.ShooterConstants.S, Constants.ShooterConstants.V, Constants.ShooterConstants.A);
+        feedFeedforward = new SimpleMotorFeedforward(0, ShooterConstants.fV, 0);
         angleFeedForward = new ArmFeedforward(Constants.ShooterConstants.AngleConstants.S, Constants.ShooterConstants.AngleConstants.G, Constants.ShooterConstants.AngleConstants.V);
 
         // Instantiate variables to intitial values
@@ -97,11 +100,11 @@ public class Shooter extends SubsystemBase {
         rightController.setTolerance(0.1);
         leftController.setTolerance(0.1);
         feedController.setTolerance(0.1);
-        angleController.setTolerance(1.5);
+        angleController.setTolerance(0.5);
 
         // reset motor defaults to ensure all settings are clear
-        rightMotor.getConfigurator().apply(new TalonFXConfiguration().withCurrentLimits(new CurrentLimitsConfigs().withSupplyCurrentLimit(60).withSupplyCurrentLimitEnable(true)));
-        leftMotor.getConfigurator().apply(new TalonFXConfiguration().withCurrentLimits(new CurrentLimitsConfigs().withSupplyCurrentLimit(60).withSupplyCurrentLimitEnable(true)));
+        rightMotor.getConfigurator().apply(new TalonFXConfiguration().withCurrentLimits(new CurrentLimitsConfigs().withSupplyCurrentLimit(35).withSupplyCurrentLimitEnable(true)));
+        leftMotor.getConfigurator().apply(new TalonFXConfiguration().withCurrentLimits(new CurrentLimitsConfigs().withSupplyCurrentLimit(35).withSupplyCurrentLimitEnable(true)));
         feedMotor.restoreFactoryDefaults();
         angleMotor.restoreFactoryDefaults();
 
@@ -115,6 +118,12 @@ public class Shooter extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Shooter Angle", getAngle());
+        SmartDashboard.putNumber("left flywheel speed", getLeftSpeedRPM());
+        SmartDashboard.putNumber("right flywheel speed", getRightSpeedRPM());
+        SmartDashboard.putNumber("left flywheel setpoint", leftSpeed);
+        SmartDashboard.putNumber("right flywheel setpoint", rightSpeed);
+        SmartDashboard.putNumber("feed flywheel speed", getFeedSpeedRPM());
+        SmartDashboard.putNumber("feed flywheel setpoint", feedSpeed);
         // This condition will reduce CPU utilization when the motor is not meant to run and save power because 
         // it will not actively deccelerate the wheel
         if (currentState == State.Shooter.CRESCENDO){
@@ -135,13 +144,9 @@ public class Shooter extends SubsystemBase {
         double angleSpeed = 0;
 
         if (isActivated) {
-            // rightShooterSpeed = rightController.calculate(getRightSpeedMPS(), this.rightSpeed) + rightFeedForward.calculate(this.rightSpeed); // adjust for feedback error using proportional gain
-            // leftShooterSpeed = leftController.calculate(getLeftSpeedMPS(), this.leftSpeed) + leftFeedForward.calculate(this.leftSpeed);
-            // feedShooterSpeed = feedController.calculate(feedSpeed);
-            // angleSpeed = angleController.calculate(getAngle(), this.angle);
-            rightShooterSpeed = rightSpeed;
-            leftShooterSpeed = leftSpeed;
-            feedShooterSpeed = feedSpeed;
+            rightShooterSpeed = rightController.calculate(getRightSpeedRPM(), rightSpeed) + rightFeedForward.calculate(rightSpeed);
+            leftShooterSpeed = leftController.calculate(getLeftSpeedRPM(), leftSpeed) + leftFeedForward.calculate(leftSpeed);
+            feedShooterSpeed = feedController.calculate(getFeedSpeedRPM(), feedSpeed) + feedFeedforward.calculate(feedSpeed);
             angleSpeed = angleController.calculate(getAngle(), this.angle);
         }
 
@@ -153,25 +158,29 @@ public class Shooter extends SubsystemBase {
 
         }
             
-        // set(manualSpeedRight, manualSpeedLeft);
-        set(leftShooterSpeed, rightShooterSpeed); // set the motor behavior using set() to interact with the controllers
-        setFeed(feedShooterSpeed);
+        
         if ((getAngle() < AngleConstants.MIN_ANGLE && angleSpeed < 0) || (getAngle() > AngleConstants.MAX_ANGLE && angleSpeed > 0)) {
+            rightShooterSpeed = 0;
+            leftShooterSpeed = 0;
+            feedShooterSpeed = 0;
             angleSpeed = 0;
         }
-        setAngle(angleSpeed + angleFeedForward.calculate(getAngle(), 0));
+        // set(manualSpeedRight, manualSpeedLeft);
+        set(rightShooterSpeed, leftShooterSpeed); // set the motor behavior using set() to interact with the controllers
+        setFeed(feedShooterSpeed);
+        setAngle(angleSpeed + angleFeedForward.calculate(Units.degreesToRadians(getAngle()), 0));
         // We divide by MAX_RPM to scale to {-1, 1}
     }
     
     //sets top speed and bottom speed
-    private void set(double topSpeed, double bottomSpeed) {
-        leftMotor.set(-bottomSpeed);
-        rightMotor.set(topSpeed); // invert speed on right side (assuming the motor is facing opposite the left)
+    private void set(double rightSpeed, double leftSpeed) {
+        leftMotor.set(-leftSpeed);
+        rightMotor.set(rightSpeed); // invert speed on right side (assuming the motor is facing opposite the left)
     }
 
     //sets speed for feedForward
     private void setFeed(double speed){
-        feedMotor.set(speed);
+        feedMotor.set(-speed);
     }
     
     //sets speed for angleMotor
@@ -223,10 +232,21 @@ public class Shooter extends SubsystemBase {
         return angleEncoder.getAbsolutePosition().getValueAsDouble() * 360;
     }
     public double getLeftSpeedMPS() {
-        return leftMotor.getVelocity().getValueAsDouble() * Units.inchesToMeters(2 * 2 * Math.PI);
+        return -leftMotor.getVelocity().getValueAsDouble() * Units.inchesToMeters(2 * 2 * Math.PI);
+    }
+
+    public double getLeftSpeedRPM() {
+        return -leftMotor.getVelocity().getValueAsDouble() * 60 * ShooterConstants.GEAR_RATIO;
     }
     public double getRightSpeedMPS() {
         return rightMotor.getVelocity().getValueAsDouble() * Units.inchesToMeters(2 * 2 * Math.PI);
+    }
+    public double getRightSpeedRPM() {
+        return rightMotor.getVelocity().getValueAsDouble() * 60 * ShooterConstants.GEAR_RATIO;
+    }
+
+    public double getFeedSpeedRPM() {
+        return -feedMotor.getEncoder().getVelocity();
     }
 
     public boolean shooterState(){

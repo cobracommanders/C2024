@@ -133,18 +133,20 @@ public class SwerveModule {
         TalonFXConfiguration driveConfig = new TalonFXConfiguration();
         driveConfig.CurrentLimits.SupplyCurrentLimit = 35;
         driveConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
-        driveConfig.Slot0.kP = 0.0215;//0.025;
+        driveConfig.Slot0.kP = 0.04;//0.025;
         driveConfig.Slot0.kI = 0.0;
-        driveConfig.Slot0.kD = 0.01;//0.5;
+        driveConfig.Slot0.kD = 0.02;//0.5;
         driveConfig.Slot0.kV = 0;
+        
         //TODO: ADD FEET FOWARD
         driveConfig.OpenLoopRamps.VoltageOpenLoopRampPeriod = 1;
         motor.getConfigurator().apply(driveConfig);
         motor.setInverted(false);
         
         motor.optimizeBusUtilization(.01);
-        motor.getPosition().setUpdateFrequency(20);
-        motor.getVelocity().setUpdateFrequency(20);
+        
+        motor.getPosition().setUpdateFrequency(100, 0.002);
+        motor.getVelocity().setUpdateFrequency(100, 0.002);
     }
 
     private void configSteerMotor(TalonFX motor) {
@@ -160,7 +162,7 @@ public class SwerveModule {
         motor.getConfigurator().apply(steerConfig);
         motor.setInverted(true);    
         motor.optimizeBusUtilization(.01);
-        motor.getPosition().setUpdateFrequency(20);
+        motor.getPosition().setUpdateFrequency(100, 0.002);
         // motor.getVelocity().setUpdateFrequency(100);
     }
 
@@ -171,7 +173,7 @@ public class SwerveModule {
         encoderConfig.MagnetSensor.MagnetOffset = angleOffset;
         CANCoder.getConfigurator().apply(encoderConfig);
         CANCoder.optimizeBusUtilization(0.01);
-        CANCoder.getAbsolutePosition().setUpdateFrequency(20);
+        CANCoder.getAbsolutePosition().setUpdateFrequency(100, 0.002);
         //CANCoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
     }
 

@@ -23,7 +23,7 @@ public class PrepareSpeaker extends SequentialCommandGroup {
                 new SetShooterNextState(),
                 new SetKickerState(State.Kicker.REVERSE),
                 // Moves Note into Shooter
-                new MoveHopper(-4)
+                new MoveHopper(-0)
             ),
             
             //Sets Kicker to IDLE

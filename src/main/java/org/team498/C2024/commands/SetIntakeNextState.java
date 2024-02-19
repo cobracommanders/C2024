@@ -19,7 +19,7 @@ public class SetIntakeNextState extends Command {
 
     @Override
     public boolean isFinished() {
-        return true;//intake.atSetpoint();
+        return intake.atSetpoint();
     }
 }
 

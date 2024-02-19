@@ -1,6 +1,7 @@
 package org.team498.C2024.commands.robot;
 
 import org.team498.C2024.State;
+import org.team498.C2024.commands.MoveHopper;
 import org.team498.C2024.commands.SetHopperNextState;
 import org.team498.C2024.subsystems.Hopper;
 
@@ -17,7 +18,7 @@ public class StoreNote extends SequentialCommandGroup{
 
             //Intakes Note until it Hits the BeamBreak
             new WaitUntilCommand(() -> Hopper.getInstance().getBeamBreak()),
-
+            new MoveHopper(2),
             //Sets Hopper to IDLE
             new SetState(State.IDLE),
             new SetHopperNextState()
