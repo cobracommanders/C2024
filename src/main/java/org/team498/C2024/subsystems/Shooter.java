@@ -16,15 +16,10 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.ColorSensorV3.ColorSensorResolution;
-
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.Unit;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DutyCycle;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 /*
@@ -92,15 +87,15 @@ public class Shooter extends SubsystemBase {
 
         // Instantiate variables to intitial values
         currentState = State.Shooter.IDLE;
-        rightSpeed = State.Shooter.IDLE.rightSpeed;
-        leftSpeed = State.Shooter.IDLE.leftSpeed;
+        rightSpeed = State.Shooter.IDLE.speed;
+        leftSpeed = State.Shooter.IDLE.speed;
         feedSpeed = State.Shooter.IDLE.feedSpeed;
         angle = State.Shooter.IDLE.angle;
 
         rightController.setTolerance(0.1);
         leftController.setTolerance(0.1);
         feedController.setTolerance(0.1);
-        angleController.setTolerance(0.5);
+        angleController.setTolerance(0.1);
 
         // reset motor defaults to ensure all settings are clear
         rightMotor.getConfigurator().apply(new TalonFXConfiguration().withCurrentLimits(new CurrentLimitsConfigs().withSupplyCurrentLimit(35).withSupplyCurrentLimitEnable(true)));
@@ -124,19 +119,26 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putNumber("right flywheel setpoint", rightSpeed);
         SmartDashboard.putNumber("feed flywheel speed", getFeedSpeedRPM());
         SmartDashboard.putNumber("feed flywheel setpoint", feedSpeed);
+        
+        SmartDashboard.putNumber("Adjusted Angle", calculateAngle(RobotPosition.distanceToSpeaker()));
+        SmartDashboard.putNumber("Adjusted Velocity", calculateSpeed(RobotPosition.distanceToSpeaker()));
         // This condition will reduce CPU utilization when the motor is not meant to run and save power because 
         // it will not actively deccelerate the wheel
         if (currentState == State.Shooter.CRESCENDO){
-            this.rightSpeed = calculateRightSpeed(RobotPosition.distanceToSpeaker());
-            this.leftSpeed = calculateLeftSpeed(RobotPosition.distanceToSpeaker());
-            this.feedSpeed = State.Shooter.CRESCENDO.feedSpeed;
+            this.leftSpeed = calculateSpeed(RobotPosition.distanceToSpeaker());
+            this.rightSpeed = this.leftSpeed * 0.6;
+            // this.feedSpeed = currentState.feedSpeed;//feedController.calculate(getFeedSpeedRPM(), feedSpeed) + feedFeedforward.calculate(feedSpeed);
             this.angle = calculateAngle(RobotPosition.distanceToSpeaker());
         }
 
         else if (currentState == State.Shooter.VISION) {
             this.angle = RobotPosition.calculateLimelightAngleToNote(StateController.getInstance().getNote());
         }
-
+        if (this.angle > 78) {
+            this.angle = 78;
+        } else if (this.angle < 33) {
+            this.angle = 33;
+        }
 
         double rightShooterSpeed = 0;
         double leftShooterSpeed = 0; // We will use this variable to keep track of our desired speed
@@ -144,8 +146,8 @@ public class Shooter extends SubsystemBase {
         double angleSpeed = 0;
 
         if (isActivated) {
-            rightShooterSpeed = rightController.calculate(getRightSpeedRPM(), rightSpeed) + rightFeedForward.calculate(rightSpeed);
             leftShooterSpeed = leftController.calculate(getLeftSpeedRPM(), leftSpeed) + leftFeedForward.calculate(leftSpeed);
+            rightShooterSpeed = rightController.calculate(getRightSpeedRPM(), rightSpeed) + rightFeedForward.calculate(rightSpeed);
             feedShooterSpeed = feedController.calculate(getFeedSpeedRPM(), feedSpeed) + feedFeedforward.calculate(feedSpeed);
             angleSpeed = angleController.calculate(getAngle(), this.angle);
         }
@@ -202,8 +204,8 @@ public class Shooter extends SubsystemBase {
     public void setState(State.Shooter state) {
         isActivated = true;
         currentState = state; // update state
-        rightSpeed = state.rightSpeed; // update setpoint
-        leftSpeed = state.leftSpeed;
+        leftSpeed = state.speed;
+        rightSpeed = state.speed * 0.7;
         feedSpeed = state.feedSpeed;
         angle = state.angle;
         rightController.setSetpoint(this.leftSpeed); // update pController
@@ -232,14 +234,14 @@ public class Shooter extends SubsystemBase {
         return angleEncoder.getAbsolutePosition().getValueAsDouble() * 360;
     }
     public double getLeftSpeedMPS() {
-        return -leftMotor.getVelocity().getValueAsDouble() * Units.inchesToMeters(2 * 2 * Math.PI);
+        return -leftMotor.getVelocity().getValueAsDouble() * ShooterConstants.GEAR_RATIO * ShooterConstants.CIRCUMFERENCE;
     }
 
     public double getLeftSpeedRPM() {
         return -leftMotor.getVelocity().getValueAsDouble() * 60 * ShooterConstants.GEAR_RATIO;
     }
     public double getRightSpeedMPS() {
-        return rightMotor.getVelocity().getValueAsDouble() * Units.inchesToMeters(2 * 2 * Math.PI);
+        return rightMotor.getVelocity().getValueAsDouble() * ShooterConstants.GEAR_RATIO * ShooterConstants.CIRCUMFERENCE;
     }
     public double getRightSpeedRPM() {
         return rightMotor.getVelocity().getValueAsDouble() * 60 * ShooterConstants.GEAR_RATIO;
@@ -253,31 +255,38 @@ public class Shooter extends SubsystemBase {
         return getState() == State.Shooter.CRESCENDO || getState() == State.Shooter.PODIUM || getState() == State.Shooter.SUBWOOFER;
     }
 
-
-    private double calculateRightSpeed(double distance){
-        double v = 0;
-        double theta = 0;
-        return offsetVelocity(RobotPosition.getSpeakerRelativeVelocity(), v, theta);
+    private static double RPM_to_MPS(double rpm) {
+        return (rpm / 60.0) * ShooterConstants.CIRCUMFERENCE;
+    }
+    private static double MPS_to_RPM (double mps) {
+        return (mps * 60.0) / ShooterConstants.CIRCUMFERENCE;
     }
 
-    private double calculateLeftSpeed(double distance){
-        double v = 0;
-        double theta = 0;
-        return offsetVelocity(RobotPosition.getSpeakerRelativeVelocity(), v, theta);
+
+    // private double calculateRightSpeed(double distance){
+    //     double v = 0;
+    //     double theta = 0;
+    //     return offsetVelocity(RobotPosition.getSpeakerRelativeVelocity(), v, theta);
+    // }
+
+    private double calculateSpeed(double distance){
+        double v = RPM_to_MPS(currentState.speed);
+        double theta = this.angle;
+        return MPS_to_RPM(offsetVelocity(RobotPosition.getSpeakerRelativeVelocity(), v, theta));
     }    
     
-    private double calculateFeedSpeed(double distance){
-        return 0;
-    }
+    // private double calculateFeedSpeed(double distance){
+    //     return 0;
+    // }
 
     private double calculateAngle(double distance){
-        double v = 0;
-        double theta = 0;
+        double v = RPM_to_MPS(currentState.speed);
+        double theta = 2.634 * distance * distance - 21.619 * distance + 73.023; //angle in degrees as given in team498/notebook/shooter_model.ipynb
         return offsetAngle(RobotPosition.getSpeakerRelativeVelocity(), v, theta);
     }
 
     private double offsetAngle(double r, double v, double theta) {
-        return Math.atan2(v * Math.sin(Units.degreesToRadians(theta)), v * Math.cos(Units.degreesToRadians(theta)) - r);
+        return Units.radiansToDegrees(Math.atan((v * Math.sin(Units.degreesToRadians(theta))) / (v * Math.cos(Units.degreesToRadians(theta)) - r)));
     }
     private double offsetVelocity(double r, double v, double theta) {
         return Math.sqrt(Math.pow(v * Math.sin(Units.degreesToRadians(theta)), 2) + Math.pow(v * Math.cos(Units.degreesToRadians(theta)) - r, 2));

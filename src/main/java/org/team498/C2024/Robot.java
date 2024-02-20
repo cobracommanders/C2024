@@ -90,12 +90,12 @@ public class Robot extends TimedRobot{
                 blinkin.setColor(BlinkinColor.SOLID_DARK_GREEN);
             else blinkin.setColor(BlinkinColor.SOLID_HOT_PINK);
         }
-        else { 
-            // if (RobotPosition.isNear(autoToRun.getInitialPose(), 1))
-            //     blinkin.setColor(BlinkinColor.SOLID_DARK_GREEN);
-            // else blinkin.setColor(BlinkinColor.SOLID_HOT_PINK);
+        // else { 
+        //     if (RobotPosition.isNear(autoToRun.getInitialPose(), 1))
+        //         blinkin.setColor(BlinkinColor.SOLID_DARK_GREEN);
+        //     else blinkin.setColor(BlinkinColor.SOLID_HOT_PINK);
 
-        }
+        // }
     }
 
     @Override

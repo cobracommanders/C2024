@@ -30,23 +30,21 @@ public enum State {
 
     //Sets Speed and Angle for Shooter
     public enum Shooter {
-        IDLE(0, 0, 0, 40),
-        SUBWOOFER(1200, 1500, 500, 57),
-        AMP(0, 0, 0, 40),
-        PODIUM(1500, 1900, 500, 37),
-        CRESCENDO(0, 0, 0, 50),
-        SOURCE(0, 0, 0, 60),
-        CANCEL_AMP(0, 0, 0, 40),
-        VISION(0, 0, 0, 40);
+        IDLE(0, 0, 35),
+        SUBWOOFER(2000, 1000, 49),
+        AMP(0, 0, 35),
+        PODIUM(2000, 1000, 37),
+        CRESCENDO(2000, 1000, 40),
+        SOURCE(0, 0, 50),
+        CANCEL_AMP(0, 0, 35),
+        VISION(0, 0, 40);
 
-        public final double rightSpeed;
-        public final double leftSpeed;
+        public final double speed;
         public final double feedSpeed;
         public final double angle;
 
-        Shooter(double rightSpeed, double leftSpeed, double feedSpeed, double angle) {
-            this.rightSpeed = rightSpeed;
-            this.leftSpeed = leftSpeed;
+        Shooter(double speed, double feedSpeed, double angle) {
+            this.speed = speed;
             this.feedSpeed = feedSpeed;
             this.angle = angle;
         }

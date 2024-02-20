@@ -3,6 +3,7 @@ package org.team498.C2024;
 import org.team498.C2024.Constants.OIConstants;
 import org.team498.C2024.StateController.LoadingOption;
 import org.team498.C2024.StateController.ScoringOption;
+import org.team498.C2024.commands.SetIntakeIdle;
 import org.team498.C2024.commands.SetIntakeManual;
 import org.team498.C2024.commands.SetKickerNextState;
 import org.team498.C2024.commands.SetShooterManual;
@@ -54,18 +55,18 @@ public class Controls {
                 runOnce(()->StateController.getInstance().setAngleOverride(-90)),
                 new ConditionalCommand(
                     runOnce(()-> {}),
-                    runOnce(()->StateController.getInstance().setTargetDrive(FieldPositions.getSpeaker())), 
+                    runOnce(()->StateController.getInstance().setTargetDrive(FieldPositions.getSpeaker())).alongWith(new SlowDrive(true)), 
                     ()-> StateController.getInstance().getNextScoringState() == State.SUBWOOFER
                 ),
                 //runOnce(()->StateController.getInstance().setTargetDrive(FieldPositions.getSpeaker())),
                 
                 ()-> StateController.getInstance().getNextScoringState() == State.AMP))
-            .onFalse(new TargetDrive(null).alongWith(runOnce(()->StateController.getInstance().setAngleOverride(-1))));
+            .onFalse(new TargetDrive(null).alongWith(runOnce(()->StateController.getInstance().setAngleOverride(-1))).alongWith(new SlowDrive(false)));
         driver.A().onTrue(runOnce(() -> Drivetrain.getInstance().setYaw(0 + Robot.rotationOffset)));
         driver.B().onTrue(runOnce(() -> Drivetrain.getInstance().setPose(new Pose2d(15.18, 1.32, Rotation2d.fromDegrees(0 + Robot.rotationOffset)))));
         driver.Y().onTrue(runOnce(() -> Drivetrain.getInstance().setPose(new Pose2d(15.07, 5.55, Rotation2d.fromDegrees(0 + Robot.rotationOffset)))));
         driver.leftTrigger().onTrue(new LoadGround())
-            .onFalse(new ReturnToIdle());
+            .onFalse(new SetIntakeIdle());
         driver.leftBumper().onTrue(new PrepareToScore())
             .onFalse(runOnce(()-> {
                     if (!StateController.getInstance().isScoring()) {
@@ -90,7 +91,7 @@ public class Controls {
 
 
 
-        // operator.X().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.CRESCENDO)));
+        operator.X().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.CRESCENDO)));
         operator.A().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.SUBWOOFER)));
         operator.B().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.PODIUM)));
         operator.Y().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.AMP)));

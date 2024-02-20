@@ -18,10 +18,10 @@ public class CancelSpeaker extends SequentialCommandGroup {
             new SetState(State.CANCEL_SPEAKER),
             new ParallelCommandGroup(
                 new SetShooterNextState(),
-                new SetKickerState(State.Kicker.REVERSE),
+                new SetKickerState(State.Kicker.REVERSE)
 
                 //Moves Note back into Hopper
-                new MoveHopper(0)
+                // new MoveHopper(0)
             ),
 
             //Sets Kicker and Shooter to Idle

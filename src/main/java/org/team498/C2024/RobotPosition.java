@@ -19,6 +19,8 @@ public class RobotPosition {
     private static final Drivetrain drivetrain = Drivetrain.getInstance();
     public static final double scoringOffset = Units.inchesToMeters((DrivetrainConstants.ROBOT_WIDTH / 2) + 10);
 
+    public static final double futureCycles = 10;
+
     public static boolean inRegion(BaseRegion region) {
         return region.contains(Point.fromPose2d(drivetrain.getPose()));
     }
@@ -48,8 +50,8 @@ public class RobotPosition {
         ChassisSpeeds currentSpeeds = drivetrain.getCurrentSpeeds();
 
         // Estimate the future pose of the robot to compensate for lag
-        double newX = currentPose.getX() + (-currentSpeeds.vxMetersPerSecond * (Robot.DEFAULT_PERIOD * 15));
-        double newY = currentPose.getY() + (-currentSpeeds.vyMetersPerSecond * (Robot.DEFAULT_PERIOD * 15));
+        double newX = currentPose.getX() + (-currentSpeeds.vxMetersPerSecond * (Robot.DEFAULT_PERIOD * 30));
+        double newY = currentPose.getY() + (-currentSpeeds.vyMetersPerSecond * (Robot.DEFAULT_PERIOD * 30));
 
         Pose2d futurePose = new Pose2d(newX, newY, new Rotation2d());
 
@@ -110,18 +112,28 @@ public class RobotPosition {
         return drivetrain.getPose().transformBy(getVelocity(loopCycles));
     }
     public static Pose2d getFuturePose() {
-        return drivetrain.getPose().transformBy(getVelocity(15));
+        return drivetrain.getPose().transformBy(getVelocity(futureCycles));
     }
     public static Transform2d getFutureVelocity() {
-        return getVelocity(15);
+        return getVelocity(futureCycles);
     }
     public static double getSpeakerRelativeVelocity() {
-        Transform2d speaker = getFutureVelocity().plus(getFuturePose().minus(FieldPositions.getSpeaker()));
-        double x = speaker.getX();
-        double y = speaker.getY();
+        Pose2d robotPose = getFuturePose();
+        Pose2d speakerPose = FieldPositions.getSpeaker();
+        Transform2d robotVelocity = getFutureVelocity();
+        double x = robotVelocity.getX();
+        double y = robotVelocity.getY();
         double r = Math.sqrt(x * x + y * y);
+        
+        double velocityDirection = Math.atan2(y, x);
+        double positionDirection = Math.atan2(robotPose.getY() - speakerPose.getY(), robotPose.getX() - speakerPose.getX());// + Math.toRadians(Robot.rotationOffset);
+        double angleDifference = velocityDirection - positionDirection;
+        angleDifference = (angleDifference + Math.PI) % (2 * Math.PI) - Math.PI;
+        if (Math.abs(angleDifference) > Math.PI / 2 && Robot.alliance.get() == Alliance.Blue) {
+            r = -r; // Moving towards the speaker, make r negative
+        } else if (Math.abs(angleDifference) <= Math.PI / 2 && Robot.alliance.get() != Alliance.Blue) {
+            r = -r;
+        }
         return r;
-        // double theta = Math.asin(y / r);
-
     }
 }
