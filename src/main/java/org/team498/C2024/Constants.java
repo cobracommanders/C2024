@@ -75,11 +75,11 @@ public final class Constants {
         public static final double fD = 0;
         public static final double fV = 0.00025;
         // P, I, D are the flywheel Constants for the shooter
-        public static final double P = .001;
+        public static final double P = 0.001; //0.001
         public static final double I = 0;
         public static final double D = 0;
         public static final double S = 0;
-        public static final double V = 0.0005;
+        public static final double V = 0.0005;  // /(55.0 / 18.0) / (55.0 / 18.0)
         public static final double A = 0;
 
         // public static final double rP = .001;
@@ -89,7 +89,7 @@ public final class Constants {
         // public static final double rV = 0.0005;
         // public static final double rA = 0;
 
-        public static final double GEAR_RATIO = 18.0 / 55.0;
+        public static final double GEAR_RATIO = 55.0 / 18.0;
         public static final double CIRCUMFERENCE = Units.inchesToMeters(3) * Math.PI;
 
         
