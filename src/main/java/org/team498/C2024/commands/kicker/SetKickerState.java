@@ -1,4 +1,4 @@
-package org.team498.C2024.commands;
+package org.team498.C2024.commands.kicker;
 
 import org.team498.C2024.State;
 import org.team498.C2024.subsystems.Kicker;

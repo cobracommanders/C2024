@@ -1,7 +1,9 @@
-package org.team498.C2024.commands;
+package org.team498.C2024.commands.robot;
 
 import org.team498.C2024.State;
-import org.team498.C2024.commands.robot.SetState;
+import org.team498.C2024.commands.hopper.SetHopperNextState;
+import org.team498.C2024.commands.intake.SetIntakeNextState;
+import org.team498.C2024.commands.intake.SetIntakeRollersNextState;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;

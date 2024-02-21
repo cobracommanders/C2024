@@ -1,10 +1,8 @@
-package org.team498.C2024.commands;
+package org.team498.C2024.commands.intake;
 
 import java.util.function.DoubleSupplier;
 
 import org.team498.C2024.subsystems.Intake;
-import org.team498.C2024.subsystems.Shooter;
-
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class SetIntakeManual extends Command{

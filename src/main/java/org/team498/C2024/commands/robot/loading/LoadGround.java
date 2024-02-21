@@ -1,10 +1,10 @@
 package org.team498.C2024.commands.robot.loading;
 
 import org.team498.C2024.State;
-import org.team498.C2024.commands.SetHopperNextState;
-import org.team498.C2024.commands.SetIntakeNextState;
-import org.team498.C2024.commands.SetIntakeRollersNextState;
-import org.team498.C2024.commands.SetKickerNextState;
+import org.team498.C2024.commands.hopper.SetHopperNextState;
+import org.team498.C2024.commands.intake.SetIntakeNextState;
+import org.team498.C2024.commands.intake.SetIntakeRollersNextState;
+import org.team498.C2024.commands.kicker.SetKickerNextState;
 import org.team498.C2024.commands.robot.SetState;
 import org.team498.C2024.commands.robot.StoreNote;
 import org.team498.C2024.subsystems.Hopper;

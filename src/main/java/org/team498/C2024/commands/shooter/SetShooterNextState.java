@@ -1,4 +1,4 @@
-package org.team498.C2024.commands;
+package org.team498.C2024.commands.shooter;
 
 import org.team498.C2024.StateController;
 import org.team498.C2024.subsystems.Shooter;

@@ -1,15 +1,10 @@
 package org.team498.C2024.commands.robot.loading;
 
 import org.team498.C2024.State;
-import org.team498.C2024.commands.SetHopperNextState;
-import org.team498.C2024.commands.SetIntakeNextState;
-import org.team498.C2024.commands.SetIntakeRollersNextState;
-import org.team498.C2024.commands.SetKickerNextState;
+import org.team498.C2024.commands.hopper.SetHopperNextState;
+import org.team498.C2024.commands.intake.SetIntakeNextState;
+import org.team498.C2024.commands.intake.SetIntakeRollersNextState;
 import org.team498.C2024.commands.robot.SetState;
-import org.team498.C2024.commands.robot.StoreNote;
-import org.team498.C2024.subsystems.Hopper;
-
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;

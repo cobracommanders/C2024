@@ -1,4 +1,4 @@
-package org.team498.C2024.commands;
+package org.team498.C2024.commands.shooter;
 
 import java.util.function.DoubleSupplier;
 

@@ -1,11 +1,11 @@
 package org.team498.C2024.commands.robot.loading;
 
 import org.team498.C2024.State;
-import org.team498.C2024.commands.MoveHopper;
-import org.team498.C2024.commands.SetHopperNextState;
-import org.team498.C2024.commands.SetKickerNextState;
-import org.team498.C2024.commands.SetShooterNextState;
+import org.team498.C2024.commands.hopper.MoveHopper;
+import org.team498.C2024.commands.hopper.SetHopperNextState;
+import org.team498.C2024.commands.kicker.SetKickerNextState;
 import org.team498.C2024.commands.robot.SetState;
+import org.team498.C2024.commands.shooter.SetShooterNextState;
 import org.team498.C2024.subsystems.Hopper;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
