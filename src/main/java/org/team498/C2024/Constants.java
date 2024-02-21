@@ -75,11 +75,11 @@ public final class Constants {
         public static final double fD = 0;
         public static final double fV = 0.00025;
         // P, I, D are the flywheel Constants for the shooter
-        public static final double P = 0.001; //0.001
+        public static final double P = 0.0006; // 0.001 //3.273
         public static final double I = 0;
         public static final double D = 0;
         public static final double S = 0;
-        public static final double V = 0.0005;  // /(55.0 / 18.0) / (55.0 / 18.0)
+        public static final double V = 0.000095;   //0.0005
         public static final double A = 0;
 
         // public static final double rP = .001;

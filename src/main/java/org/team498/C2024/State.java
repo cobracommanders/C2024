@@ -31,10 +31,10 @@ public enum State {
     //Sets Speed and Angle for Shooter
     public enum Shooter {
         IDLE(0, 0, 35),
-        SUBWOOFER(2000, 1000, 49),
+        SUBWOOFER(8000, 1000, 49),
         AMP(0, 0, 35),
-        PODIUM(2000, 1000, 37),
-        CRESCENDO(2000, 1000, 40),
+        PODIUM(4000, 1000, 27), //37
+        CRESCENDO(8000, 1000, 40),
         SOURCE(0, 0, 50),
         CANCEL_AMP(0, 0, 35),
         VISION(0, 0, 40);
