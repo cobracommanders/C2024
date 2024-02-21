@@ -98,8 +98,13 @@ public class Shooter extends SubsystemBase {
         angleController.setTolerance(0.1);
 
         // reset motor defaults to ensure all settings are clear
-        rightMotor.getConfigurator().apply(new TalonFXConfiguration().withCurrentLimits(new CurrentLimitsConfigs().withSupplyCurrentLimit(35).withSupplyCurrentLimitEnable(true)));
-        leftMotor.getConfigurator().apply(new TalonFXConfiguration().withCurrentLimits(new CurrentLimitsConfigs().withSupplyCurrentLimit(35).withSupplyCurrentLimitEnable(true)));
+        TalonFXConfiguration flywheelConfig = new TalonFXConfiguration();
+        flywheelConfig.CurrentLimits.SupplyCurrentLimit = 35;
+        flywheelConfig.CurrentLimits.StatorCurrentLimit = 35;
+        flywheelConfig.CurrentLimits.StatorCurrentLimitEnable = true;
+        flywheelConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
+        rightMotor.getConfigurator().apply(flywheelConfig);
+        leftMotor.getConfigurator().apply(flywheelConfig);
         feedMotor.restoreFactoryDefaults();
         angleMotor.restoreFactoryDefaults();
 
