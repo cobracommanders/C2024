@@ -95,6 +95,7 @@ public final class Constants {
         
         public static final double MAX_RPM = 6000 * GEAR_RATIO;
         public static final double MAX_MPS = MAX_RPM * CIRCUMFERENCE;
+        public static final double SPIN_DIFF = 800;
 
         public static final class AngleConstants{
             public static final double P = 0.07;
@@ -118,7 +119,7 @@ public final class Constants {
         public static final double V = 0;
         public static final double G = 0.12;
 
-        public static final double ENCODER_OFFSET = 0.056;
+        public static final double ENCODER_OFFSET = 0.351858;
     }
 
     public static final class HopperConstants {

@@ -102,7 +102,7 @@ public class Intake extends SubsystemBase {
      * returns encoder angle
      */
     public double getPosition() {
-        return (angleEncoder.getPosition() - Constants.IntakeConstants.ENCODER_OFFSET) * Math.PI * 2;
+        return angleEncoder.getPosition() * Math.PI * 2 - Constants.IntakeConstants.ENCODER_OFFSET;
     }
     
     // Using static instances to reference the flywheel object ensures that we only use ONE FLywheel throughout the code 

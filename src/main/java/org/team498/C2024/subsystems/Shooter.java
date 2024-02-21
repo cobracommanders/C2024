@@ -92,9 +92,9 @@ public class Shooter extends SubsystemBase {
         feedSpeed = State.Shooter.IDLE.feedSpeed;
         angle = State.Shooter.IDLE.angle;
 
-        rightController.setTolerance(0.1);
-        leftController.setTolerance(0.1);
-        feedController.setTolerance(0.1);
+        rightController.setTolerance(10);
+        leftController.setTolerance(10);
+        feedController.setTolerance(10);
         angleController.setTolerance(0.1);
 
         // reset motor defaults to ensure all settings are clear
@@ -131,7 +131,7 @@ public class Shooter extends SubsystemBase {
         // it will not actively deccelerate the wheel
         if (currentState == State.Shooter.CRESCENDO){
             this.leftSpeed = calculateSpeed(RobotPosition.distanceToSpeaker());
-            this.rightSpeed = this.leftSpeed * 0.6;
+            this.rightSpeed = this.leftSpeed - ShooterConstants.SPIN_DIFF;
             // this.feedSpeed = currentState.feedSpeed;//feedController.calculate(getFeedSpeedRPM(), feedSpeed) + feedFeedforward.calculate(feedSpeed);
             this.angle = calculateAngle(RobotPosition.distanceToSpeaker());
         }
@@ -210,7 +210,7 @@ public class Shooter extends SubsystemBase {
         isActivated = true;
         currentState = state; // update state
         leftSpeed = state.speed;
-        rightSpeed = state.speed * 0.7;
+        rightSpeed = state.speed - ShooterConstants.SPIN_DIFF;
         feedSpeed = state.feedSpeed;
         angle = state.angle;
         rightController.setSetpoint(this.leftSpeed); // update pController
