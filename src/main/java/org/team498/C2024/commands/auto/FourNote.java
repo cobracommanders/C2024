@@ -1,4 +1,5 @@
 package org.team498.C2024.commands.auto;
+import org.team498.C2024.Constants.DrivetrainConstants;
 import org.team498.C2024.PathLib;
 import org.team498.C2024.StateController;
 import org.team498.C2024.StateController.ScoringOption;
@@ -34,10 +35,10 @@ public class FourNote implements Auto{
                     new LoadGround(),
                     new WaitCommand(1),
                     new TargetSpeaker(),
-                    new SlowDrive(true),
+                    new SlowDrive(DrivetrainConstants.AUTO_SPEED_SCALAR),
                     new FullScore(),
                     new TargetDrive(null),
-                    new SlowDrive(false)
+                    new SlowDrive(DrivetrainConstants.FULL_SPEED_SCALAR)
                 )
             ),
 
@@ -48,10 +49,10 @@ public class FourNote implements Auto{
                     new LoadGround(),
                     new WaitCommand(1),
                     new TargetSpeaker(),
-                    new SlowDrive(true),
+                    new SlowDrive(DrivetrainConstants.AUTO_SPEED_SCALAR),
                     new FullScore(),
                     new TargetDrive(null),
-                    new SlowDrive(false)
+                    new SlowDrive(DrivetrainConstants.FULL_SPEED_SCALAR)
                 )
             ),
 
@@ -68,10 +69,10 @@ public class FourNote implements Auto{
                 new PathPlannerFollower(PathLib.ThirdNoteSL2),
                 new SequentialCommandGroup(
                     new TargetSpeaker(),
-                    new SlowDrive(true),
+                    new SlowDrive(DrivetrainConstants.AUTO_SPEED_SCALAR),
                     new FullScore(),
                     new TargetDrive(null),
-                    new SlowDrive(false)
+                    new SlowDrive(DrivetrainConstants.FULL_SPEED_SCALAR)
                 )
             )
         );

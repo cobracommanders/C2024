@@ -1,6 +1,7 @@
 package org.team498.C2024.commands.auto;
 
 import org.team498.C2024.PathLib;
+import org.team498.C2024.Constants.DrivetrainConstants;
 import org.team498.C2024.commands.drivetrain.PathPlannerFollower;
 import org.team498.C2024.commands.drivetrain.SlowDrive;
 import org.team498.C2024.commands.robot.scoring.FullScore;
@@ -18,9 +19,9 @@ public class PracticeAuto implements Auto{
             new ParallelCommandGroup(
                 new PathPlannerFollower(PathLib.SL1Note1),
                 new SequentialCommandGroup(
-                    new SlowDrive(true),
+                    new SlowDrive(DrivetrainConstants.AUTO_SPEED_SCALAR),
                     new FullScore(),
-                    new SlowDrive(false)
+                    new SlowDrive(DrivetrainConstants.FULL_SPEED_SCALAR)
                 )
             )
             

@@ -1,6 +1,7 @@
 package org.team498.C2024.commands.robot;
 
 import org.team498.C2024.State;
+import org.team498.C2024.Constants.DrivetrainConstants;
 import org.team498.C2024.commands.drivetrain.SlowDrive;
 import org.team498.C2024.commands.drivetrain.TargetDrive;
 import org.team498.C2024.commands.hopper.SetHopperNextState;
@@ -24,7 +25,7 @@ public class ReturnToIdle extends SequentialCommandGroup {
                 new SetShooterNextState(),
                 new SetKickerNextState(),
                 new TargetDrive(null),
-                new SlowDrive(false)
+                new SlowDrive(DrivetrainConstants.FULL_SPEED_SCALAR)
             )
         );
     }

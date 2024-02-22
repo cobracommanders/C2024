@@ -1,6 +1,6 @@
 package org.team498.C2024;
 
-import static org.team498.C2024.Constants.DrivetrainConstants.FULL_DRIVE_SCALAR;
+import static org.team498.C2024.Constants.DrivetrainConstants.FULL_SPEED_SCALAR;
 
 import org.team498.C2024.Constants.DrivetrainConstants;
 import org.team498.C2024.Constants.OIConstants;
@@ -52,19 +52,19 @@ public class Controls {
     }
 
     public void configureDriverCommands() {
-        driver.rightBumper().onTrue(new SlowDrive(DrivetrainConstants.SLOW_DRIVE_SCALAR))
-            .onFalse(new SlowDrive(DrivetrainConstants.FULL_DRIVE_SCALAR));
+        driver.rightBumper().onTrue(new SlowDrive(DrivetrainConstants.SLOW_SPEED_SCALAR))
+            .onFalse(new SlowDrive(DrivetrainConstants.FULL_SPEED_SCALAR));
         driver.leftBumper().onTrue(new ConditionalCommand(
                 runOnce(()->StateController.getInstance().setAngleOverride(-90)),
                 new ConditionalCommand(
                     runOnce(()-> {}),
-                    runOnce(()->StateController.getInstance().setTargetDrive(FieldPositions.getSpeaker())).alongWith(new SlowDrive(DrivetrainConstants.TARGET_DRIVE_SCALAR)), 
+                    runOnce(()->StateController.getInstance().setTargetDrive(FieldPositions.getSpeaker())).alongWith(new SlowDrive(DrivetrainConstants.TARGET_SPEED_SCALAR)), 
                     ()-> StateController.getInstance().getNextScoringState() == State.SUBWOOFER
                 ),
                 //runOnce(()->StateController.getInstance().setTargetDrive(FieldPositions.getSpeaker())),
                 
                 ()-> StateController.getInstance().getNextScoringState() == State.AMP))
-            .onFalse(new TargetDrive(null).alongWith(runOnce(()->StateController.getInstance().setAngleOverride(-1))).alongWith(new SlowDrive(DrivetrainConstants.FULL_DRIVE_SCALAR)));
+            .onFalse(new TargetDrive(null).alongWith(runOnce(()->StateController.getInstance().setAngleOverride(-1))).alongWith(new SlowDrive(DrivetrainConstants.FULL_SPEED_SCALAR)));
         driver.A().onTrue(runOnce(() -> Drivetrain.getInstance().setYaw(0 + Robot.rotationOffset)));
         driver.B().onTrue(runOnce(() -> Drivetrain.getInstance().setPose(new Pose2d(15.18, 1.32, Rotation2d.fromDegrees(0 + Robot.rotationOffset)))));
         driver.Y().onTrue(runOnce(() -> Drivetrain.getInstance().setPose(new Pose2d(15.07, 5.55, Rotation2d.fromDegrees(0 + Robot.rotationOffset)))));

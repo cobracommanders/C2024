@@ -41,12 +41,12 @@ public class PathPlannerFollower extends Command {
 
     @Override
     public void execute() {
-        boolean slowDrive = stateController.getSlowDrive();
+        double slowDrive = stateController.getSlowDrive();
         Pose2d targetPose = stateController.getTargetDrive();
         boolean hasTargetDrive = stateController.getTargetDriveActive();
         dt = trajectoryTimer.get();
         trajectoryTimer.restart();
-        currentTime += slowDrive ? dt / 2 : dt;
+        currentTime += dt * slowDrive;
         State state = trajectory.sample(currentTime);
 
         if (Robot.alliance.get() == Alliance.Blue) {

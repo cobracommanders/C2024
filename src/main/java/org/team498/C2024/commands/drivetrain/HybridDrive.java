@@ -8,7 +8,6 @@ import org.team498.C2024.subsystems.Drivetrain;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 
-import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import static org.team498.C2024.Constants.DrivetrainConstants.AngleConstants.MAX_ANGULAR_SPEED_DEGREES_PER_SECOND;
@@ -56,17 +55,15 @@ public class HybridDrive extends Command {
 
     @Override
     public void execute() {
-        boolean slowDrive = StateController.getInstance().getSlowDrive();
+        double slowDrive = StateController.getInstance().getSlowDrive();
         boolean hasTargetDrive = StateController.getInstance().getTargetDriveActive();
         boolean hasAngleOverride = StateController.getInstance().getAngleOverrideActive();
         Pose2d targetDrive = StateController.getInstance().getTargetDrive();
         double angleOverride = StateController.getInstance().getAngleOverride();
-
-        double speed = slowDrive ? 0.5 : 1;
         
-        double xTranslation = xTranslationSupplier.getAsDouble() * MAX_VELOCITY_METERS_PER_SECOND * Robot.coordinateFlip * speed;
-        double yTranslation = yTranslationSupplier.getAsDouble() * MAX_VELOCITY_METERS_PER_SECOND * Robot.coordinateFlip * speed;
-        double rotation = Math.copySign(Math.pow(rotationSupplier.getAsDouble(), 3), rotationSupplier.getAsDouble()) * MAX_ANGULAR_SPEED_DEGREES_PER_SECOND * speed;
+        double xTranslation = xTranslationSupplier.getAsDouble() * MAX_VELOCITY_METERS_PER_SECOND * Robot.coordinateFlip * slowDrive;
+        double yTranslation = yTranslationSupplier.getAsDouble() * MAX_VELOCITY_METERS_PER_SECOND * Robot.coordinateFlip * slowDrive;
+        double rotation = Math.copySign(Math.pow(rotationSupplier.getAsDouble(), 3), rotationSupplier.getAsDouble()) * MAX_ANGULAR_SPEED_DEGREES_PER_SECOND * slowDrive;
         rotation /= 2;
         
 
