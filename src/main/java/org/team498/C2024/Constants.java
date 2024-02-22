@@ -22,6 +22,10 @@ public final class Constants {
         public static final double MAX_AUTO_VELOCITY = 3;
         public static final double MAX_AUTO_ACCELERATION = 3;
 
+        public static final float SLOW_DRIVE_SCALAR = 0.5f;
+        public static final float TARGET_DRIVE_SCALAR = 0.8f;
+        public static final short FULL_DRIVE_SCALAR = 1;
+
         public static final double SWERVE_MODULE_DISTANCE_FROM_CENTER = 10.75;
 
         public static final double MK4I_DRIVE_REDUCTION_L3 = 5.35;

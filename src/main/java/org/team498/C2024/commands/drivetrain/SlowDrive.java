@@ -5,9 +5,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 public class SlowDrive extends InstantCommand{
     
-    private final Boolean slowDrive;
+    private final double slowDrive;
 
-    public SlowDrive(boolean slowDrive){
+    public SlowDrive(double slowDrive){
         this.slowDrive = slowDrive;
     }
 

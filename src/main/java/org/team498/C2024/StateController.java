@@ -20,7 +20,7 @@ public class StateController extends SubsystemBase {
     private LoadingOption nextLoadingOption = LoadingOption.GROUND;
 
     private Supplier<Pose2d> targetDrive = null;
-    private BooleanSupplier slowDrive = ()-> false;
+    private DoubleSupplier slowDrive = ()-> 1;
     private DoubleSupplier angleOverride = null;
 
     public enum ScoringOption{AMP, PODIUM, SUBWOOFER, CRESCENDO}
@@ -135,12 +135,12 @@ public class StateController extends SubsystemBase {
     }
 
     //slow drive
-    public void setSlowDrive(boolean isSlow) {
+    public void setSlowDrive(double isSlow) {
         slowDrive = ()-> isSlow;
     }
 
-    public boolean getSlowDrive() {
-        return slowDrive.getAsBoolean();
+    public double getSlowDrive() {
+        return slowDrive.getAsDouble();
     }
 
     public boolean isScoring(){
