@@ -145,6 +145,12 @@ public class Shooter extends SubsystemBase {
             this.angle = 33;
         }
 
+        if (currentState == State.Shooter.IDLE) {
+            //IF State is IDLE, don't Spin the right wheel
+            this.leftSpeed = currentState.speed;
+            this.rightSpeed = currentState.speed;
+        }
+
         double rightShooterSpeed = 0;
         double leftShooterSpeed = 0; // We will use this variable to keep track of our desired speed
         double feedShooterSpeed = 0;
