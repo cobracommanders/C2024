@@ -30,11 +30,6 @@ public final class Constants {
         public static final double DRIVE_WHEEL_DIAMETER = 4;
         public static final double DRIVE_WHEEL_CIRCUMFERENCE = DRIVE_WHEEL_DIAMETER * Math.PI;
 
-        // public static final double FL_MODULE_OFFSET = 298.03716;
-        // public static final double FR_MODULE_OFFSET = 118.125;
-        // public static final double BL_MODULE_OFFSET = 48.16404;
-        // public static final double BR_MODULE_OFFSET = 81.8262;
-
         public static final double FL_MODULE_OFFSET = -0.827881;
         public static final double FR_MODULE_OFFSET = -0.328125;
         public static final double BL_MODULE_OFFSET = -0.133789;
@@ -82,13 +77,6 @@ public final class Constants {
         public static final double V = 0.000095;   //0.0005
         public static final double A = 0;
 
-        // public static final double rP = .001;
-        // public static final double rI = 0;
-        // public static final double rD = 0;
-        // public static final double rS = 0;
-        // public static final double rV = 0.0005;
-        // public static final double rA = 0;
-
         public static final double GEAR_RATIO = 55.0 / 18.0;
         public static final double CIRCUMFERENCE = Units.inchesToMeters(3) * Math.PI;
 
@@ -118,6 +106,8 @@ public final class Constants {
         public static final double S = 0;
         public static final double V = 0;
         public static final double G = 0.12;
+        public static final double dV = 0.2 / 6.0; // 20% power per 6 m/s
+        public static final double rV = 0.5 / (4 * Math.PI); // 50% power per 4pi r/s (180 deg/s)
 
         public static final double ENCODER_OFFSET = 0.351858;
     }

@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 import org.team498.C2024.Constants.DrivetrainConstants;
 import org.team498.C2024.subsystems.Drivetrain;
+import org.team498.C2024.subsystems.Shooter;
 import org.team498.lib.field.BaseRegion;
 import org.team498.lib.field.Point;
 import org.team498.lib.util.PoseUtil;
@@ -17,6 +18,7 @@ import org.team498.lib.wpilib.ChassisSpeeds;
 
 public class RobotPosition {
     private static final Drivetrain drivetrain = Drivetrain.getInstance();
+    private static final Shooter shooter = Shooter.getInstance();
     public static final double scoringOffset = Units.inchesToMeters((DrivetrainConstants.ROBOT_WIDTH / 2) + 10);
 
     public static final double futureCycles = 10;
@@ -45,13 +47,12 @@ public class RobotPosition {
 
     private static double distanceTo(Point point) {return distanceTo(point, drivetrain.getPose());}
 
-    public static double calculateDegreesToTarget(Pose2d target) {
+    public static double calculateDegreesToTarget(Pose2d target, ChassisSpeeds currentSpeeds, double tof) {
         Pose2d currentPose = drivetrain.getPose();
-        ChassisSpeeds currentSpeeds = drivetrain.getCurrentSpeeds();
 
         // Estimate the future pose of the robot to compensate for lag
-        double newX = currentPose.getX() + (-currentSpeeds.vxMetersPerSecond * (Robot.DEFAULT_PERIOD * 30));
-        double newY = currentPose.getY() + (-currentSpeeds.vyMetersPerSecond * (Robot.DEFAULT_PERIOD * 30));
+        double newX = currentPose.getX() + (-currentSpeeds.vxMetersPerSecond * tof);
+        double newY = currentPose.getY() + (-currentSpeeds.vyMetersPerSecond * tof);
 
         Pose2d futurePose = new Pose2d(newX, newY, new Rotation2d());
 
@@ -64,6 +65,9 @@ public class RobotPosition {
         // Return the angle to which the turret needs to be adjusted.
         return angle;
     }
+    public static double calculateDegreesToTarget(Pose2d target) {
+        return calculateDegreesToTarget(target, drivetrain.getCurrentSpeeds(), 0.25);
+    }
 
     public static double distanceToSpeaker(){
         Pose2d speakerPose = FieldPositions.getSpeaker();
@@ -71,12 +75,12 @@ public class RobotPosition {
         return distanceTo(speakerPoint, getFuturePose());
     }
 
-    private static Transform2d getVelocity(double loopCycles) {
+    private static Transform2d getVelocity(double tof) {
         var currentSpeeds = drivetrain.getCurrentSpeeds();
         return new Transform2d(new Translation2d(
-            -currentSpeeds.vxMetersPerSecond * (Robot.DEFAULT_PERIOD * loopCycles),
-            -currentSpeeds.vyMetersPerSecond * (Robot.DEFAULT_PERIOD * loopCycles)),
-            Rotation2d.fromRadians(currentSpeeds.omegaRadiansPerSecond * (Robot.DEFAULT_PERIOD * loopCycles)));
+            -currentSpeeds.vxMetersPerSecond * (tof),
+            -currentSpeeds.vyMetersPerSecond * (tof)),
+            Rotation2d.fromRadians(currentSpeeds.omegaRadiansPerSecond * (tof)));
     }
 
     // private static Transform2d getVelocitySquared(double loopCycles) {
@@ -89,7 +93,7 @@ public class RobotPosition {
 
     public static  double calculateDegreesToSpeaker(){
         Pose2d blueSpeaker = FieldPositions.blueSpeaker.toPose2d();
-        if (Robot.alliance.get() == Alliance.Red) return calculateDegreesToTarget(PoseUtil.flip(blueSpeaker));
+        if (Robot.alliance.get() == Alliance.Red) return calculateDegreesToTarget(PoseUtil.flip(blueSpeaker), drivetrain.getCurrentSpeeds(), shooter.getTimeOfFlight());
         return calculateDegreesToTarget(blueSpeaker);
     }
 
@@ -112,10 +116,10 @@ public class RobotPosition {
         return drivetrain.getPose().transformBy(getVelocity(loopCycles));
     }
     public static Pose2d getFuturePose() {
-        return drivetrain.getPose().transformBy(getVelocity(futureCycles));
+        return drivetrain.getPose().transformBy(getVelocity(shooter.getTimeOfFlight()));
     }
     public static Transform2d getFutureVelocity() {
-        return getVelocity(futureCycles);
+        return getVelocity(shooter.getTimeOfFlight());
     }
     public static double getSpeakerRelativeVelocity() {
         Pose2d robotPose = getFuturePose();

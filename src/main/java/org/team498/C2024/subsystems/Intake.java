@@ -4,6 +4,8 @@ import org.team498.C2024.Constants;
 import org.team498.C2024.Ports;
 import org.team498.C2024.State;
 import org.team498.C2024.Constants.IntakeConstants;
+import org.team498.lib.wpilib.ChassisSpeeds;
+
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.AbsoluteEncoder;
@@ -12,6 +14,7 @@ import com.revrobotics.SparkAbsoluteEncoder;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -21,7 +24,10 @@ public class Intake extends SubsystemBase {
     private final SparkAbsoluteEncoder angleEncoder;
 
     private final PIDController pidController;
-    private final ArmFeedforward feedforward;
+    private final ArmFeedforward gravityFeedforward;
+    private final SimpleMotorFeedforward driveFeedforward;
+    private final SimpleMotorFeedforward rotationFeedforward;
+
     private boolean isManual;
     private double manualSpeed;
     
@@ -38,7 +44,9 @@ public class Intake extends SubsystemBase {
         angleEncoder = motor.getAbsoluteEncoder(Type.kDutyCycle);
 
         pidController = new PIDController(IntakeConstants.P, IntakeConstants.I, IntakeConstants.D);
-        feedforward = new ArmFeedforward(IntakeConstants.S, IntakeConstants.G, IntakeConstants.V);
+        gravityFeedforward = new ArmFeedforward(IntakeConstants.S, IntakeConstants.G, IntakeConstants.V);
+        driveFeedforward = new SimpleMotorFeedforward(0, IntakeConstants.dV, 0);
+        rotationFeedforward = new SimpleMotorFeedforward(0, IntakeConstants.rV, 0);
 
         // Instantiate variables to intitial values
         currentState = State.Intake.IDLE;
@@ -59,7 +67,16 @@ public class Intake extends SubsystemBase {
         SmartDashboard.putNumber("Manual Intake Speed", manualSpeed);
         // We will use this variable to keep track of our desired speed
         double speed = 0;
-        if (isActivated) speed = pidController.calculate(getPosition(), this.setpoint) + feedforward.calculate(getPosition(),0); // adjust for feedback error using proportional gain
+        if (isActivated) {
+            ChassisSpeeds driveSpeeds = Drivetrain.getInstance().getCurrentSpeeds();
+
+            double initialPID = pidController.calculate(getPosition(), this.setpoint);
+            double gravityOffset = gravityFeedforward.calculate(getPosition(), 0);
+            double driveOffset = driveFeedforward.calculate(driveSpeeds.vyMetersPerSecond);
+            double rotationOffset = rotationFeedforward.calculate(Math.abs(driveSpeeds.omegaRadiansPerSecond));
+
+            speed = initialPID + gravityOffset + driveOffset + rotationOffset; // adjust for feedback error using proportional gain
+        } 
         if (isManual) speed = manualSpeed;
         set(speed);
     }

@@ -256,6 +256,12 @@ public class Shooter extends SubsystemBase {
         return -feedMotor.getEncoder().getVelocity();
     }
 
+    public double getTimeOfFlight() {
+        double yVelocity = getRightSpeedMPS() * Math.sin(Math.toRadians(getAngle()));
+        double distanceToSpeaker = RobotPosition.distanceToSpeaker();
+        return distanceToSpeaker / yVelocity;
+    }
+
     public boolean shooterState(){
         return getState() == State.Shooter.CRESCENDO || getState() == State.Shooter.PODIUM || getState() == State.Shooter.SUBWOOFER;
     }

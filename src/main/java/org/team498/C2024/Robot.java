@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -16,7 +17,11 @@ import org.team498.C2024.commands.auto.FourNoteFull;
 import org.team498.C2024.commands.auto.TestAuto;
 import org.team498.C2024.subsystems.Drivetrain;
 import org.team498.C2024.subsystems.Hopper;
+import org.team498.C2024.subsystems.Intake;
+import org.team498.C2024.subsystems.IntakeRollers;
+import org.team498.C2024.subsystems.Kicker;
 import org.team498.C2024.subsystems.Limelight;
+import org.team498.C2024.subsystems.PhotonVision;
 import org.team498.C2024.subsystems.Shooter;
 import org.team498.lib.auto.Auto;
 import org.team498.lib.drivers.Blinkin;
@@ -64,6 +69,14 @@ public class Robot extends TimedRobot{
         controls.configureOperatorCommands();
         // PathLib.SL1Note1.getClass();
         drivetrain.enableBrakeMode(false);
+        // Register Subsystems
+        Drivetrain.getInstance();
+        Shooter.getInstance();
+        Hopper.getInstance();
+        Kicker.getInstance();
+        Intake.getInstance();
+        IntakeRollers.getInstance();
+        PhotonVision.getInstance();
         // Limelight.getInstance();
     }
 
@@ -85,7 +98,7 @@ public class Robot extends TimedRobot{
                              : 180;
         }
 
-        if (DriverStation.isEnabled()) {
+        if (RobotState.isEnabled()) {
             if(Shooter.getInstance().atSetpoint() && Shooter.getInstance().shooterState() && !Hopper.getInstance().isPidEnabled()) 
                 blinkin.setColor(BlinkinColor.SOLID_DARK_GREEN);
             else blinkin.setColor(BlinkinColor.SOLID_HOT_PINK);
@@ -122,7 +135,7 @@ public class Robot extends TimedRobot{
     @Override
     public void teleopInit() {
         // matchStarted = true;
-        drivetrain.enableBrakeMode(true);
+        // drivetrain.enableBrakeMode(true);
     }
 
     @Override
@@ -137,11 +150,11 @@ public class Robot extends TimedRobot{
 
     @Override
     public void disabledInit() {
-        drivetrain.enableBrakeMode(false);
+        // drivetrain.enableBrakeMode(false);
     }
     @Override
     public void autonomousInit() {
-        drivetrain.enableBrakeMode(true);
+        // drivetrain.enableBrakeMode(true);
         // matchStarted = true;
 
         // if (autoToRun == null)
@@ -160,7 +173,7 @@ public class Robot extends TimedRobot{
 
         // autoToRun.getCommand().schedule();
 
-        CommandScheduler.getInstance().run();
+        // CommandScheduler.getInstance().run();
 
         if (alliance.get() == Alliance.Blue) {
             Drivetrain.getInstance().setYaw(autoToRun.getInitialPose().getRotation().getDegrees());
