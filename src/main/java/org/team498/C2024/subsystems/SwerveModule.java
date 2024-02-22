@@ -80,14 +80,19 @@ public class SwerveModule {
      */
     public double getPosition(){
         return Falcon500Conversions.falconToDegrees(drive.getPosition().getValueAsDouble(), MK4I_DRIVE_REDUCTION_L3) / 360 * Units.inchesToMeters(DRIVE_WHEEL_CIRCUMFERENCE);
-   }
+    }
 
    /**
     * returns angle in degrees
     */
-   public double getAngle(){
-    return encoder.getAbsolutePosition().getValueAsDouble() * 360;
-   }
+    public double getAngle(){
+        return encoder.getAbsolutePosition().getValueAsDouble() * 360;
+    }
+
+    public double getYAcceleration() {
+        return drive.getAcceleration().getValueAsDouble() * Math.cos(Math.toRadians(getAngle()));
+    }
+    
     // Custom optimize method by team 364
     private SwerveModuleState optimize(SwerveModuleState desiredState, double currentAngle) {
         double targetAngle = placeInAppropriate0To360Scope(currentAngle, desiredState.angle.getDegrees());
@@ -149,6 +154,7 @@ public class SwerveModule {
         
         motor.getPosition().setUpdateFrequency(100, 0.002);
         motor.getVelocity().setUpdateFrequency(100, 0.002);
+        motor.getAcceleration().setUpdateFrequency(100, 0.002);
     }
 
     private void configSteerMotor(TalonFX motor) {

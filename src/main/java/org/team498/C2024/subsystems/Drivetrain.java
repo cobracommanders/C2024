@@ -197,6 +197,14 @@ public class Drivetrain extends SubsystemBase {
 
     public ChassisSpeeds getCurrentSpeeds() {return ChassisSpeeds.fromWPIChassisSpeeds(kinematics.toChassisSpeeds(getModuleStates()));}
 
+    public double getRobotRelativeYAcceleration() {
+        double sum = 0;
+        for (SwerveModule swerveModule : modules) {
+            sum += swerveModule.getYAcceleration();
+        }
+        return sum;
+    }
+
     private Translation2d[] getModuleTranslations() {
         double moduleDistance = Units.inchesToMeters(SWERVE_MODULE_DISTANCE_FROM_CENTER);
         Translation2d FL_ModulePosition = new Translation2d(moduleDistance, moduleDistance);
