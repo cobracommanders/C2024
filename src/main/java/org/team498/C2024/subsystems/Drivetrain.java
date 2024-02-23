@@ -83,7 +83,6 @@ public class Drivetrain extends SubsystemBase {
 
     @Override
     public void periodic() {
-        dT = timer.get();
         timer.restart();
         field2d.setRobotPose(getPose().getX(), getPose().getY(), getPose().getRotation());
         // Optional<TimedPose> visionPose = PhotonVision.getInstance().getEstimatedPose();
@@ -113,18 +112,25 @@ public class Drivetrain extends SubsystemBase {
         
         SmartDashboard.putBoolean("left Camera Connected", PhotonVision.getInstance().leftCameraConnected());
         SmartDashboard.putBoolean("right camera connected", PhotonVision.getInstance().rightCameraConnected());
-        for (int i = 0; i < modules.length; i++) {
-            //modules[i].setBrakeMode(RobotState.isEnabled());
-            SmartDashboard.putNumber(i + " CanCoder Value", modules[i].getAngle());
-            SmartDashboard.putNumber(i + " Velocity Setpoint", modules[i].getSpeed());
-            SmartDashboard.putNumber(i + " Velocity Real", modules[i].getDriveMotorSpeed());
-            if (RobotState.isDisabled()) {
-                modules[i].updateIntegratedEncoder();
-            }
-        }
+        // for (int i = 0; i < modules.length; i++) {
+        //     //modules[i].setBrakeMode(RobotState.isEnabled());
+        //     SmartDashboard.putNumber(i + " CanCoder Value", modules[i].getAngle());
+        //     SmartDashboard.putNumber(i + " Velocity Setpoint", modules[i].getSpeed());
+        //     SmartDashboard.putNumber(i + " Velocity Real", modules[i].getDriveMotorSpeed());
+            
+        // }
         poseEstimator.update(Rotation2d.fromDegrees(getYaw()), getModulePositions());
-
+        
     }
+
+    public void updateIntegratedEncoders() {
+        timer.restart();
+        for(SwerveModule module : modules) {
+            module.updateIntegratedEncoder();
+        }
+        System.out.println(timer.get());
+    }
+
     public void enableBrakeMode(boolean setBrake) {
         for (int i = 0; i < modules.length; i++) {
             modules[i].enableBrakeMode(setBrake);

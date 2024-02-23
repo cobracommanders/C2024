@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -34,6 +35,8 @@ import java.util.Optional;
 
 public class Robot extends TimedRobot{
     public static final double DEFAULT_PERIOD = 0.02;
+    public final Timer setupTimer = new Timer();
+    public double setupTime  = 0;
     public static int coordinateFlip = 1;
     public static int rotationOffset = 0;
 
@@ -122,6 +125,13 @@ public class Robot extends TimedRobot{
         rotationOffset = alliance.get() == Alliance.Blue
                          ? 0
                          : 180;
+        if (setupTime < 10) {
+            setupTime = setupTimer.get();
+            drivetrain.updateIntegratedEncoders();
+        } else {
+            setupTimer.stop();
+            setupTime = setupTimer.get() + 10;
+        }
 
 
         // if (!matchStarted) {
@@ -150,6 +160,7 @@ public class Robot extends TimedRobot{
 
     @Override
     public void disabledInit() {
+        setupTimer.restart();
         // drivetrain.enableBrakeMode(false);
     }
     @Override

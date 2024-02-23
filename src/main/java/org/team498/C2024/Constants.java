@@ -4,11 +4,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants {
-    public enum Mode {
-        REAL, SIM, REPLAY
-    }
-
-    public static Mode mode = Mode.REAL;
+    public static final double CAN_TIMEOUT_SECONDS = 0.002;
 
     public static final class OIConstants {
         public static final int DRIVER_CONTROLLER_ID = 0;

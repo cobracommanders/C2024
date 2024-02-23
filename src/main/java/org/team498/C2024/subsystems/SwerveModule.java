@@ -4,6 +4,7 @@ import static org.team498.C2024.Constants.DrivetrainConstants.DRIVE_WHEEL_CIRCUM
 import static org.team498.C2024.Constants.DrivetrainConstants.MK4I_DRIVE_REDUCTION_L3;
 import static org.team498.C2024.Constants.DrivetrainConstants.MK4I_STEER_REDUCTION_L3;
 
+import org.team498.C2024.Constants;
 import org.team498.lib.util.Falcon500Conversions;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
@@ -57,7 +58,7 @@ public class SwerveModule {
      * sets positions for encoders
     */
     public void updateIntegratedEncoder() {
-        steer.setPosition(Falcon500Conversions.degreesToFalcon(getAngle(), MK4I_STEER_REDUCTION_L3));
+        steer.setPosition(Falcon500Conversions.degreesToFalcon(getAngle(), MK4I_STEER_REDUCTION_L3), Constants.CAN_TIMEOUT_SECONDS);
         steer.setControl(new PositionVoltage(Falcon500Conversions.degreesToFalcon(getAngle(), MK4I_STEER_REDUCTION_L3)));
     }
 
@@ -150,11 +151,11 @@ public class SwerveModule {
         motor.getConfigurator().apply(driveConfig);
         motor.setInverted(false);
         
-        motor.optimizeBusUtilization(.01);
+        motor.optimizeBusUtilization(Constants.CAN_TIMEOUT_SECONDS);
         
-        motor.getPosition().setUpdateFrequency(100, 0.002);
-        motor.getVelocity().setUpdateFrequency(100, 0.002);
-        motor.getAcceleration().setUpdateFrequency(100, 0.002);
+        motor.getPosition().setUpdateFrequency(200, Constants.CAN_TIMEOUT_SECONDS);
+        motor.getVelocity().setUpdateFrequency(200, Constants.CAN_TIMEOUT_SECONDS);
+        motor.getAcceleration().setUpdateFrequency(200, Constants.CAN_TIMEOUT_SECONDS);
     }
 
     private void configSteerMotor(TalonFX motor) {
@@ -169,8 +170,8 @@ public class SwerveModule {
         steerConfig.OpenLoopRamps.VoltageOpenLoopRampPeriod = 1;
         motor.getConfigurator().apply(steerConfig);
         motor.setInverted(true);    
-        motor.optimizeBusUtilization(.01);
-        motor.getPosition().setUpdateFrequency(100, 0.002);
+        motor.optimizeBusUtilization(Constants.CAN_TIMEOUT_SECONDS);
+        motor.getPosition().setUpdateFrequency(200, Constants.CAN_TIMEOUT_SECONDS);
         // motor.getVelocity().setUpdateFrequency(100);
     }
 
@@ -180,8 +181,8 @@ public class SwerveModule {
         encoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
         encoderConfig.MagnetSensor.MagnetOffset = angleOffset;
         CANCoder.getConfigurator().apply(encoderConfig);
-        CANCoder.optimizeBusUtilization(0.01);
-        CANCoder.getAbsolutePosition().setUpdateFrequency(100, 0.002);
+        CANCoder.optimizeBusUtilization(Constants.CAN_TIMEOUT_SECONDS);
+        CANCoder.getAbsolutePosition().setUpdateFrequency(200, Constants.CAN_TIMEOUT_SECONDS);
         //CANCoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
     }
 
