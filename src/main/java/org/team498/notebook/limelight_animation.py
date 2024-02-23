@@ -7,13 +7,13 @@ from scipy.optimize import fsolve
 # Define the symbols
 theta = symbols('theta')
 r = 7 / 39.37 # Define the lever length (meters)
-x_offset = -2.625 / 39.37 # Define the x offset (meters)
+# x_offset = -2.625 / 39.37 # Define the x offset (meters)
 axisheight = 13.995234 / 39.37 # 13.995234 inches to meters
 # Function to calculate theta for a given distance
 def calculate_theta(distance, initial_theta=0.1):
     # Camera position
-    camera_x = r * cos(theta) - x_offset * sin(theta)
-    camera_y = r * sin(theta) + x_offset * cos(theta) + axisheight
+    camera_x = r * cos(theta)
+    camera_y = r * sin(theta) + axisheight
 
     angle_x = r * cos(theta)
     angle_y = r * sin(theta) + axisheight
@@ -83,10 +83,10 @@ def update(frame):
     
     # Update camera and lever coordinates
     theta_val = np.radians(theta_val_deg)
-    camera_x = r * np.cos(theta_val) - x_offset * np.sin(theta_val)
+    camera_x = r * np.cos(theta_val)
     angle_x = r * np.cos(theta_val)
     angle_y = r * np.sin(theta_val) + axisheight
-    camera_y = r * np.sin(theta_val) + x_offset * np.cos(theta_val) + axisheight
+    camera_y = r * np.sin(theta_val) + axisheight
     lever_x = camera_x
     lever_y = camera_y
 

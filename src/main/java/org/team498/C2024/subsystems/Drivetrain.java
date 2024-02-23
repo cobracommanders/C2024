@@ -15,6 +15,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotState;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -52,6 +53,9 @@ public class Drivetrain extends SubsystemBase {
     private final SlewRateLimiter yLimiter = new SlewRateLimiter(MAX_ACCELERATION_METERS_PER_SECOND_SQUARED);
     private final PIDController yController = new PIDController(Constants.DrivetrainConstants.PoseConstants.P, Constants.DrivetrainConstants.PoseConstants.I,  Constants.DrivetrainConstants.PoseConstants.D);
     private final Field2d field2d = new Field2d();
+
+    private double dT = 0;
+    private final Timer timer = new Timer();
     public Drivetrain(){
         modules = new SwerveModule[]{
             new SwerveModule(Ports.DrivetrainPorts.FL_DRIVE, Ports.DrivetrainPorts.FL_STEER, Ports.DrivetrainPorts.FL_CANCODER, Ports.Accessories.DriveBus, FL_MODULE_OFFSET),
@@ -79,6 +83,8 @@ public class Drivetrain extends SubsystemBase {
 
     @Override
     public void periodic() {
+        dT = timer.get();
+        timer.restart();
         field2d.setRobotPose(getPose().getX(), getPose().getY(), getPose().getRotation());
         // Optional<TimedPose> visionPose = PhotonVision.getInstance().getEstimatedPose();
         // if (visionPose.isPresent())
@@ -117,6 +123,7 @@ public class Drivetrain extends SubsystemBase {
             }
         }
         poseEstimator.update(Rotation2d.fromDegrees(getYaw()), getModulePositions());
+
     }
     public void enableBrakeMode(boolean setBrake) {
         for (int i = 0; i < modules.length; i++) {
@@ -140,9 +147,11 @@ public class Drivetrain extends SubsystemBase {
 
         speeds.vxMetersPerSecond = xLimiter.calculate(speeds.vxMetersPerSecond);
         speeds.vyMetersPerSecond = yLimiter.calculate(speeds.vyMetersPerSecond);
+        speeds = ChassisSpeeds.fromWPIChassisSpeeds(ChassisSpeeds.discretize(speeds, dT));
         //speeds = updateSpeeds(speeds);
         stateSetpoints = kinematics.toSwerveModuleStates(speeds);
         SwerveDriveKinematics.desaturateWheelSpeeds(stateSetpoints, DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND);
+
         setModuleStates(stateSetpoints);
     }
 

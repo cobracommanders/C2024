@@ -104,7 +104,8 @@ public class RobotPosition {
     }
 
     public static double calculateLimelightAngleToNote(double distance) {
-        return 0;
+        // equation derived from notebook/limelight_model.ipynb
+        return 3.226 * Math.pow(distance, 5) - 28.95 * Math.pow(distance, 4) + 105.4 * Math.pow(distance, 3) - 200 * Math.pow(distance, 2) + 211.2 * distance - 31.05;
     }
     public static double calculateLimelightAngleToNote(Point note) {
         return calculateLimelightAngleToNote(distanceTo(note));
