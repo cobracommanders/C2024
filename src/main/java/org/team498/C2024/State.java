@@ -33,7 +33,7 @@ public enum State {
         IDLE(0, 0, 35),
         SUBWOOFER(8000, 1000, 49),
         AMP(0, 0, 35),
-        PODIUM(4000, 1000, 27), //37
+        PODIUM(8000, 1000, 46), //37
         CRESCENDO(8000, 1000, 40),
         SOURCE(0, 0, 50),
         CANCEL_AMP(0, 0, 35),
