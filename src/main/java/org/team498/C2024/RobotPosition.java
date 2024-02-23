@@ -21,7 +21,7 @@ public class RobotPosition {
     private static final Shooter shooter = Shooter.getInstance();
     public static final double scoringOffset = Units.inchesToMeters((DrivetrainConstants.ROBOT_WIDTH / 2) + 10);
 
-    public static final double futureCycles = 10;
+    public static final double defaultTOF = 0.25;
 
     public static boolean inRegion(BaseRegion region) {
         return region.contains(Point.fromPose2d(drivetrain.getPose()));
@@ -47,8 +47,9 @@ public class RobotPosition {
 
     private static double distanceTo(Point point) {return distanceTo(point, drivetrain.getPose());}
 
-    public static double calculateDegreesToTarget(Pose2d target, ChassisSpeeds currentSpeeds, double tof) {
+    public static double calculateDegreesToTarget(Pose2d target, double tof) {
         Pose2d currentPose = drivetrain.getPose();
+        ChassisSpeeds currentSpeeds = drivetrain.getCurrentSpeeds();
 
         // Estimate the future pose of the robot to compensate for lag
         double newX = currentPose.getX() + (-currentSpeeds.vxMetersPerSecond * tof);
@@ -66,7 +67,13 @@ public class RobotPosition {
         return angle;
     }
     public static double calculateDegreesToTarget(Pose2d target) {
-        return calculateDegreesToTarget(target, drivetrain.getCurrentSpeeds(), 0.25);
+        return calculateDegreesToTarget(target, defaultTOF);
+    }
+
+    public static double distanceToSpeakerStatic(){
+        Pose2d speakerPose = FieldPositions.getSpeaker();
+        Point speakerPoint = new Point(speakerPose.getX(), speakerPose.getY());
+        return distanceTo(speakerPoint, getFuturePose(defaultTOF));
     }
 
     public static double distanceToSpeaker(){
@@ -93,8 +100,8 @@ public class RobotPosition {
 
     public static  double calculateDegreesToSpeaker(){
         Pose2d blueSpeaker = FieldPositions.blueSpeaker.toPose2d();
-        if (Robot.alliance.get() == Alliance.Red) return calculateDegreesToTarget(PoseUtil.flip(blueSpeaker), drivetrain.getCurrentSpeeds(), shooter.getTimeOfFlight());
-        return calculateDegreesToTarget(blueSpeaker);
+        if (Robot.alliance.get() == Alliance.Red) return calculateDegreesToTarget(PoseUtil.flip(blueSpeaker), shooter.getTimeOfFlight());
+        return calculateDegreesToTarget(blueSpeaker, shooter.getTimeOfFlight());
     }
 
     public static  double calculateDegreesToNote(Point note){
@@ -112,9 +119,11 @@ public class RobotPosition {
     }
     
 
-
-    public static Pose2d getFuturePose(double loopCycles) {
-        return drivetrain.getPose().transformBy(getVelocity(loopCycles));
+    public static Pose2d getPose() {
+        return drivetrain.getPose();
+    }
+    public static Pose2d getFuturePose(double tof) {
+        return drivetrain.getPose().transformBy(getVelocity(tof));
     }
     public static Pose2d getFuturePose() {
         return drivetrain.getPose().transformBy(getVelocity(shooter.getTimeOfFlight()));

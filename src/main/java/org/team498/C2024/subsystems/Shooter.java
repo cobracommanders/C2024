@@ -264,7 +264,7 @@ public class Shooter extends SubsystemBase {
 
     public double getTimeOfFlight() {
         double yVelocity = getRightSpeedMPS() * Math.sin(Math.toRadians(getAngle()));
-        double distanceToSpeaker = RobotPosition.distanceToSpeaker();
+        double distanceToSpeaker = RobotPosition.distanceToSpeakerStatic();
         return distanceToSpeaker / yVelocity;
     }
 
