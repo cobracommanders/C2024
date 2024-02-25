@@ -16,7 +16,7 @@ public class CancelAmp extends SequentialCommandGroup{
                 new SetKickerState(State.Kicker.REVERSE),
 
                 //Moves Note back to hopper
-                new MoveHopper(8),
+                new MoveHopper(16),
 
                 //Set kicker to Idle
                 new SetState(State.IDLE),

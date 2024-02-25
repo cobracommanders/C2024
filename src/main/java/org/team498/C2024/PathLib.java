@@ -15,11 +15,17 @@ public class PathLib {
     // public static final PathPlannerTrajectory Note2Note3 = Trajectories.getChoreoTrajectory("Note2Note3", Rotation2d.fromRadians(-1.695));
     // public static final PathPlannerTrajectory SL1Note1 = Trajectories.getChoreoTrajectory("SL1Note1", Rotation2d.fromDegrees(-90));
     public static final PathPlannerTrajectory SL1Note1 = Trajectories.getChoreoTrajectory("SL1Note1", Rotation2d.fromDegrees(-90));
-    public static final PathPlannerTrajectory Note1Note2 = Trajectories.getChoreoTrajectory("Note1Note2", Rotation2d.fromDegrees(-90));
+    public static final PathPlannerTrajectory Note1Note2 = Trajectories.getChoreoTrajectory("Note1toNote2", Rotation2d.fromDegrees(-90));
     public static final PathPlannerTrajectory Note2Note3 = Trajectories.getChoreoTrajectory("Note2Note3", Rotation2d.fromDegrees(-90));
     public static final PathPlannerTrajectory ThirdNoteSL2 = Trajectories.getChoreoTrajectory("ThirdNoteSL2", Rotation2d.fromDegrees(-90));
     public static final PathPlannerTrajectory FourNoteFull = Trajectories.getChoreoTrajectory("FourNoteFull", Rotation2d.fromDegrees(-90));
-
+    public static final PathPlannerTrajectory SixSource1 = Trajectories.getChoreoTrajectory("six_source_1", Rotation2d.fromDegrees(180));
+    public static final PathPlannerTrajectory SixSource2 = Trajectories.getChoreoTrajectory("six_source_2", Rotation2d.fromRadians(1.464));
+    public static final PathPlannerTrajectory SixSource3 = Trajectories.getChoreoTrajectory("six_source_3", Rotation2d.fromRadians(3.118));
+    public static final PathPlannerTrajectory Test1 = Trajectories.getChoreoTrajectory("test_1", Rotation2d.fromDegrees(180));
+    public static final PathPlannerTrajectory SixAmp1 = Trajectories.getChoreoTrajectory("six_amp_1", Rotation2d.fromDegrees(180));
+    public static final PathPlannerTrajectory SixAmp2 = Trajectories.getChoreoTrajectory("six_amp_2", Rotation2d.fromRadians(-2.8510430948694685));
+    public static final PathPlannerTrajectory SixAmp3 = Trajectories.getChoreoTrajectory("six_amp_3", Rotation2d.fromDegrees(180));
     // public static final PathPlannerTrajectory Note3Mid5 = Trajectories.getChoreoTrajectory("Note3Mid5");
     // public static final PathPlannerTrajectory Mid5Note3 = Trajectories.getChoreoTrajectory("Mid5Note3");
 }

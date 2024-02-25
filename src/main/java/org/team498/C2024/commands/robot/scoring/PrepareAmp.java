@@ -17,7 +17,7 @@ public class PrepareAmp extends SequentialCommandGroup {
             new SetKickerState(State.Kicker.FORWARD),
 
             // Moves Note into to Kicker
-            new MoveHopper(-8),
+            new MoveHopper(-16),
 
             // Sets Kicker to Idle
             new SetState(State.IDLE),

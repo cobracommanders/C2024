@@ -20,14 +20,14 @@ public class PrepareSpeaker extends SequentialCommandGroup {
 
             // Sets Shooter to Speed and sets kicker to REVERSE
             new ParallelCommandGroup(
-                new SetShooterNextState(),
-                new SetKickerState(State.Kicker.REVERSE)
+                new SetShooterNextState()
+                //new SetKickerState(State.Kicker.REVERSE)
                 // Moves Note into Shooter
                 // new MoveHopper(-0)
-            ),
+            )
             
             //Sets Kicker to IDLE
-            new SetKickerState(State.Kicker.IDLE)
+            //new SetKickerState(State.Kicker.IDLE)
 
             //Sets state Back to Speaker
             // new SetScoringState()

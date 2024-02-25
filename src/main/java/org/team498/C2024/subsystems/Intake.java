@@ -52,7 +52,7 @@ public class Intake extends SubsystemBase {
         currentState = State.Intake.IDLE;
         setpoint = currentState.speed;
 
-        pidController.setTolerance(0.15);
+        pidController.setTolerance(0.3);
         pidController.reset();
         pidController.setSetpoint(setpoint);
 

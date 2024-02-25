@@ -92,15 +92,15 @@ public class Shooter extends SubsystemBase {
         feedSpeed = State.Shooter.IDLE.feedSpeed;
         angle = State.Shooter.IDLE.angle;
 
-        rightController.setTolerance(10);
-        leftController.setTolerance(10);
-        feedController.setTolerance(10);
+        rightController.setTolerance(350);
+        leftController.setTolerance(350);
+        feedController.setTolerance(300);
         angleController.setTolerance(0.1);
 
         // reset motor defaults to ensure all settings are clear
         TalonFXConfiguration flywheelConfig = new TalonFXConfiguration();
-        flywheelConfig.CurrentLimits.SupplyCurrentLimit = 35;
-        flywheelConfig.CurrentLimits.StatorCurrentLimit = 35;
+        flywheelConfig.CurrentLimits.SupplyCurrentLimit = 70;
+        flywheelConfig.CurrentLimits.StatorCurrentLimit = 80;
         flywheelConfig.CurrentLimits.StatorCurrentLimitEnable = true;
         flywheelConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
         rightMotor.getConfigurator().apply(flywheelConfig);
@@ -139,13 +139,13 @@ public class Shooter extends SubsystemBase {
         else if (currentState == State.Shooter.VISION) {
             this.angle = RobotPosition.calculateLimelightAngleToNote(StateController.getInstance().getNote());
         }
-        if (this.angle > 78) {
-            this.angle = 78;
-        } else if (this.angle < 33) {
-            this.angle = 33;
+        if (this.angle > ShooterConstants.AngleConstants.MAX_ANGLE) {
+            this.angle = ShooterConstants.AngleConstants.MAX_ANGLE;
+        } else if (this.angle < ShooterConstants.AngleConstants.MIN_ANGLE) {
+            this.angle = ShooterConstants.AngleConstants.MIN_ANGLE;
         }
 
-        if (currentState == State.Shooter.IDLE) {
+        if (currentState == State.Shooter.IDLE || currentState == State.Shooter.AMP) {
             //IF State is IDLE, don't Spin the right wheel
             this.leftSpeed = currentState.speed;
             this.rightSpeed = currentState.speed;
@@ -263,9 +263,11 @@ public class Shooter extends SubsystemBase {
     }
 
     public double getTimeOfFlight() {
-        double yVelocity = getRightSpeedMPS() * Math.sin(Math.toRadians(getAngle()));
+        //double yVelocity = getRightSpeedMPS() * Math.sin(Math.toRadians(getAngle()));
+        double yVelocity = RPM_to_MPS(2700) * Math.sin(Math.toRadians(getAngle()));
         double distanceToSpeaker = RobotPosition.distanceToSpeakerStatic();
-        return distanceToSpeaker / yVelocity;
+        // return (distanceToSpeaker / yVelocity) + RobotPosition.defaultTOF;
+        return RobotPosition.defaultTOF;
     }
 
     public boolean shooterState(){
@@ -298,10 +300,13 @@ public class Shooter extends SubsystemBase {
 
     private double calculateAngle(double distance){
         double v = RPM_to_MPS(currentState.speed);
-        double theta = 2.634 * distance * distance - 21.619 * distance + 73.023; //angle in degrees as given in team498/notebook/shooter_model.ipynb
+        double c1 = 65.301;
+        double c2 = -16.645;
+        double c3 = 1.736;
+        double c4 = 0;
+        double theta = c4 * Math.pow(distance, 3) + c3 * distance * distance + c2 * distance + c1; //angle in degrees as given in team498/notebook/shooter_model.ipynb
         return offsetAngle(RobotPosition.getSpeakerRelativeVelocity(), v, theta);
     }
-
     private double offsetAngle(double r, double v, double theta) {
         return Units.radiansToDegrees(Math.atan((v * Math.sin(Units.degreesToRadians(theta))) / (v * Math.cos(Units.degreesToRadians(theta)) - r)));
     }

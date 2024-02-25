@@ -9,8 +9,8 @@ import org.team498.C2024.commands.shooter.SetShooterNextState;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
-public class Score extends SequentialCommandGroup {
-    public Score(){
+public class HalfScore extends SequentialCommandGroup {
+    public HalfScore(){
         super(
 
             //Starts in CRESCENDO, SUBWOOFER, PODIUM, or AMP
@@ -25,7 +25,6 @@ public class Score extends SequentialCommandGroup {
 
             // Sets Shooter, Hopper and Kicker to IDLE
             new SetState(State.IDLE),
-            new SetShooterNextState(),
             new SetHopperNextState(),
             new SetKickerNextState()
         );

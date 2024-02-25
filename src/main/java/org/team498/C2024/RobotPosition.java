@@ -21,7 +21,7 @@ public class RobotPosition {
     private static final Shooter shooter = Shooter.getInstance();
     public static final double scoringOffset = Units.inchesToMeters((DrivetrainConstants.ROBOT_WIDTH / 2) + 10);
 
-    public static final double defaultTOF = 0.25;
+    public static final double defaultTOF = 0.4;
 
     public static boolean inRegion(BaseRegion region) {
         return region.contains(Point.fromPose2d(drivetrain.getPose()));
@@ -52,8 +52,16 @@ public class RobotPosition {
         ChassisSpeeds currentSpeeds = drivetrain.getCurrentSpeeds();
 
         // Estimate the future pose of the robot to compensate for lag
-        double newX = currentPose.getX() + (-currentSpeeds.vxMetersPerSecond * tof);
-        double newY = currentPose.getY() + (-currentSpeeds.vyMetersPerSecond * tof);
+        double newX;
+        double newY;
+        if (Robot.alliance.get() == Alliance.Red) {
+            newX = currentPose.getX() + (-currentSpeeds.vxMetersPerSecond * tof);
+            newY = currentPose.getY() + (-currentSpeeds.vyMetersPerSecond * tof);
+        } else {
+            newX = currentPose.getX() + (currentSpeeds.vxMetersPerSecond * tof);
+            newY = currentPose.getY() + (currentSpeeds.vyMetersPerSecond * tof);
+        }
+        
 
         Pose2d futurePose = new Pose2d(newX, newY, new Rotation2d());
 
