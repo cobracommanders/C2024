@@ -20,7 +20,7 @@ public class PracticeAuto implements Auto{
                 new PathPlannerFollower(PathLib.SL1Note1),
                 new SequentialCommandGroup(
                     new SlowDrive(DrivetrainConstants.AUTO_SPEED_SCALAR),
-                    new FullScore(),
+                    new FullScore(2),
                     new SlowDrive(DrivetrainConstants.FULL_SPEED_SCALAR)
                 )
             )

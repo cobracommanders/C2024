@@ -48,7 +48,7 @@ public class PathPlannerFollower extends Command {
         trajectoryTimer.restart();
         currentTime += dt * slowDrive;
         State state = trajectory.sample(currentTime);
-
+        // if (currentTime >= trajectory.getTotalTimeSeconds()) state = new State();
         if (Robot.alliance.get() == Alliance.Blue) {
             drivetrain.setPositionGoal(new Pose2d(state.positionMeters.getX(), state.positionMeters.getY(), state.targetHolonomicRotation));
             if (hasTargetDrive) drivetrain.setAngleGoal(RobotPosition.calculateDegreesToTarget(targetPose));
@@ -62,7 +62,7 @@ public class PathPlannerFollower extends Command {
 
     @Override
     public boolean isFinished() {
-        // return trajectoryTimer.get() > trajectory.getTotalTimeSeconds();
+        //currentTime > trajectory.getTotalTimeSeconds();
         if (Robot.alliance.get() == Alliance.Blue) {
             return RobotPosition.isNear(PoseUtil.toPose2d(trajectory.getEndState().positionMeters), 0.1);
         } else {

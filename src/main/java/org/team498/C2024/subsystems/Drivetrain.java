@@ -67,8 +67,8 @@ public class Drivetrain extends SubsystemBase {
         angleController.enableContinuousInput(-180, 180);
         angleController.setTolerance(0);
         angleController.reset(getYaw());
-        xController.setTolerance(0);
-        yController.setTolerance(0);
+        xController.setTolerance(0.1);
+        yController.setTolerance(0.1);
         xLimiter.reset(0);
         yLimiter.reset(0);
         kinematics = new SwerveDriveKinematics(getModuleTranslations());
@@ -83,6 +83,7 @@ public class Drivetrain extends SubsystemBase {
 
     @Override
     public void periodic() {
+        dT = timer.get();
         timer.restart();
         field2d.setRobotPose(getPose().getX(), getPose().getY(), getPose().getRotation());
         // Optional<TimedPose> visionPose = PhotonVision.getInstance().getEstimatedPose();
@@ -124,11 +125,11 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void updateIntegratedEncoders() {
-        timer.restart();
+        // timer.restart();
         for(SwerveModule module : modules) {
             module.updateIntegratedEncoder();
         }
-        System.out.println(timer.get());
+        // System.out.println(timer.get());
     }
 
     public void enableBrakeMode(boolean setBrake) {

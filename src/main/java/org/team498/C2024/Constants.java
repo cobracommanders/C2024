@@ -4,7 +4,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants {
-    public static final double CAN_TIMEOUT_SECONDS = 0.002;
+    public static final double CAN_TIMEOUT_SECONDS = 0.001;
 
     public static final class OIConstants {
         public static final int DRIVER_CONTROLLER_ID = 0;
@@ -20,7 +20,7 @@ public final class Constants {
 
         public static final float SLOW_SPEED_SCALAR = 0.5f;
         public static final float TARGET_SPEED_SCALAR = 0.8f;
-        public static final float AUTO_SPEED_SCALAR = 0.6f;
+        public static final float AUTO_SPEED_SCALAR = 0.5f;
         public static final short FULL_SPEED_SCALAR = 1;
 
         public static final double SWERVE_MODULE_DISTANCE_FROM_CENTER = 10.75;
@@ -71,20 +71,20 @@ public final class Constants {
         public static final double fD = 0;
         public static final double fV = 0.00025;
         // P, I, D are the flywheel Constants for the shooter
-        public static final double P = 0.0006; // 0.001 //3.273
+        public static final double P = 0.0003; // 0.001 //3.273
         public static final double I = 0;
         public static final double D = 0;
         public static final double S = 0;
-        public static final double V = 0.000095;   //0.0005
+        public static final double V = 0.00016;   //0.0005
         public static final double A = 0;
 
-        public static final double GEAR_RATIO = 55.0 / 18.0;
+        public static final double GEAR_RATIO = 36.0 / 18.0;
         public static final double CIRCUMFERENCE = Units.inchesToMeters(3) * Math.PI;
 
         
         public static final double MAX_RPM = 6000 * GEAR_RATIO;
         public static final double MAX_MPS = MAX_RPM * CIRCUMFERENCE;
-        public static final double SPIN_DIFF = 800;
+        public static final double SPIN_DIFF = 1000;
 
         public static final class AngleConstants{
             public static final double P = 0.07;
@@ -93,10 +93,10 @@ public final class Constants {
             public static final double S = 0;
             public static final double V = 0;
             public static final double G = 0; //0.03
-            public static final double MAX_ANGLE = 78;
-            public static final double MIN_ANGLE = 32;
+            public static final double MAX_ANGLE = 73;
+            public static final double MIN_ANGLE = 31;
 
-            public static final double ANGLE_OFFSET = 0.057643; //0.07161433; //0.08792
+            public static final double ANGLE_OFFSET = 0.073486; //0.07161433; //0.08792
         }
     }
 
@@ -107,8 +107,8 @@ public final class Constants {
         public static final double S = 0;
         public static final double V = 0;
         public static final double G = 0.12;
-        public static final double dV = 0.2 / 6.0; // 20% power per 6 m/s
-        public static final double rV = 0.5 / (4 * Math.PI); // 50% power per 4pi r/s (180 deg/s)
+        public static final double dV = 0.2 / 1800.0; // 20% power per 6 m/s
+        public static final double rV = 0.3 / (3 * Math.PI); // 50% power per 3pi r/s (120 deg/s)
 
         public static final double ENCODER_OFFSET = 0.351858;
     }

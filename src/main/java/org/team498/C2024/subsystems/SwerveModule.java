@@ -138,7 +138,7 @@ public class SwerveModule {
 
         TalonFXConfiguration driveConfig = new TalonFXConfiguration();
         driveConfig.CurrentLimits.SupplyCurrentLimit = 35;
-        driveConfig.CurrentLimits.StatorCurrentLimit = 35;
+        driveConfig.CurrentLimits.StatorCurrentLimit = 45;
         driveConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
         driveConfig.CurrentLimits.StatorCurrentLimitEnable = true;
         driveConfig.Slot0.kP = 0.04;//0.025;
@@ -150,6 +150,7 @@ public class SwerveModule {
         driveConfig.OpenLoopRamps.VoltageOpenLoopRampPeriod = 1;
         motor.getConfigurator().apply(driveConfig);
         motor.setInverted(false);
+        motor.setNeutralMode(NeutralModeValue.Brake);
         
         motor.optimizeBusUtilization(Constants.CAN_TIMEOUT_SECONDS);
         
@@ -171,6 +172,7 @@ public class SwerveModule {
         motor.getConfigurator().apply(steerConfig);
         motor.setInverted(true);    
         motor.optimizeBusUtilization(Constants.CAN_TIMEOUT_SECONDS);
+        motor.setNeutralMode(NeutralModeValue.Brake);
         motor.getPosition().setUpdateFrequency(200, Constants.CAN_TIMEOUT_SECONDS);
         // motor.getVelocity().setUpdateFrequency(100);
     }

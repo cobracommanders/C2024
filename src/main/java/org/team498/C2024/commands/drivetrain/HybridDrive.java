@@ -64,7 +64,7 @@ public class HybridDrive extends Command {
         double xTranslation = xTranslationSupplier.getAsDouble() * MAX_VELOCITY_METERS_PER_SECOND * Robot.coordinateFlip * slowDrive;
         double yTranslation = yTranslationSupplier.getAsDouble() * MAX_VELOCITY_METERS_PER_SECOND * Robot.coordinateFlip * slowDrive;
         double rotation = Math.copySign(Math.pow(rotationSupplier.getAsDouble(), 3), rotationSupplier.getAsDouble()) * MAX_ANGULAR_SPEED_DEGREES_PER_SECOND * slowDrive;
-        rotation /= 2;
+        rotation *= 0.4;
         
 
         if (drivetrain.atAngleGoal()) isPOVControlled = false;

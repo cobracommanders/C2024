@@ -13,6 +13,7 @@ import org.team498.C2024.commands.intake.SetIntakeManual;
 import org.team498.C2024.commands.kicker.SetKickerNextState;
 import org.team498.C2024.commands.robot.ReturnToIdle;
 import org.team498.C2024.commands.robot.SetIntakeIdle;
+import org.team498.C2024.commands.robot.SetScoringState;
 import org.team498.C2024.commands.robot.SetState;
 import org.team498.C2024.commands.robot.loading.CollectSource;
 import org.team498.C2024.commands.robot.loading.LoadGround;
@@ -23,6 +24,8 @@ import org.team498.C2024.commands.robot.scoring.CancelSpeaker;
 import org.team498.C2024.commands.robot.scoring.PrepareToScore;
 import org.team498.C2024.commands.robot.scoring.Score;
 import org.team498.C2024.commands.shooter.SetShooterManual;
+import org.team498.C2024.commands.shooter.SetShooterNextState;
+import org.team498.C2024.commands.shooter.SetShooterState;
 import org.team498.C2024.subsystems.Drivetrain;
 import org.team498.lib.drivers.Xbox;
 
@@ -85,6 +88,8 @@ public class Controls {
         operator.back().toggleOnTrue(new SetIntakeManual(true, operator::rightY));
         operator.leftTrigger().onTrue(new Outtake())
             .onFalse(new ReturnToIdle());
+        operator.leftBumper().onTrue(new SetShooterState(State.Shooter.PREPARE).andThen(new SetShooterNextState()));
+        operator.rightBumper().onTrue(new SetState(State.IDLE).andThen(new SetShooterNextState()));
         // operator.back().toggleOnTrue(new SetShooterManual(true, operator::leftY, ()-> 0.5));
         // operator.A().toggleOnTrue(new SetShooterManual(true, operator::leftY, ()-> 1.0));
         // operator.B().toggleOnTrue(new SetShooterManual(true, operator::leftY, ()-> 0.0));

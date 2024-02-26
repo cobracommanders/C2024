@@ -3,7 +3,6 @@ package org.team498.C2024.commands.drivetrain;
 import org.team498.C2024.FieldPositions;
 import org.team498.C2024.StateController;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 public class TargetSpeaker extends InstantCommand{

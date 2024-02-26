@@ -26,7 +26,7 @@ public class FourNote implements Auto{
 
         return new SequentialCommandGroup(
                 new InstantCommand(() -> StateController.getInstance().setNextScoringOption(ScoringOption.CRESCENDO)),
-                new FullScore(),
+                new FullScore(2),
 
             new ParallelCommandGroup(
                 new PathPlannerFollower(PathLib.SL1Note1),
@@ -36,7 +36,7 @@ public class FourNote implements Auto{
                     new WaitCommand(1),
                     new TargetSpeaker(),
                     new SlowDrive(DrivetrainConstants.AUTO_SPEED_SCALAR),
-                    new FullScore(),
+                    new FullScore(2),
                     new TargetDrive(null),
                     new SlowDrive(DrivetrainConstants.FULL_SPEED_SCALAR)
                 )
@@ -50,7 +50,7 @@ public class FourNote implements Auto{
                     new WaitCommand(1),
                     new TargetSpeaker(),
                     new SlowDrive(DrivetrainConstants.AUTO_SPEED_SCALAR),
-                    new FullScore(),
+                    new FullScore(2),
                     new TargetDrive(null),
                     new SlowDrive(DrivetrainConstants.FULL_SPEED_SCALAR)
                 )
@@ -70,7 +70,7 @@ public class FourNote implements Auto{
                 new SequentialCommandGroup(
                     new TargetSpeaker(),
                     new SlowDrive(DrivetrainConstants.AUTO_SPEED_SCALAR),
-                    new FullScore(),
+                    new FullScore(2),
                     new TargetDrive(null),
                     new SlowDrive(DrivetrainConstants.FULL_SPEED_SCALAR)
                 )

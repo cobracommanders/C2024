@@ -30,12 +30,13 @@ public enum State {
 
     //Sets Speed and Angle for Shooter
     public enum Shooter {
-        IDLE(0, 0, 35),
-        SUBWOOFER(8000, 1000, 49),
+        IDLE(0, 0, 30),
+        SUBWOOFER(3200, 1000, 49),
         AMP(0, 0, 35),
-        PODIUM(4000, 1000, 27), //37
-        CRESCENDO(8000, 1000, 40),
+        PODIUM(3700, 1000, 49), //37
+        CRESCENDO(3700, 1000, 40),
         SOURCE(0, 0, 50),
+        PREPARE(3700, 1000, 40),
         CANCEL_AMP(0, 0, 35),
         VISION(0, 0, 40);
 
@@ -82,7 +83,7 @@ public enum State {
     //Sets Positions for Intake
     public enum Intake {
         IDLE(1.92), //0.304
-        INTAKE(0.01),
+        INTAKE(0.0),
         OUTTAKE(0.01);
 
         public final double speed;

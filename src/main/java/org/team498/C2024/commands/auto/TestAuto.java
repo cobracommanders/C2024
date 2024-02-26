@@ -14,15 +14,18 @@ public class TestAuto implements Auto{
     public Command getCommand() {
 
         return new SequentialCommandGroup(
-            // new PathPlannerFollower(PathLib.MidSubwooferToFirstNote)
-            // new PathPlannerFollower(PathLib.FirstNoteToFifthNote),
-            // new PathPlannerFollower(PathLib.FifthNoteToSecondNoteUnderStage)
+            // new PathPlannerFollower(PathLib.SixSource1),
+            // new PathPlannerFollower(PathLib.SixSource2),
+            // new PathPlannerFollower(PathLib.SixSource3)
+            new PathPlannerFollower(PathLib.SixAmp1)
+            // new PathPlannerFollower(PathLib.SixAmp2),
+            // new PathPlannerFollower(PathLib.SixAmp3)
         );
     }
 
     @Override
     public Pose2d getInitialPose() {
-        return new Pose2d();//PathLib.MidSubwooferToFirstNote.getInitialTargetHolonomicPose();
+        return PathLib.SixAmp1.getInitialTargetHolonomicPose();//PathLib.MidSubwooferToFirstNote.getInitialTargetHolonomicPose();
     }
     
 }

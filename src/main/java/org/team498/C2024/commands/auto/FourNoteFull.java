@@ -33,7 +33,7 @@ public class FourNoteFull implements Auto{
                     new InstantCommand(() -> StateController.getInstance().setNextScoringOption(ScoringOption.CRESCENDO)),
                     new TargetSpeaker(),
                     new SlowDrive(DrivetrainConstants.AUTO_SPEED_SCALAR),
-                    new FullScore(),
+                    new FullScore(2),
                     new TargetDrive(null),
                     new SlowDrive(DrivetrainConstants.FULL_SPEED_SCALAR),
 
@@ -42,7 +42,7 @@ public class FourNoteFull implements Auto{
                     new WaitCommand(1),
                     new TargetSpeaker(),
                     new SlowDrive(DrivetrainConstants.AUTO_SPEED_SCALAR),
-                    new FullScore(),
+                    new FullScore(2),
                     new TargetDrive(null),
                     new SlowDrive(DrivetrainConstants.FULL_SPEED_SCALAR),
 
@@ -51,7 +51,7 @@ public class FourNoteFull implements Auto{
                     new WaitCommand(1),
                     new TargetSpeaker(),
                     new SlowDrive(DrivetrainConstants.AUTO_SPEED_SCALAR),
-                    new FullScore(),
+                    new FullScore(2),
                     new TargetDrive(null),
                     new SlowDrive(DrivetrainConstants.FULL_SPEED_SCALAR),
 
@@ -60,7 +60,7 @@ public class FourNoteFull implements Auto{
                     new WaitCommand(1),
                     new TargetSpeaker(),
                     new SlowDrive(DrivetrainConstants.AUTO_SPEED_SCALAR),
-                    new FullScore(),
+                    new FullScore(2),
                     new TargetDrive(null),
                     new SlowDrive(DrivetrainConstants.FULL_SPEED_SCALAR)));
     }
