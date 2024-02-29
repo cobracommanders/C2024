@@ -20,7 +20,7 @@ public final class Constants {
 
         public static final float SLOW_SPEED_SCALAR = 0.5f;
         public static final float TARGET_SPEED_SCALAR = 0.8f;
-        public static final float AUTO_SPEED_SCALAR = 0.5f;
+        public static final float AUTO_SPEED_SCALAR = 0.2f;
         public static final short FULL_SPEED_SCALAR = 1;
 
         public static final double SWERVE_MODULE_DISTANCE_FROM_CENTER = 10.75;
@@ -75,7 +75,7 @@ public final class Constants {
         public static final double I = 0;
         public static final double D = 0;
         public static final double S = 0;
-        public static final double V = 0.00016;   //0.0005
+        public static final double V = 0.00013;   //0.0005
         public static final double A = 0;
 
         public static final double GEAR_RATIO = 36.0 / 18.0;

@@ -26,6 +26,15 @@ public class PathLib {
     public static final PathPlannerTrajectory SixAmp1 = Trajectories.getChoreoTrajectory("six_amp_1", Rotation2d.fromDegrees(180));
     public static final PathPlannerTrajectory SixAmp2 = Trajectories.getChoreoTrajectory("six_amp_2", Rotation2d.fromRadians(-2.8510430948694685));
     public static final PathPlannerTrajectory SixAmp3 = Trajectories.getChoreoTrajectory("six_amp_3", Rotation2d.fromDegrees(180));
+    public static final PathPlannerTrajectory four_port_1 = Trajectories.getChoreoTrajectory("four_port_1", Rotation2d.fromDegrees(180));
+    public static final PathPlannerTrajectory four_port_2 = Trajectories.getChoreoTrajectory("four_port_2", Rotation2d.fromRadians(2.212));
+    public static final PathPlannerTrajectory four_port_3 = Trajectories.getChoreoTrajectory("four_port_3", Rotation2d.fromRadians(2.279));
+    public static final PathPlannerTrajectory pre_taxi_1 = Trajectories.getChoreoTrajectory("pre_taxi_1", Rotation2d.fromRadians(2.4));
+    public static final PathPlannerTrajectory pre_taxi_2 = Trajectories.getChoreoTrajectory("pre_taxi_2", Rotation2d.fromDegrees(180));
+    public static final PathPlannerTrajectory pre_taxi_3 = Trajectories.getChoreoTrajectory("pre_taxi_3", Rotation2d.fromRadians(-2.078));
+    public static final PathPlannerTrajectory four_wing_1 = Trajectories.getChoreoTrajectory("four_wing_1", Rotation2d.fromDegrees(180));
+    public static final PathPlannerTrajectory four_wing_2 = Trajectories.getChoreoTrajectory("four_wing_2", Rotation2d.fromRadians(2.85));
+    public static final PathPlannerTrajectory four_wing_3 = Trajectories.getChoreoTrajectory("four_wing_3", Rotation2d.fromRadians(-3.058));
     // public static final PathPlannerTrajectory Note3Mid5 = Trajectories.getChoreoTrajectory("Note3Mid5");
     // public static final PathPlannerTrajectory Mid5Note3 = Trajectories.getChoreoTrajectory("Mid5Note3");
 }

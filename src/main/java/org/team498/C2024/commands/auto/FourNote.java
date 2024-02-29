@@ -1,16 +1,17 @@
 package org.team498.C2024.commands.auto;
 import org.team498.C2024.Constants.DrivetrainConstants;
 import org.team498.C2024.PathLib;
+import org.team498.C2024.State;
 import org.team498.C2024.StateController;
 import org.team498.C2024.StateController.ScoringOption;
 import org.team498.C2024.commands.drivetrain.PathPlannerFollower;
 import org.team498.C2024.commands.drivetrain.SlowDrive;
 import org.team498.C2024.commands.drivetrain.TargetDrive;
 import org.team498.C2024.commands.drivetrain.TargetSpeaker;
+import org.team498.C2024.commands.intake.SetIntakeNextState;
+import org.team498.C2024.commands.robot.SetState;
 import org.team498.C2024.commands.robot.loading.LoadGround;
 import org.team498.C2024.commands.robot.scoring.FullScore;
-import org.team498.C2024.commands.robot.scoring.PrepareToScore;
-import org.team498.C2024.commands.robot.scoring.Score;
 import org.team498.lib.auto.Auto;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -29,6 +30,10 @@ public class FourNote implements Auto{
                 new FullScore(2),
 
             new ParallelCommandGroup(
+                new SequentialCommandGroup(
+                    new SetState(State.AUTO),
+                    new SetIntakeNextState()
+                ),
                 new PathPlannerFollower(PathLib.SL1Note1),
                 new SequentialCommandGroup(
                     new WaitCommand(1),

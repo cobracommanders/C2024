@@ -9,6 +9,7 @@ import org.team498.C2024.StateController.ScoringOption;
 import org.team498.C2024.commands.drivetrain.HybridDrive;
 import org.team498.C2024.commands.drivetrain.SlowDrive;
 import org.team498.C2024.commands.drivetrain.TargetDrive;
+import org.team498.C2024.commands.hopper.SetHopperState;
 import org.team498.C2024.commands.intake.SetIntakeManual;
 import org.team498.C2024.commands.kicker.SetKickerNextState;
 import org.team498.C2024.commands.robot.ReturnToIdle;
@@ -86,7 +87,7 @@ public class Controls {
     public void configureOperatorCommands() {
         operator.start().toggleOnTrue(new SetShooterManual(true, operator::leftY, ()-> 0));
         operator.back().toggleOnTrue(new SetIntakeManual(true, operator::rightY));
-        operator.leftTrigger().onTrue(new Outtake())
+        operator.leftTrigger().onTrue(new SetHopperState(State.Hopper.FORWARD))
             .onFalse(new ReturnToIdle());
         operator.leftBumper().onTrue(new SetShooterState(State.Shooter.PREPARE).andThen(new SetShooterNextState()));
         operator.rightBumper().onTrue(new SetState(State.IDLE).andThen(new SetShooterNextState()));

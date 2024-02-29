@@ -11,7 +11,8 @@ public enum State {
     CRESCENDO(Shooter.CRESCENDO, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.REVERSE),
     CANCEL_AMP(Shooter.IDLE, Hopper.IDLE, Intake.IDLE, IntakeRollers.IDLE, Kicker.REVERSE),
     CANCEL_SPEAKER(Shooter.IDLE, Hopper.IDLE, Intake.IDLE, IntakeRollers.IDLE, Kicker.FORWARD),
-    TRACK_NOTE(Shooter.VISION, Hopper.REVERSE, Intake.INTAKE, IntakeRollers.INTAKE, Kicker.IDLE);
+    TRACK_NOTE(Shooter.VISION, Hopper.REVERSE, Intake.INTAKE, IntakeRollers.INTAKE, Kicker.IDLE),
+    AUTO(Shooter.AUTO, Hopper.REVERSE, Intake.INTAKE, IntakeRollers.INTAKE, Kicker.REVERSE);
 
     public final Shooter shooter;
     public final Hopper hopper;
@@ -31,14 +32,18 @@ public enum State {
     //Sets Speed and Angle for Shooter
     public enum Shooter {
         IDLE(0, 0, 30),
-        SUBWOOFER(3200, 1000, 49),
+        SUBWOOFER(3200, 1000, 49), //49 //3200
         AMP(0, 0, 35),
-        PODIUM(3700, 1000, 49), //37
+        PODIUM(3700, 1000, 37), //37
         CRESCENDO(3700, 1000, 40),
         SOURCE(0, 0, 50),
         PREPARE(3700, 1000, 40),
         CANCEL_AMP(0, 0, 35),
-        VISION(0, 0, 40);
+        VISION(0, 0, 40),
+        AUTO(4000, 1000, 40),
+        CLIMB_UP(0, 0, 70),
+        CLIMB_DOWN(0, 0, 32),
+        TRAP(3500, 1000, 50);
 
         public final double speed;
         public final double feedSpeed;
@@ -70,7 +75,7 @@ public enum State {
     public enum Hopper {
         IDLE(0),
         FORWARD(0.5),
-        REVERSE(-0.4),
+        REVERSE(-0.5),
         AMP(-0.75);
 
         public final double speed;

@@ -21,7 +21,7 @@ public class Score extends SequentialCommandGroup {
             new SetShooterNextState(),
 
             //Waits for Note to shoot
-            new WaitCommand(0.75),
+            new WaitCommand(0.6),
 
             // Sets Shooter, Hopper and Kicker to IDLE
             new SetState(State.IDLE),

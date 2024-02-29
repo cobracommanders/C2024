@@ -15,6 +15,9 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 import org.team498.C2024.commands.auto.FourNote;
 import org.team498.C2024.commands.auto.FourNoteFull;
+import org.team498.C2024.commands.auto.FourNoteWing;
+import org.team498.C2024.commands.auto.FourPort;
+import org.team498.C2024.commands.auto.OneTaxi;
 import org.team498.C2024.commands.auto.SixNoteAmp;
 import org.team498.C2024.commands.auto.TestAuto;
 import org.team498.C2024.commands.robot.scoring.FullScore;
@@ -51,7 +54,7 @@ public class Robot extends TimedRobot{
     //private final RobotState robotState = RobotState.getInstance();
 
     private final SendableChooser<Auto> autoChooser = new SendableChooser<Auto>();
-    private Auto defaultAuto = new TestAuto();
+    private Auto defaultAuto = new FourPort();
     private Auto autoToRun = defaultAuto;
 
     // private boolean matchStarted = false;
@@ -60,7 +63,10 @@ public class Robot extends TimedRobot{
         new FourNote(),
         new FourNoteFull(),
         new SixNoteAmp(),
-        new TestAuto()
+        new TestAuto(),
+        new FourPort(),
+        new FourNoteWing(),
+        new OneTaxi()
         //    new PracticeAuto()
                                                   );
 
@@ -69,7 +75,7 @@ public class Robot extends TimedRobot{
         //new PowerDistribution(1, PowerDistribution.ModuleType.kRev).close(); // Enables power distribution logging
         drivetrain.setYaw(0);
        // FieldPositions.displayAll();
-        autoChooser.setDefaultOption("default (six_source_test)", defaultAuto);
+        autoChooser.setDefaultOption(defaultAuto.getName(), defaultAuto);
         autoOptions.forEach(auto -> autoChooser.addOption(auto.getName(), auto));
         controls.configureDefaultCommands();
         controls.configureDriverCommands();

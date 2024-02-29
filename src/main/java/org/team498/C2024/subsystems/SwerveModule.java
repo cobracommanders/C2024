@@ -163,7 +163,7 @@ public class SwerveModule {
        // motor.configFactoryDefault();
 
         TalonFXConfiguration steerConfig = new TalonFXConfiguration();
-        steerConfig.CurrentLimits.SupplyCurrentLimit = 20;
+        steerConfig.CurrentLimits.SupplyCurrentLimit = 35;
         steerConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
         steerConfig.Slot0.kP = 2.4; //0.2
         steerConfig.Slot0.kI = 0.0;
