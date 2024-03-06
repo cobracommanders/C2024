@@ -19,6 +19,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SwerveModule {
     private final TalonFX drive;
@@ -60,6 +61,10 @@ public class SwerveModule {
     public void updateIntegratedEncoder() {
         steer.setPosition(Falcon500Conversions.degreesToFalcon(getAngle(), MK4I_STEER_REDUCTION_L3), Constants.CAN_TIMEOUT_SECONDS);
         steer.setControl(new PositionVoltage(Falcon500Conversions.degreesToFalcon(getAngle(), MK4I_STEER_REDUCTION_L3)));
+    }
+    public void updateIntegratedEncoder(double updatevalue) {
+        steer.setPosition(updatevalue, Constants.CAN_TIMEOUT_SECONDS);
+        steer.setControl(new PositionVoltage(updatevalue));
     }
 
     /**

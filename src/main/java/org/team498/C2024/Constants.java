@@ -20,7 +20,7 @@ public final class Constants {
 
         public static final float SLOW_SPEED_SCALAR = 0.5f;
         public static final float TARGET_SPEED_SCALAR = 0.8f;
-        public static final float AUTO_SPEED_SCALAR = 0.2f;
+        public static final float AUTO_SPEED_SCALAR = 0.3f;
         public static final short FULL_SPEED_SCALAR = 1;
 
         public static final double SWERVE_MODULE_DISTANCE_FROM_CENTER = 10.75;
@@ -31,10 +31,10 @@ public final class Constants {
         public static final double DRIVE_WHEEL_DIAMETER = 4;
         public static final double DRIVE_WHEEL_CIRCUMFERENCE = DRIVE_WHEEL_DIAMETER * Math.PI;
 
-        public static final double FL_MODULE_OFFSET = -0.827881;
-        public static final double FR_MODULE_OFFSET = -0.328125;
-        public static final double BL_MODULE_OFFSET = -0.133789;
-        public static final double BR_MODULE_OFFSET = -0.227295;
+        public static final double FL_MODULE_OFFSET = -0.984863;
+        public static final double FR_MODULE_OFFSET = -0.707031;
+        public static final double BL_MODULE_OFFSET = -0.716553 + 0.5;
+        public static final double BR_MODULE_OFFSET = -0.960449 + 0.5;
 
         public static final double ROBOT_WIDTH = 26.5 + 6; // Robot width with bumpers, in inches
 
@@ -42,7 +42,7 @@ public final class Constants {
             public static final double P = 5;
             public static final double I = 0;
             public static final double D = 0;
-            public static final double EPSILON = 1.0;
+            public static final double EPSILON = 1.5;
 
             // Constraints for the profiled angle controller
             public static final double MAX_ANGULAR_SPEED_DEGREES_PER_SECOND = 720;
@@ -66,7 +66,7 @@ public final class Constants {
 
     public static final class ShooterConstants {
         // fP, fI, fD are the feedMotor Constants for the shooter
-        public static final double fP = 0.0003;
+        public static final double fP = 0.00028;
         public static final double fI = 0;
         public static final double fD = 0;
         public static final double fV = 0.00025;
@@ -94,9 +94,10 @@ public final class Constants {
             public static final double V = 0;
             public static final double G = 0; //0.03
             public static final double MAX_ANGLE = 73;
-            public static final double MIN_ANGLE = 31;
+            public static final double MIN_ANGLE = 32;
+            public static final double AUTO_MIN_ANGLE = 29;
 
-            public static final double ANGLE_OFFSET = 0.073486; //0.07161433; //0.08792
+            public static final double ANGLE_OFFSET = 0.18900256; //0.07161433; //0.08792
         }
     }
 
@@ -107,10 +108,10 @@ public final class Constants {
         public static final double S = 0;
         public static final double V = 0;
         public static final double G = 0.12;
-        public static final double dV = 0.2 / 1800.0; // 20% power per 6 m/s
-        public static final double rV = 0.3 / (3 * Math.PI); // 50% power per 3pi r/s (120 deg/s)
+        public static final double dV = 0;//0.2 / 1800.0; // 20% power per 6 m/s
+        public static final double rV = 0;//0.3 / (3 * Math.PI); // 50% power per 3pi r/s (120 deg/s)
 
-        public static final double ENCODER_OFFSET = 0.351858;
+        public static final double ENCODER_OFFSET = 8.32;
     }
 
     public static final class HopperConstants {

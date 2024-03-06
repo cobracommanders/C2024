@@ -33,7 +33,7 @@ public final class Ports {
         public static final int TOP_MOTOR = 40;
         public static final int BOTTOM_MOTOR = 42;
         public static final int ENCODER = 41;
-        public static final int BEAM_BREAk = 0; //DIO
+        public static final int BEAM_BREAk = 9; //DIO
     }
     public static class KickerPorts {
         public static final int MOTOR = 43;
@@ -41,7 +41,7 @@ public final class Ports {
 
     public static class IntakePorts {
         public static final int MOTOR = 50;
-        public static final int ANGLE_ENCODER = 2;
+        // public static final int ANGLE_ENCODER = 2;
     }
 
     public static class IntakeRollersPorts {
@@ -51,8 +51,8 @@ public final class Ports {
     
 
     public static class Accessories {
-        public static final int BLINKIN = 9; // PWM
-        public static final int SETUP_SWITCH = 8; //DIO
+        public static final int BLINKIN = 0; // PWM
+        // public static final int SETUP_SWITCH =0; //DIO
         public static final String DriveBus = "bus"; //Canivore's name
         public static final String RioBus =  "rio"; //Name of the native bus on the roborio
     }

@@ -15,6 +15,7 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
@@ -92,10 +93,10 @@ public class Shooter extends SubsystemBase {
         feedSpeed = State.Shooter.IDLE.feedSpeed;
         angle = State.Shooter.IDLE.angle;
 
-        rightController.setTolerance(350);
-        leftController.setTolerance(350);
+        rightController.setTolerance(200);
+        leftController.setTolerance(200);
         feedController.setTolerance(300);
-        angleController.setTolerance(0.1);
+        angleController.setTolerance(0.3);
 
         // reset motor defaults to ensure all settings are clear
         TalonFXConfiguration flywheelConfig = new TalonFXConfiguration();
@@ -105,13 +106,17 @@ public class Shooter extends SubsystemBase {
         flywheelConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
         rightMotor.getConfigurator().apply(flywheelConfig);
         leftMotor.getConfigurator().apply(flywheelConfig);
-        feedMotor.restoreFactoryDefaults();
-        angleMotor.restoreFactoryDefaults();
 
         CANcoderConfiguration canCoderConfig = new CANcoderConfiguration();
         canCoderConfig.MagnetSensor.MagnetOffset = Constants.ShooterConstants.AngleConstants.ANGLE_OFFSET;
         canCoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
         angleEncoder.getConfigurator().apply(canCoderConfig);
+    }
+
+    public void configMotors() {
+        feedMotor.restoreFactoryDefaults();
+        angleMotor.restoreFactoryDefaults();
+        angleMotor.setIdleMode(IdleMode.kBrake);
     }
 
     // This method will run every 10-20 milliseconds (about 50-100 times in one second)
@@ -141,11 +146,13 @@ public class Shooter extends SubsystemBase {
         }
         if (this.angle > ShooterConstants.AngleConstants.MAX_ANGLE) {
             this.angle = ShooterConstants.AngleConstants.MAX_ANGLE;
+        // } else if (this.angle < ShooterConstants.AngleConstants.MIN_ANGLE && Intake.getInstance().getState() == State.Intake.IDLE) {
+        //     this.angle = ShooterConstants.AngleConstants.MIN_ANGLE;
         } else if (this.angle < ShooterConstants.AngleConstants.MIN_ANGLE) {
             this.angle = ShooterConstants.AngleConstants.MIN_ANGLE;
         }
 
-        if (currentState == State.Shooter.IDLE || currentState == State.Shooter.AMP) {
+        if (currentState.speed == 0) {
             //IF State is IDLE, don't Spin the right wheel
             this.leftSpeed = currentState.speed;
             this.rightSpeed = currentState.speed;
@@ -192,12 +199,12 @@ public class Shooter extends SubsystemBase {
     }
 
     //sets speed for feedForward
-    private void setFeed(double speed){
+    public void setFeed(double speed){
         feedMotor.set(-speed);
     }
     
     //sets speed for angleMotor
-    private void setAngle(double speed){
+    public void setAngle(double speed){
         angleMotor.set(-speed);
     }
 
@@ -234,8 +241,8 @@ public class Shooter extends SubsystemBase {
      * returns leftController, rightController, and angleController setpoints
      */
     public boolean atSetpoint(){
-        return angleController.atSetpoint();
-        // return leftController.atSetpoint() && rightController.atSetpoint() && angleController.atSetpoint();
+        //return angleController.atSetpoint();
+         return leftController.atSetpoint() && rightController.atSetpoint();// && angleController.atSetpoint();
     }
 
     /**
@@ -300,11 +307,14 @@ public class Shooter extends SubsystemBase {
 
     private double calculateAngle(double distance){
         double v = RPM_to_MPS(currentState.speed);
-        double c1 = 65.301;
-        double c2 = -16.645;
-        double c3 = 1.736;
-        double c4 = 0;
-        double theta = c4 * Math.pow(distance, 3) + c3 * distance * distance + c2 * distance + c1; //angle in degrees as given in team498/notebook/shooter_model.ipynb
+        double c1 = 179.357;
+        double c2 = -143.418;
+        double c3 = 48.543;
+        double c4 = -5.607;
+        double theta = c4 * Math.pow(distance, 3) + c3 * distance * distance + c2 * distance + c1 - 1; //angle in degrees as given in team498/notebook/shooter_model.ipynb
+        // if (distance > 5) {
+        //     theta = 40;
+        // }
         return offsetAngle(RobotPosition.getSpeakerRelativeVelocity(), v, theta);
     }
     private double offsetAngle(double r, double v, double theta) {

@@ -30,7 +30,7 @@ public class SixNoteAmp implements Auto{
             new ParallelDeadlineGroup(
                 new PathPlannerFollower(PathLib.SixAmp1),
                 new SequentialCommandGroup(
-                    new FullScore(0.1),
+                    new FullScore(0.75),
                     // new WaitCommand(0.5),
                     new LoadGround(),
                     // new WaitCommand(1.25),

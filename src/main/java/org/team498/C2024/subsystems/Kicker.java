@@ -24,6 +24,9 @@ public class Kicker extends SubsystemBase {
         currentState = State.Kicker.IDLE;
 
         // reset motor defaults to ensure all settings are clear
+    }
+
+    public void configMotors() {
         motor.restoreFactoryDefaults();
     }
 
@@ -35,7 +38,7 @@ public class Kicker extends SubsystemBase {
     }
 
     //sets motor speeds
-    private void set(double speed) {
+    public void set(double speed) {
         motor.set(-speed);
     }
 

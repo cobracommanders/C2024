@@ -44,7 +44,9 @@ public class Hopper extends SubsystemBase {
         currentState = State.Hopper.IDLE;
         pidEnabled = false;
         beamBreakEnabled = true;
+    }
 
+    public void configMotors() {
         topMotor.restoreFactoryDefaults();
         bottomMotor.restoreFactoryDefaults();
     }
@@ -62,8 +64,8 @@ public class Hopper extends SubsystemBase {
         SmartDashboard.putBoolean("Beambreak",getBeamBreak());
     }
 
-    private void set(double speed) {
-        topMotor.set(speed);
+    public void set(double speed) {
+        topMotor.set(speed * 1.25);
         bottomMotor.set(speed);
     }
 

@@ -4,6 +4,7 @@ import org.team498.C2024.Constants;
 import org.team498.C2024.Ports;
 import org.team498.C2024.State;
 import org.team498.C2024.Constants.IntakeConstants;
+import org.team498.C2024.Constants.ShooterConstants;
 import org.team498.lib.wpilib.ChassisSpeeds;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -34,7 +35,7 @@ public class Intake extends SubsystemBase {
     private State.Intake currentState;
     private double setpoint;
 
-    private boolean isActivated = false;
+    private boolean isActivated = true;
     
     // Constructor: Configure Motor Controller settings and  
     // Instantiate all objects (assign values to every variable and object)
@@ -52,19 +53,23 @@ public class Intake extends SubsystemBase {
         currentState = State.Intake.IDLE;
         setpoint = currentState.speed;
 
-        pidController.setTolerance(0.3);
+        pidController.setTolerance(0.03);
         pidController.reset();
         pidController.setSetpoint(setpoint);
 
         // reset motor defaults to ensure all settings are clear
+       
+    }
+    public void configMotors() {
         motor.restoreFactoryDefaults();
     }
 
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Intake Position", getPosition());
-        SmartDashboard.putBoolean("Intake atSetpoint", pidController.atSetpoint());
+        
         SmartDashboard.putNumber("Manual Intake Speed", manualSpeed);
+        SmartDashboard.putString("Intake State", currentState.name());
         // We will use this variable to keep track of our desired speed
         double speed = 0;
         if (isActivated) {
@@ -78,6 +83,8 @@ public class Intake extends SubsystemBase {
 
             speed = initialPID + gravityOffset + driveOffset + rotationOffset; // adjust for feedback error using proportional gain
         } 
+        // if (Shooter.getInstance().getAngle() < ShooterConstants.AngleConstants.MIN_ANGLE - 1) //Tolerance for Intake Angle
+        //     speed = 0;
         if (isManual) speed = manualSpeed;
         set(speed);
     }
@@ -93,6 +100,7 @@ public class Intake extends SubsystemBase {
      * sets state for speed and sets PID controller to setpoint
      */
     public void setState(State.Intake state) {
+        SmartDashboard.putNumber("Intake Setpoint", setpoint);
         isActivated = true;
         currentState = state;
         setpoint = state.speed; // update state
@@ -120,7 +128,15 @@ public class Intake extends SubsystemBase {
      * returns encoder angle
      */
     public double getPosition() {
-        return angleEncoder.getPosition() * Math.PI * 2 - Constants.IntakeConstants.ENCODER_OFFSET;
+        return -(getRawEncoder() * Math.PI * 2 - Constants.IntakeConstants.ENCODER_OFFSET);
+    }
+
+    public double getRawEncoder(){
+            double angle = angleEncoder.getPosition() + 0.4;
+            if (angle < 1)
+                angle += 1;
+    
+            return angle - 0.4;
     }
     
     // Using static instances to reference the flywheel object ensures that we only use ONE FLywheel throughout the code 

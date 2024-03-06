@@ -26,8 +26,11 @@ public class IntakeRollers extends SubsystemBase {
         currentState = State.IntakeRollers.IDLE;
 
         // reset motor defaults to ensure all settings are clear
-        motor.restoreFactoryDefaults();
+       
         // motor.setSmartCurrentLimit(50);
+    }
+    public void configMotors() {
+        motor.restoreFactoryDefaults();
     }
 
     @Override
@@ -37,7 +40,7 @@ public class IntakeRollers extends SubsystemBase {
     }
 
     //sets Motor Speed
-    private void set(double speed) {
+    public void set(double speed) {
         motor.set(-speed);
     }
 

@@ -17,9 +17,12 @@ import org.team498.C2024.commands.auto.FourNote;
 import org.team498.C2024.commands.auto.FourNoteFull;
 import org.team498.C2024.commands.auto.FourNoteWing;
 import org.team498.C2024.commands.auto.FourPort;
+import org.team498.C2024.commands.auto.LongTaxi;
 import org.team498.C2024.commands.auto.OneTaxi;
 import org.team498.C2024.commands.auto.SixNoteAmp;
+import org.team498.C2024.commands.auto.Spit;
 import org.team498.C2024.commands.auto.TestAuto;
+import org.team498.C2024.commands.robot.ReturnToIdle;
 import org.team498.C2024.commands.robot.scoring.FullScore;
 import org.team498.C2024.subsystems.Drivetrain;
 import org.team498.C2024.subsystems.Hopper;
@@ -66,7 +69,9 @@ public class Robot extends TimedRobot{
         new TestAuto(),
         new FourPort(),
         new FourNoteWing(),
-        new OneTaxi()
+        new OneTaxi(),
+        new LongTaxi(),
+        new Spit()
         //    new PracticeAuto()
                                                   );
 
@@ -90,13 +95,22 @@ public class Robot extends TimedRobot{
         Intake.getInstance();
         IntakeRollers.getInstance();
         PhotonVision.getInstance();
+
+        Shooter.getInstance().configMotors();
+        Hopper.getInstance().configMotors();
+        Kicker.getInstance().configMotors();
+        Intake.getInstance().configMotors();
+        IntakeRollers.getInstance().configMotors();
+
         // Limelight.getInstance();
+
     }
 
     @Override
     public void robotPeriodic() {
         CommandScheduler.getInstance().run();
         SmartDashboard.putData(autoChooser);
+        // SmartDashboard.putNumber("bl cancoder", kDefaultPeriod)
         // SmartDashboard.putBoolean("is Scoring", StateController.getInstance().isScoring());
 
         if (alliance.isEmpty()) {
@@ -110,11 +124,17 @@ public class Robot extends TimedRobot{
                              ? 0
                              : 180;
         }
-
+        // blinkin.setColor(BlinkinColor.BREATH_RED);
+        SmartDashboard.putBoolean("Shooter Aligned", Shooter.getInstance().atSetpoint() && Shooter.getInstance().shooterState() && !Hopper.getInstance().isPidEnabled());
         // if (RobotState.isEnabled()) {
-        //     if(Shooter.getInstance().atSetpoint() && Shooter.getInstance().shooterState() && !Hopper.getInstance().isPidEnabled()) 
+        //     if(Shooter.getInstance().atSetpoint() && Shooter.getInstance().shooterState() && !Hopper.getInstance().isPidEnabled()) {
         //         blinkin.setColor(BlinkinColor.SOLID_DARK_GREEN);
-        //     else blinkin.setColor(BlinkinColor.SOLID_HOT_PINK);
+        //         SmartDashboard.putBoolean("Shooter Aligned", true);
+        //     }
+        //     else {
+        //         blinkin.setColor(BlinkinColor.SOLID_BLUE);
+        //         SmartDashboard.putBoolean("Shooter Aligned", false);
+        //     }
         // }
         // else { 
         //     if (RobotPosition.isNear(autoToRun.getInitialPose(), 1))
@@ -151,12 +171,28 @@ public class Robot extends TimedRobot{
 
     @Override
     public void teleopInit() {
+        Shooter.getInstance().setFeed(0);
+        Shooter.getInstance().setAngle(0);
+        Hopper.getInstance().set(0);
+        Intake.getInstance().set(0);
+        IntakeRollers.getInstance().set(0);
+        Kicker.getInstance().set(0);
+        CommandScheduler.getInstance().schedule(new ReturnToIdle());
         // matchStarted = true;
         // drivetrain.enableBrakeMode(true);
     }
 
     @Override
     public void teleopPeriodic() {
+        if (Hopper.getInstance().getBeamBreak()){
+            controls.driver.rumble(0.05);
+            controls.operator.rumble(0.05);
+        }
+        else {
+            controls.driver.rumble(0);
+            controls.operator.rumble(0);
+        }
+
     }
 
 
@@ -175,6 +211,12 @@ public class Robot extends TimedRobot{
         // new FullScore().schedule();
         // drivetrain.enableBrakeMode(true);
         // matchStarted = true;
+        Shooter.getInstance().setFeed(0);
+        Shooter.getInstance().setAngle(0);
+        Hopper.getInstance().set(0);
+        Intake.getInstance().set(0);
+        IntakeRollers.getInstance().set(0);
+        Kicker.getInstance().set(0);
 
         if (autoToRun == null)
             autoToRun = defaultAuto;
@@ -182,10 +224,10 @@ public class Robot extends TimedRobot{
         //autoToRun = new HighHighCone();
 
         if (alliance.get() == Alliance.Blue) {
-            Drivetrain.getInstance().setYaw(180 + Robot.rotationOffset);
+            Drivetrain.getInstance().setYaw(120);
             Drivetrain.getInstance().setPose(autoToRun.getInitialPose());
         } else {
-            Drivetrain.getInstance().setYaw(0 + Robot.rotationOffset);
+            Drivetrain.getInstance().setYaw(60);
             Drivetrain.getInstance().setPose(PoseUtil.flip(autoToRun.getInitialPose()));
         }
         //SmartDashboard.putData((Sendable) autoToRun.getInitialPose());

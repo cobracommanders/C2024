@@ -35,21 +35,21 @@ public class PhotonVision {
     // private CameraInputs leftInputs;
 
     private final Transform3d rightCameraPose = new Transform3d(
-            new Translation3d(Units.inchesToMeters(10.375),
-                Units.inchesToMeters(-3.4),
+            new Translation3d(Units.inchesToMeters(-3.4),// should be positive
+                Units.inchesToMeters(-10.375),
                 Units.inchesToMeters(21)),
-            new Rotation3d(Units.degreesToRadians(30), 0, 0));
+            new Rotation3d(0, Units.degreesToRadians(-30), 0));
 
     private final Transform3d leftCameraPose = new Transform3d(
-        new Translation3d(Units.inchesToMeters(-10.375),
-            Units.inchesToMeters(-3.4),
+        new Translation3d(Units.inchesToMeters(-3.4), //should be negative
+            Units.inchesToMeters(10.375),
             Units.inchesToMeters(21)),
-        new Rotation3d(Units.degreesToRadians(30), 0, 0));
+        new Rotation3d(0, Units.degreesToRadians(-30), 0));
     
     public PhotonVision(){
         PhotonCamera.setVersionCheckEnabled(false);
-        rightCamera = new PhotonCamera("red 1 camera");
-        leftCamera = new PhotonCamera("blue 1 camera");
+        rightCamera = new PhotonCamera("red 2 camera"); //ACTUALLY RED
+        leftCamera = new PhotonCamera("blue 2 camera"); //ACTUALLY BLUE
         // rightInputs = new CameraInputs();
         // leftInputs = new CameraInputs();
 
@@ -58,6 +58,7 @@ public class PhotonVision {
             rightPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout,PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, rightCamera, rightCameraPose);
             leftPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, leftCamera, leftCameraPose);
             rightPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+            
             leftPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
         }catch(UncheckedIOException e){
             DriverStation.reportError("Failed to load AprilTagFieldLayout", e.getStackTrace());

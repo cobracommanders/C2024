@@ -11,6 +11,7 @@ public class Blinkin {
 
     private Blinkin() {
         blinkin = new Spark(BLINKIN);
+        blinkin.setSafetyEnabled(false);
         setColor(BlinkinColor.OCEAN_PALETTE);
     }
 

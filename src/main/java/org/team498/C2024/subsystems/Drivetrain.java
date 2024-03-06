@@ -46,7 +46,7 @@ public class Drivetrain extends SubsystemBase {
 
     private final SwerveDrivePoseEstimator poseEstimator;
 
-    private final ProfiledPIDController angleController = new ProfiledPIDController(3.5, 0, 0.2, AngleConstants.CONTROLLER_CONSTRAINTS);
+    private final ProfiledPIDController angleController = new ProfiledPIDController(3.5, 0, 0, AngleConstants.CONTROLLER_CONSTRAINTS);
 
     private final PIDController xController = new PIDController(Constants.DrivetrainConstants.PoseConstants.P, Constants.DrivetrainConstants.PoseConstants.I,  Constants.DrivetrainConstants.PoseConstants.D);
     private final SlewRateLimiter xLimiter = new SlewRateLimiter(MAX_ACCELERATION_METERS_PER_SECOND_SQUARED);

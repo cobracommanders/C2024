@@ -20,25 +20,26 @@ public class FourPort implements Auto{
 
         return new SequentialCommandGroup(
 
+            
+            new ReturnToIdle(),
+
             new ParallelDeadlineGroup(
                 new PathPlannerFollower(PathLib.four_port_1),
                 new SequentialCommandGroup(
-                    new FullScore(0.75),
-                    new LoadGround(),
-                    new WaitCommand(3),
-                    new FullScore(0.5),
+                    new FullScore(1),
                     new LoadGround()
+                    // new WaitCommand(3),
+                    //new LoadGround()
                 )
             ),
             new ParallelDeadlineGroup(
                 new PathPlannerFollower(PathLib.four_port_2),
                 new SequentialCommandGroup(
                     // new SetIntakeRollerState(State.IntakeRollers.IDLE),
-                    new FullScore(0.5),
-                    new LoadGround(),
-                    new WaitCommand(3),
-                    new FullScore(0.5),
+                    new FullScore(0.75),
                     new LoadGround()
+                    // new WaitCommand(3),
+                    //new LoadGround()
                 )
             ),
 
@@ -46,14 +47,13 @@ public class FourPort implements Auto{
                 new PathPlannerFollower(PathLib.four_port_3),
                 new SequentialCommandGroup(
                     // new SetIntakeRollerState(State.IntakeRollers.IDLE),
-                    new FullScore(0.5),
-                    new LoadGround(),
-                    new WaitCommand(3),
-                    new FullScore(0.5),
+                    new FullScore(0.75),
                     new LoadGround()
+                    // new WaitCommand(3),
+                    //new LoadGround()
                 )
             ),
-            new FullScore(1),
+            new FullScore(0.75),
             new ReturnToIdle()
         );
 }
