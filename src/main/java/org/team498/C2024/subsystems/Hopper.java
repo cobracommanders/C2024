@@ -4,6 +4,9 @@ import org.team498.C2024.Ports;
 import org.team498.C2024.State;
 import org.team498.C2024.Constants.HopperConstants;
 import org.team498.C2024.Ports.HopperPorts;
+
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -15,10 +18,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Hopper extends SubsystemBase {
 
-    private final CANSparkMax topMotor;
-    private final CANSparkMax bottomMotor;
-    private final RelativeEncoder topEncoder;
-    private final RelativeEncoder bottomEncoder;
+    private final TalonFX topMotor;
+    private final TalonFX bottomMotor;
     private final PIDController pidController;
     private final DigitalInput beamBreak;
     private boolean beamBreakEnabled;
@@ -30,10 +31,8 @@ public class Hopper extends SubsystemBase {
     // Constructor: Configure Motor Controller settings and  
     // Instantiate all objects (assign values to every variable and object)
     public Hopper() {
-        topMotor = new CANSparkMax(Ports.HopperPorts.TOP_MOTOR, MotorType.kBrushless);
-        bottomMotor = new CANSparkMax(Ports.HopperPorts.BOTTOM_MOTOR, MotorType.kBrushless);
-        topEncoder = topMotor.getEncoder(); //this can be left or right motor, whichever is most convenient
-        bottomEncoder = bottomMotor.getEncoder();
+        topMotor = new TalonFX(Ports.HopperPorts.TOP_MOTOR);
+        bottomMotor = new TalonFX(Ports.HopperPorts.BOTTOM_MOTOR);
         beamBreak = new DigitalInput(HopperPorts.BEAM_BREAk);
         pidController = new PIDController(HopperConstants.P, HopperConstants.I, HopperConstants.D);
         pidController.setTolerance(0.1);
@@ -47,15 +46,15 @@ public class Hopper extends SubsystemBase {
     }
 
     public void configMotors() {
-        topMotor.restoreFactoryDefaults();
-        bottomMotor.restoreFactoryDefaults();
+        topMotor.getConfigurator().apply(new TalonFXConfiguration());
+        bottomMotor.getConfigurator().apply(new TalonFXConfiguration());
     }
 
     @Override
     public void periodic() {
         if(pidController.atSetpoint()) pidEnabled = false;
         if(pidEnabled){
-            set(pidController.calculate(bottomEncoder.getPosition()));
+            set(pidController.calculate(bottomMotor.getPosition().getValueAsDouble()));
         }
         else{
             double speed = setpoint;
@@ -96,7 +95,7 @@ public class Hopper extends SubsystemBase {
      * resets encoder, enables PID and sets PID setpoint
      */
     public void setPosition(double position){
-        bottomEncoder.setPosition(0);
+        bottomMotor.setPosition(0);
         pidEnabled = true;
         pidController.setSetpoint(position);
     }

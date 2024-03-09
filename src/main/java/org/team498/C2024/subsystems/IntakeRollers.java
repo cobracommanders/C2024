@@ -2,6 +2,9 @@ package org.team498.C2024.subsystems;
 
 import org.team498.C2024.Ports;
 import org.team498.C2024.State;
+
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
@@ -9,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeRollers extends SubsystemBase {
 
-    private final CANSparkMax motor;
+    private final TalonFX motor;
    // private final RelativeEncoder encoder;
 
     private double setpoint;
@@ -18,7 +21,7 @@ public class IntakeRollers extends SubsystemBase {
     // Constructor: Configure Motor Controller settings and  
     // Instantiate all objects (assign values to every variable and object)
     public IntakeRollers() {
-        motor = new CANSparkMax(Ports.IntakeRollersPorts.MOTOR, MotorType.kBrushless);
+        motor = new TalonFX(Ports.IntakeRollersPorts.MOTOR);
         //encoder = motor.getEncoder(); //this can be left or right motor, whichever is most convenient
 
         // Instantiate variables to intitial values
@@ -30,7 +33,7 @@ public class IntakeRollers extends SubsystemBase {
         // motor.setSmartCurrentLimit(50);
     }
     public void configMotors() {
-        motor.restoreFactoryDefaults();
+        motor.getConfigurator().apply(new TalonFXConfiguration());
     }
 
     @Override

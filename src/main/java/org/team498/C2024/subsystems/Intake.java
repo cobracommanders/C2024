@@ -9,6 +9,8 @@ import org.team498.lib.wpilib.ChassisSpeeds;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkAbsoluteEncoder;
@@ -16,13 +18,15 @@ import com.revrobotics.SparkAbsoluteEncoder;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DutyCycle;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {
 
-    private final CANSparkMax motor;
-    private final SparkAbsoluteEncoder angleEncoder;
+    private final TalonFX motor;
+    private final DutyCycle angleEncoder;
 
     private final PIDController pidController;
     private final ArmFeedforward gravityFeedforward;
@@ -41,8 +45,8 @@ public class Intake extends SubsystemBase {
     // Instantiate all objects (assign values to every variable and object)
     public Intake() {
         // motor = new LazySparkMax(Ports.IntakePorts.LMOTOR, MotorType.kBrushless);
-        motor = new CANSparkMax(Ports.IntakePorts.MOTOR, MotorType.kBrushless);
-        angleEncoder = motor.getAbsoluteEncoder(Type.kDutyCycle);
+        motor = new TalonFX(Ports.IntakePorts.MOTOR);
+        angleEncoder = new DutyCycle(new DigitalInput(Ports.IntakePorts.ANGLE_ENCODER));
 
         pidController = new PIDController(IntakeConstants.P, IntakeConstants.I, IntakeConstants.D);
         gravityFeedforward = new ArmFeedforward(IntakeConstants.S, IntakeConstants.G, IntakeConstants.V);
@@ -61,7 +65,7 @@ public class Intake extends SubsystemBase {
        
     }
     public void configMotors() {
-        motor.restoreFactoryDefaults();
+        motor.getConfigurator().apply(new TalonFXConfiguration());
     }
 
     @Override
@@ -132,7 +136,7 @@ public class Intake extends SubsystemBase {
     }
 
     public double getRawEncoder(){
-            double angle = angleEncoder.getPosition() + 0.4;
+            double angle = angleEncoder.getOutput() + 0.4;
             if (angle < 1)
                 angle += 1;
     

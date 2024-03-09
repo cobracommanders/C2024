@@ -14,6 +14,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -36,8 +37,8 @@ public class Shooter extends SubsystemBase {
     // Motors will almost always be private because they will only be controlled using public methods. There should be NO global use where motors 
     private final TalonFX leftMotor; // Declaration for a NEO or NEO550 brushless motor
     private final TalonFX rightMotor; // We use left / right descriptors to make identification easier in testing and communication
-    private final CANSparkMax angleMotor; //Declaration for a Built-in NEO/NEO550 encoder
-    private final CANSparkMax feedMotor;
+    private final TalonFX angleMotor; //Declaration for a Built-in NEO/NEO550 encoder
+    private final TalonFX feedMotor;
     
     private final CANcoder angleEncoder;
 
@@ -70,8 +71,8 @@ public class Shooter extends SubsystemBase {
     public Shooter() {
         leftMotor = new TalonFX(Ports.ShooterPorts.LEFT_MOTOR);
         rightMotor = new TalonFX(Ports.ShooterPorts.RIGHT_MOTOR);
-        feedMotor = new CANSparkMax(Ports.ShooterPorts.FEED_MOTOR, MotorType.kBrushless);
-        angleMotor = new CANSparkMax(Ports.ShooterPorts.ANGLE_MOTOR, MotorType.kBrushless); //this can be left or right motor, whichever is most convenient
+        feedMotor = new TalonFX(Ports.ShooterPorts.FEED_MOTOR);
+        angleMotor = new TalonFX(Ports.ShooterPorts.ANGLE_MOTOR); //this can be left or right motor, whichever is most convenient
         
         angleEncoder = new CANcoder(Ports.ShooterPorts.ANGLE_ENCODER);
 
@@ -106,6 +107,7 @@ public class Shooter extends SubsystemBase {
         flywheelConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
         rightMotor.getConfigurator().apply(flywheelConfig);
         leftMotor.getConfigurator().apply(flywheelConfig);
+        angleMotor.getConfigurator().apply(new TalonFXConfiguration());
 
         CANcoderConfiguration canCoderConfig = new CANcoderConfiguration();
         canCoderConfig.MagnetSensor.MagnetOffset = Constants.ShooterConstants.AngleConstants.ANGLE_OFFSET;
@@ -114,9 +116,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public void configMotors() {
-        feedMotor.restoreFactoryDefaults();
-        angleMotor.restoreFactoryDefaults();
-        angleMotor.setIdleMode(IdleMode.kBrake);
+        angleMotor.setNeutralMode(NeutralModeValue.Brake);
     }
 
     // This method will run every 10-20 milliseconds (about 50-100 times in one second)
@@ -266,7 +266,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public double getFeedSpeedRPM() {
-        return -feedMotor.getEncoder().getVelocity();
+        return -feedMotor.getVelocity().getValueAsDouble();
     }
 
     public double getTimeOfFlight() {

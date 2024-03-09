@@ -108,7 +108,7 @@ public class Robot extends TimedRobot{
 
     @Override
     public void robotPeriodic() {
-        CommandScheduler.getInstance().run();
+        if (RobotState.isEnabled()) CommandScheduler.getInstance().run();
         SmartDashboard.putData(autoChooser);
         // SmartDashboard.putNumber("bl cancoder", kDefaultPeriod)
         // SmartDashboard.putBoolean("is Scoring", StateController.getInstance().isScoring());
