@@ -104,19 +104,15 @@ public class Controls {
 
         operator.X().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.AMP_SPEAKER)));
         operator.X().toggleOnTrue(new PrepareToScore());
-        operator.X().toggleOnFalse(new ReturnToIdle());
 
         operator.A().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.SUBWOOFER)));
         operator.A().toggleOnTrue(new PrepareToScore());
-        operator.A().toggleOnFalse(new ReturnToIdle());
 
         operator.B().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.PODIUM)));
         operator.B().toggleOnTrue(new PrepareToScore());
-        operator.B().toggleOnFalse(new ReturnToIdle());
 
         operator.Y().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.AMP)));
         operator.Y().toggleOnTrue(new PrepareToScore());
-        operator.Y().toggleOnFalse(new ReturnToIdle());
 
         // operator.leftBumper().onTrue(runOnce(() -> StateController.getInstance().setNextLoadingOption(LoadingOption.GROUND)));
         // operator.leftTrigger().onTrue(new LoadSource())

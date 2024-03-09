@@ -31,10 +31,10 @@ public final class Constants {
         public static final double DRIVE_WHEEL_DIAMETER = 4;
         public static final double DRIVE_WHEEL_CIRCUMFERENCE = DRIVE_WHEEL_DIAMETER * Math.PI;
 
-        public static final double FL_MODULE_OFFSET = -0.984863;
-        public static final double FR_MODULE_OFFSET = -0.707031;
-        public static final double BL_MODULE_OFFSET = -0.716553 + 0.5;
-        public static final double BR_MODULE_OFFSET = -0.960449 + 0.5;
+        public static final double FL_MODULE_OFFSET = -0.827881;
+        public static final double FR_MODULE_OFFSET = -0.328125;
+        public static final double BL_MODULE_OFFSET = -0.133789;
+        public static final double BR_MODULE_OFFSET = -0.227295;
 
         public static final double ROBOT_WIDTH = 26.5 + 6; // Robot width with bumpers, in inches
 
@@ -97,7 +97,7 @@ public final class Constants {
             public static final double MIN_ANGLE = 32;
             public static final double AUTO_MIN_ANGLE = 29;
 
-            public static final double ANGLE_OFFSET = 0.18900256; //0.07161433; //0.08792
+            public static final double ANGLE_OFFSET = 0.057643 + 0.0138889; //0.07161433; //0.08792
         }
     }
 
