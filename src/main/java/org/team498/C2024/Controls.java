@@ -64,7 +64,7 @@ public class Controls {
                 new ConditionalCommand(
                     runOnce(()-> {}),
                     runOnce(()->StateController.getInstance().setTargetDrive(FieldPositions.getSpeaker())).alongWith(new SlowDrive(DrivetrainConstants.TARGET_SPEED_SCALAR)), 
-                    ()-> StateController.getInstance().getNextScoringState() == State.SUBWOOFER// || StateController.getInstance().getNextScoringState() == State.PODIUM
+                    ()-> StateController.getInstance().getNextScoringState() == State.SUBWOOFER  || StateController.getInstance().getNextScoringState() == State.PODIUM || StateController.getInstance().getNextScoringState() == State.AMP_SPEAKER
                 ),
                 //runOnce(()->StateController.getInstance().setTargetDrive(FieldPositions.getSpeaker())),
                 
@@ -90,7 +90,7 @@ public class Controls {
         // operator.back().toggleOnTrue(new SetIntakeManual(true, operator::rightY));
         operator.leftTrigger().onTrue(new SetHopperState(State.Hopper.FORWARD))
             .onFalse(new ReturnToIdle());
-        operator.leftBumper().onTrue(new SetShooterState(State.Shooter.CRESCENDO));
+        operator.leftBumper().onTrue(new SetShooterState(State.Shooter.PODIUM));
         operator.rightBumper().onTrue(new SetShooterState(State.Shooter.IDLE));
         // operator.back().toggleOnTrue(new SetShooterManual(true, operator::leftY, ()-> 0.5));
         // operator.A().toggleOnTrue(new SetShooterManual(true, operator::leftY, ()-> 1.0));
@@ -102,10 +102,21 @@ public class Controls {
 
 
 
-        operator.X().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.CRESCENDO)));
+        operator.X().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.AMP_SPEAKER)));
+        operator.X().toggleOnTrue(new PrepareToScore());
+        operator.X().toggleOnFalse(new ReturnToIdle());
+
         operator.A().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.SUBWOOFER)));
+        operator.A().toggleOnTrue(new PrepareToScore());
+        operator.A().toggleOnFalse(new ReturnToIdle());
+
         operator.B().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.PODIUM)));
+        operator.B().toggleOnTrue(new PrepareToScore());
+        operator.B().toggleOnFalse(new ReturnToIdle());
+
         operator.Y().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.AMP)));
+        operator.Y().toggleOnTrue(new PrepareToScore());
+        operator.Y().toggleOnFalse(new ReturnToIdle());
 
         // operator.leftBumper().onTrue(runOnce(() -> StateController.getInstance().setNextLoadingOption(LoadingOption.GROUND)));
         // operator.leftTrigger().onTrue(new LoadSource())

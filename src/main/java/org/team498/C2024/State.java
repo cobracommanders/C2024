@@ -13,7 +13,8 @@ public enum State {
     CANCEL_SPEAKER(Shooter.IDLE, Hopper.IDLE, Intake.IDLE, IntakeRollers.IDLE, Kicker.FORWARD),
     TRACK_NOTE(Shooter.VISION, Hopper.REVERSE, Intake.INTAKE, IntakeRollers.INTAKE, Kicker.IDLE),
     AUTO(Shooter.AUTO, Hopper.REVERSE, Intake.INTAKE, IntakeRollers.INTAKE, Kicker.REVERSE),
-    SPIT(Shooter.SPIT, Hopper.REVERSE, Intake.INTAKE, IntakeRollers.INTAKE, Kicker.REVERSE);
+    SPIT(Shooter.SPIT, Hopper.REVERSE, Intake.INTAKE, IntakeRollers.INTAKE, Kicker.REVERSE),
+    AMP_SPEAKER(Shooter.AMP_SPEAKER, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.REVERSE);
 
     public final Shooter shooter;
     public final Hopper hopper;
@@ -33,9 +34,9 @@ public enum State {
     //Sets Speed and Angle for Shooter
     public enum Shooter {
         IDLE(0, 0, 30),
-        SUBWOOFER(3200, 1000, 51), //49 //3200
+        SUBWOOFER(3200, 1000, 53), //49 //3200
         AMP(0, 0, 35),
-        PODIUM(3700, 1000, 33), //37
+        PODIUM(3700, 1000, 37), //37
         CRESCENDO(3700, 1000, 40),
         SOURCE(0, 0, 50),
         PREPARE(3700, 1000, 40),
@@ -45,7 +46,8 @@ public enum State {
         CLIMB_UP(0, 0, 70),
         CLIMB_DOWN(0, 0, 30),
         TRAP(3500, 1000, 50),
-        SPIT(900, 1000, 40);
+        SPIT(900, 1000, 40),
+        AMP_SPEAKER(3700, 1000, 33);
 
         public final double speed;
         public final double feedSpeed;
