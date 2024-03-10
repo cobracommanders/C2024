@@ -143,7 +143,7 @@ public class SwerveModule {
 
         TalonFXConfiguration driveConfig = new TalonFXConfiguration();
         driveConfig.CurrentLimits.SupplyCurrentLimit = 35;
-        driveConfig.CurrentLimits.StatorCurrentLimit = 45;
+        driveConfig.CurrentLimits.StatorCurrentLimit = 35;
         driveConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
         driveConfig.CurrentLimits.StatorCurrentLimitEnable = true;
         driveConfig.Slot0.kP = 0.04;//0.025;

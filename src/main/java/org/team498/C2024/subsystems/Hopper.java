@@ -53,14 +53,14 @@ public class Hopper extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if(pidController.atSetpoint()) pidEnabled = false;
-        if(pidEnabled){
-            set(pidController.calculate(bottomEncoder.getPosition()));
-        }
-        else{
+        // if(pidController.atSetpoint()) pidEnabled = false;
+        // if(pidEnabled){
+        //     set(pidController.calculate(bottomEncoder.getPosition()));
+        // }
+        // else{
             double speed = setpoint;
             set(speed);
-        }
+        // }
         SmartDashboard.putBoolean("Beambreak",getBeamBreak());
     }
 
