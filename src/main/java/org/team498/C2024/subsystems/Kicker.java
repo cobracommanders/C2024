@@ -2,12 +2,14 @@ package org.team498.C2024.subsystems;
 
 import org.team498.C2024.Ports;
 import org.team498.C2024.State;
+import org.team498.C2024.Ports.KickerPorts;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Kicker extends SubsystemBase {
@@ -16,11 +18,14 @@ public class Kicker extends SubsystemBase {
 
     private double setpoint;
     private State.Kicker currentState;
+    private final DigitalInput kickerBeamBreak;
+    private boolean kickerBeamBreakEnabled;
     
     // Constructor: Configure Motor Controller settings and  
     // Instantiate all objects (assign values to every variable and object)
     public Kicker() {
         motor = new TalonFX(Ports.KickerPorts.MOTOR);
+        kickerBeamBreak = new DigitalInput(KickerPorts.KICKER_BEAM_BREAK);
 
         // Instantiate variables to intitial values
         setpoint = 0;
@@ -38,6 +43,25 @@ public class Kicker extends SubsystemBase {
         //updates setpoint
         double speed = setpoint;
         set(speed);
+    }
+
+    public boolean getKickerBeamBreak(){
+        return !kickerBeamBreak.get();
+    }
+
+    /**
+     * returns true if the beambreak is enabled
+     */
+    public boolean isKickerBeamBreakEnabled(){
+        return kickerBeamBreakEnabled;
+    }
+
+    /**
+     * enables or disables beambreak
+     * @param isEnabled true if enabling
+     */
+    public void setKickerBeamBreakEnabled(boolean isEnabled){
+        kickerBeamBreakEnabled = isEnabled;
     }
 
     //sets motor speeds

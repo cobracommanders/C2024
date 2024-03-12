@@ -23,7 +23,7 @@ public class LoadSource extends SequentialCommandGroup{
                 new SetKickerNextState()
             ),
             //Move Note to Beam Break
-            new WaitUntilCommand(Hopper.getInstance()::getBeamBreak),
+            new WaitUntilCommand(Hopper.getInstance()::getBackBeamBreak),
 
              // Set Subsystems to IDLE
             new SetState(State.IDLE),

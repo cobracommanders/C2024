@@ -33,15 +33,17 @@ public final class Ports {
         public static final int TOP_MOTOR = 40;
         public static final int BOTTOM_MOTOR = 42;
         public static final int ENCODER = 41;
-        public static final int BEAM_BREAk = 9; //DIO
+        public static final int BACK_BEAM_BREAk = 9; //DIO
+        public static final int FRONT_BEAM_BREAk = 0;
     }
     public static class KickerPorts {
         public static final int MOTOR = 43;
+        public static final int KICKER_BEAM_BREAK = 0;
     }
 
     public static class IntakePorts {
         public static final int MOTOR = 50;
-        public static final int ANGLE_ENCODER = 51;
+        public static final int ANGLE_ENCODER = 8;
         // public static final int ANGLE_ENCODER = 2;
     }
 

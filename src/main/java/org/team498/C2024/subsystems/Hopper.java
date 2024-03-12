@@ -21,8 +21,11 @@ public class Hopper extends SubsystemBase {
     private final TalonFX topMotor;
     private final TalonFX bottomMotor;
     private final PIDController pidController;
-    private final DigitalInput beamBreak;
-    private boolean beamBreakEnabled;
+    private final DigitalInput backBeamBreak;
+    private final DigitalInput frontBeamBreak;
+    private boolean backBeamBreakEnabled;
+    private boolean frontBeamBreakEnabled;
+
     private boolean pidEnabled;
 
     private double setpoint;
@@ -33,7 +36,8 @@ public class Hopper extends SubsystemBase {
     public Hopper() {
         topMotor = new TalonFX(Ports.HopperPorts.TOP_MOTOR);
         bottomMotor = new TalonFX(Ports.HopperPorts.BOTTOM_MOTOR);
-        beamBreak = new DigitalInput(HopperPorts.BEAM_BREAk);
+        backBeamBreak = new DigitalInput(HopperPorts.BACK_BEAM_BREAk);
+        frontBeamBreak = new DigitalInput(HopperPorts.FRONT_BEAM_BREAk);
         pidController = new PIDController(HopperConstants.P, HopperConstants.I, HopperConstants.D);
         pidController.setTolerance(0.1);
 
@@ -42,7 +46,8 @@ public class Hopper extends SubsystemBase {
         setpoint = 0;
         currentState = State.Hopper.IDLE;
         pidEnabled = false;
-        beamBreakEnabled = true;
+        backBeamBreakEnabled = true;
+        frontBeamBreakEnabled = true;
     }
 
     public void configMotors() {
@@ -60,7 +65,7 @@ public class Hopper extends SubsystemBase {
             double speed = setpoint;
             set(speed);
         }
-        SmartDashboard.putBoolean("Beambreak",getBeamBreak());
+        SmartDashboard.putBoolean("Beambreak",getBackBeamBreak());
     }
 
     public void set(double speed) {
@@ -103,23 +108,42 @@ public class Hopper extends SubsystemBase {
     /**
      * return true if beambreak sensor is active
      */
-    public boolean getBeamBreak(){
-        return !beamBreak.get();
+    public boolean getBackBeamBreak(){
+        return !backBeamBreak.get();
     }
 
     /**
      * returns true if the beambreak is enabled
      */
-    public boolean isBeamBreakEnabled(){
-        return beamBreakEnabled;
+    public boolean isBackBeamBreakEnabled(){
+        return backBeamBreakEnabled;
     }
 
     /**
      * enables or disables beambreak
      * @param isEnabled true if enabling
      */
-    public void setBeamBreakEnabled(boolean isEnabled){
-        beamBreakEnabled = isEnabled;
+    public void setBackBeamBreakEnabled(boolean isEnabled){
+        backBeamBreakEnabled = isEnabled;
+    }
+
+      public boolean getFrontBeamBreak(){
+        return !frontBeamBreak.get();
+    }
+
+    /**
+     * returns true if the beambreak is enabled
+     */
+    public boolean isFrontBeamBreakEnabled(){
+        return frontBeamBreakEnabled;
+    }
+
+    /**
+     * enables or disables beambreak
+     * @param isEnabled true if enabling
+     */
+    public void setFrontBeamBreakEnabled(boolean isEnabled){
+        frontBeamBreakEnabled = isEnabled;
     }
     private static Hopper instance;
 

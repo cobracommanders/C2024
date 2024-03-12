@@ -87,7 +87,7 @@ public final class Constants {
         public static final double SPIN_DIFF = 1000;
 
         public static final class AngleConstants{
-            public static final double P = 0.07;
+            public static final double P = 0.05;
             public static final double I = 0;
             public static final double D = 0.0;
             public static final double S = 0;
@@ -102,16 +102,16 @@ public final class Constants {
     }
 
     public static final class IntakeConstants {
-        public static final double P = 0.08;
+        public static final double P = 0.14;
         public static final double I = 0;
         public static final double D = 0; //0.15
         public static final double S = 0;
         public static final double V = 0;
-        public static final double G = 0.12;
+        public static final double G = 0;
         public static final double dV = 0;//0.2 / 1800.0; // 20% power per 6 m/s
         public static final double rV = 0;//0.3 / (3 * Math.PI); // 50% power per 3pi r/s (120 deg/s)
 
-        public static final double ENCODER_OFFSET = 8.32;
+        public static final double ENCODER_OFFSET = 6.21;
     }
 
     public static final class HopperConstants {

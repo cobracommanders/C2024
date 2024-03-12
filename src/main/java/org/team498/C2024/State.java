@@ -92,7 +92,7 @@ public enum State {
     //Sets Positions for Intake
     public enum Intake {
         IDLE(2.23), //0.304
-        INTAKE(0.05),
+        INTAKE(0.02),
         OUTTAKE(-0.1);
 
         public final double speed;
@@ -106,7 +106,7 @@ public enum State {
     //Sets Speeds for IntakeRollers
     public enum IntakeRollers {
         IDLE(0),
-        INTAKE(1),
+        INTAKE(0.5),
         OUTTAKE(-1);
 
         public final double speed;

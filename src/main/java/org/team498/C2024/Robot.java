@@ -108,8 +108,9 @@ public class Robot extends TimedRobot{
 
     @Override
     public void robotPeriodic() {
-        if (RobotState.isEnabled()) CommandScheduler.getInstance().run();
+        CommandScheduler.getInstance().run();
         SmartDashboard.putData(autoChooser);
+        SmartDashboard.putBoolean("Note Ready To AMP", Kicker.getInstance().getKickerBeamBreak());
         // SmartDashboard.putNumber("bl cancoder", kDefaultPeriod)
         // SmartDashboard.putBoolean("is Scoring", StateController.getInstance().isScoring());
 
@@ -142,6 +143,16 @@ public class Robot extends TimedRobot{
         //     else blinkin.setColor(BlinkinColor.SOLID_HOT_PINK);
 
         // }
+        if (RobotState.isEnabled()) {
+            if(Hopper.getInstance().getBackBeamBreak()) {
+                blinkin.setColor(BlinkinColor.RAINBOW_WITH_GLITTER);
+                SmartDashboard.putBoolean("Note in Robot", true);
+            }
+            else {
+                blinkin.setColor(BlinkinColor.SOLID_BLUE);
+                SmartDashboard.putBoolean("Note Not In Robot", false);
+            }
+        }
     }
 
     @Override
@@ -184,7 +195,7 @@ public class Robot extends TimedRobot{
 
     @Override
     public void teleopPeriodic() {
-        if (Hopper.getInstance().getBeamBreak()){
+        if (Hopper.getInstance().getBackBeamBreak()){
             controls.driver.rumble(0.05);
             controls.operator.rumble(0.05);
         }

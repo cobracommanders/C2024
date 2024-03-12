@@ -30,7 +30,7 @@ public class LoadGround extends SequentialCommandGroup{
                 new SetIntakeNextState()
             ),
             // If the BeamBreak is enabled then it stores the Note and if it's not enabled then it Sets the hopper to the next state
-            new ConditionalCommand(new StoreNote(), new SetHopperNextState(), Hopper.getInstance()::isBeamBreakEnabled)
+            new ConditionalCommand(new StoreNote(), new SetHopperNextState(), Hopper.getInstance()::isBackBeamBreakEnabled)
         );
     }
 }

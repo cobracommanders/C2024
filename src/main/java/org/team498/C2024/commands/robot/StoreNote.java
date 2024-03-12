@@ -17,7 +17,7 @@ public class StoreNote extends SequentialCommandGroup{
             new SetHopperNextState(),
 
             //Intakes Note until it Hits the BeamBreak
-            new WaitUntilCommand(() -> Hopper.getInstance().getBeamBreak()),
+            new WaitUntilCommand(() -> Hopper.getInstance().getBackBeamBreak()),
             new MoveHopper(2),
             //Sets Hopper to IDLE
             new SetState(State.IDLE),
