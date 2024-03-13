@@ -145,11 +145,23 @@ public class Robot extends TimedRobot{
         // }
         if (RobotState.isEnabled()) {
             if(Hopper.getInstance().getBackBeamBreak()) {
-                blinkin.setColor(BlinkinColor.RAINBOW_WITH_GLITTER);
+                blinkin.setColor(BlinkinColor.SOLID_DARK_GREEN);
                 SmartDashboard.putBoolean("Note in Robot", true);
             }
             else {
-                blinkin.setColor(BlinkinColor.SOLID_BLUE);
+                blinkin.setColor(BlinkinColor.SOLID_DARK_RED);
+                SmartDashboard.putBoolean("Note Not In Robot", false);
+            }
+        }
+
+        if (RobotState.isEnabled()) {
+            if(Hopper.getInstance().getFrontBeamBreak()) {
+                blinkin.setColor(BlinkinColor.STROBE_BLUE
+                );
+                SmartDashboard.putBoolean("Note entered Robot", true);
+            }
+            else {
+                blinkin.setColor(BlinkinColor.SOLID_DARK_RED);
                 SmartDashboard.putBoolean("Note Not In Robot", false);
             }
         }
