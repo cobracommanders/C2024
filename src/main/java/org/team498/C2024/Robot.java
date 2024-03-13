@@ -86,7 +86,7 @@ public class Robot extends TimedRobot{
         controls.configureDriverCommands();
         controls.configureOperatorCommands();
         // PathLib.SL1Note1.getClass();
-        drivetrain.enableBrakeMode(false);
+        drivetrain.enableBrakeMode(true);
         // Register Subsystems
         Drivetrain.getInstance();
         Shooter.getInstance();

@@ -42,7 +42,7 @@ public final class Constants {
             public static final double P = 5;
             public static final double I = 0;
             public static final double D = 0;
-            public static final double EPSILON = 1.5;
+            public static final double EPSILON = 0.5;
 
             // Constraints for the profiled angle controller
             public static final double MAX_ANGULAR_SPEED_DEGREES_PER_SECOND = 720;
