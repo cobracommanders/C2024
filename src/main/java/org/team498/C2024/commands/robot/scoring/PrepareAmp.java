@@ -3,6 +3,7 @@ package org.team498.C2024.commands.robot.scoring;
 import org.team498.C2024.State;
 import org.team498.C2024.commands.hopper.MoveHopper;
 import org.team498.C2024.commands.hopper.SetHopperNextState;
+import org.team498.C2024.commands.hopper.SetHopperState;
 import org.team498.C2024.commands.kicker.SetKickerNextState;
 import org.team498.C2024.commands.kicker.SetKickerState;
 import org.team498.C2024.commands.robot.SetState;
@@ -20,11 +21,13 @@ public class PrepareAmp extends SequentialCommandGroup {
 
             // Sets Kicker to forward
             new SetKickerState(State.Kicker.FORWARD),
+            //new SetHopperState(State.Hopper.FORWARD),
 
             // Moves Note into to Kicker
-            // new MoveHopper(-16),
+            new MoveHopper(-16),
 
-            new ConditionalCommand(new SetKickerState(State.Kicker.IDLE), new SetKickerNextState(), Kicker.getInstance()::isKickerBeamBreakEnabled),
+            //new ConditionalCommand(new SetKickerState(State.Kicker.IDLE), new SetKickerNextState(), Kicker.getInstance()::isKickerBeamBreakEnabled),
+            //new ConditionalCommand(new SetHopperState(State.Hopper.IDLE), new SetHopperNextState(), Kicker.getInstance()::isKickerBeamBreakEnabled),
 
             // Sets Kicker to Idle
             // new SetState(State.IDLE),

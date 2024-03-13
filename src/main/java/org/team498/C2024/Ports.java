@@ -34,7 +34,11 @@ public final class Ports {
         public static final int BOTTOM_MOTOR = 42;
         public static final int ENCODER = 41;
         public static final int BACK_BEAM_BREAk = 9; //DIO
+<<<<<<< Updated upstream
         public static final int FRONT_BEAM_BREAk = 5;
+=======
+        public static final int FRONT_BEAM_BREAk = 6;
+>>>>>>> Stashed changes
     }
     public static class KickerPorts {
         public static final int MOTOR = 43;

@@ -23,6 +23,7 @@ import org.team498.C2024.commands.robot.loading.LoadSource;
 import org.team498.C2024.commands.robot.loading.Outtake;
 import org.team498.C2024.commands.robot.scoring.CancelAmp;
 import org.team498.C2024.commands.robot.scoring.CancelSpeaker;
+import org.team498.C2024.commands.robot.scoring.PrepareAmp;
 import org.team498.C2024.commands.robot.scoring.PrepareToScore;
 import org.team498.C2024.commands.robot.scoring.Score;
 import org.team498.C2024.commands.shooter.SetShooterManual;
@@ -88,7 +89,9 @@ public class Controls {
     public void configureOperatorCommands() {
         operator.start().toggleOnTrue(new SetShooterManual(true, operator::leftY, ()-> 0));
         // operator.back().toggleOnTrue(new SetIntakeManual(true, operator::rightY));
-        operator.leftTrigger().onTrue(new SetHopperState(State.Hopper.FORWARD))
+        operator.rightTrigger().onTrue(new SetHopperState(State.Hopper.REVERSE))
+            .onFalse(new ReturnToIdle());
+        operator.leftTrigger().onTrue(new Outtake())
             .onFalse(new ReturnToIdle());
         operator.leftBumper().onTrue(new SetShooterState(State.Shooter.PODIUM));
         operator.rightBumper().onTrue(new SetShooterState(State.Shooter.IDLE));
@@ -115,7 +118,7 @@ public class Controls {
         operator.B().toggleOnFalse(new ReturnToIdle());
 
         operator.Y().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.AMP)));
-        operator.Y().toggleOnTrue(new PrepareToScore());
+        operator.Y().toggleOnTrue(new PrepareAmp());
         operator.Y().toggleOnFalse(new ReturnToIdle());
 
         // operator.leftBumper().onTrue(runOnce(() -> StateController.getInstance().setNextLoadingOption(LoadingOption.GROUND)));
