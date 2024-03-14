@@ -18,16 +18,16 @@ public class Score extends SequentialCommandGroup {
             //Sets Hopper, Shooter and Kicker to Next state
             new SetKickerNextState(),
             new SetHopperNextState(),
-            new SetShooterNextState(),
+            new SetShooterNextState()
 
             //Waits for Note to shoot
-            new WaitCommand(0.5),
+            // new WaitCommand(0.5),
 
             // Sets Shooter, Hopper and Kicker to IDLE
-            new SetState(State.IDLE),
-            new SetShooterNextState(),
-            new SetHopperNextState(),
-            new SetKickerNextState()
+            // new SetState(State.IDLE),
+            //new SetShooterNextState(),
+            // new SetHopperNextState(),
+            // new SetKickerNextState()
         );
     }
     

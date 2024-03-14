@@ -37,6 +37,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 
@@ -107,19 +108,16 @@ public class Controls {
 
         operator.X().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.AMP_SPEAKER)));
         operator.X().toggleOnTrue(new PrepareToScore());
-        operator.X().toggleOnFalse(new ReturnToIdle());
 
         operator.A().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.SUBWOOFER)));
         operator.A().toggleOnTrue(new PrepareToScore());
-        operator.A().toggleOnFalse(new ReturnToIdle());
 
-        operator.B().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.PODIUM)));
-        operator.B().toggleOnTrue(new PrepareToScore());
-        operator.B().toggleOnFalse(new ReturnToIdle());
+        // operator.B().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.PODIUM)));
+        // operator.B().toggleOnTrue(new PrepareToScore());
+        operator.B().onTrue(new ReturnToIdle());
 
         operator.Y().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.AMP)));
         operator.Y().toggleOnTrue(new PrepareAmp());
-        operator.Y().toggleOnFalse(new ReturnToIdle());
 
         // operator.leftBumper().onTrue(runOnce(() -> StateController.getInstance().setNextLoadingOption(LoadingOption.GROUND)));
         // operator.leftTrigger().onTrue(new LoadSource())
