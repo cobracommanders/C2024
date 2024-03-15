@@ -7,6 +7,7 @@ import org.team498.C2024.Constants.DrivetrainConstants;
 import org.team498.C2024.commands.drivetrain.SlowDrive;
 import org.team498.C2024.commands.drivetrain.TargetDrive;
 import org.team498.C2024.commands.drivetrain.TargetSpeaker;
+import org.team498.C2024.commands.robot.ReturnToIdle;
 import org.team498.C2024.commands.robot.SetScoringState;
 import org.team498.C2024.commands.robot.SetState;
 
@@ -25,7 +26,9 @@ public class SubwooferScore extends SequentialCommandGroup{
                 new PrepareToScore()
                 //new WaitCommand(wait),
             ),
-            new Score()
+            new Score(),
+            new WaitCommand(1),
+            new ReturnToIdle()
         );
     }
 }

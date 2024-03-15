@@ -4,6 +4,7 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
+import org.team498.C2024.commands.robot.loading.LoadGround;
 import org.team498.C2024.commands.robot.scoring.Score;
 import org.team498.lib.field.Point;
 
@@ -149,6 +150,10 @@ public class StateController extends SubsystemBase {
     public boolean isScoring(){
         return CommandScheduler.getInstance().isScheduled(Controls.scoreCommand);
     }
+
+    // public boolean isIntaking(){
+    //         return 
+    // }
 
     private static StateController instance;
 

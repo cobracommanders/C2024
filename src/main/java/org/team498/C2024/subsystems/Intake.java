@@ -3,8 +3,10 @@ package org.team498.C2024.subsystems;
 import org.team498.C2024.Constants;
 import org.team498.C2024.Ports;
 import org.team498.C2024.State;
+import org.team498.C2024.StateController;
 import org.team498.C2024.Constants.IntakeConstants;
 import org.team498.C2024.Constants.ShooterConstants;
+import org.team498.C2024.StateController.LoadingOption;
 import org.team498.lib.wpilib.ChassisSpeeds;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;

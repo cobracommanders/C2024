@@ -84,7 +84,8 @@ public class Controls {
                     }
                 }   
             ));
-        driver.rightTrigger().onTrue(runOnce(()-> CommandScheduler.getInstance().schedule(scoreCommand)));//.onFalse(runOnce(()-> scoreCommand.cancel()));
+        //driver.rightTrigger().onTrue(runOnce(()-> CommandScheduler.getInstance().schedule(scoreCommand)));//.onFalse(runOnce(()-> scoreCommand.cancel()));
+        driver.rightTrigger().onTrue(new SetScoringState().andThen(runOnce(()-> CommandScheduler.getInstance().schedule(scoreCommand))));
     }
 
     public void configureOperatorCommands() {
@@ -95,7 +96,7 @@ public class Controls {
         operator.leftTrigger().onTrue(new Outtake())
             .onFalse(new ReturnToIdle());
         operator.leftBumper().onTrue(new SetShooterState(State.Shooter.PODIUM));
-        operator.rightBumper().onTrue(new SetShooterState(State.Shooter.IDLE));
+        operator.rightBumper().onTrue(new ReturnToIdle());
         // operator.back().toggleOnTrue(new SetShooterManual(true, operator::leftY, ()-> 0.5));
         // operator.A().toggleOnTrue(new SetShooterManual(true, operator::leftY, ()-> 1.0));
         // operator.B().toggleOnTrue(new SetShooterManual(true, operator::leftY, ()-> 0.0));
@@ -114,7 +115,8 @@ public class Controls {
 
         // operator.B().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.PODIUM)));
         // operator.B().toggleOnTrue(new PrepareToScore());
-        operator.B().onTrue(new ReturnToIdle());
+        operator.B().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.PODIUM)));
+        operator.B().toggleOnTrue(new PrepareToScore());
 
         operator.Y().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.AMP)));
         operator.Y().toggleOnTrue(new PrepareAmp());

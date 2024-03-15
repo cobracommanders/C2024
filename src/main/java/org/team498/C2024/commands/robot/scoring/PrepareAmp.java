@@ -24,7 +24,8 @@ public class PrepareAmp extends SequentialCommandGroup {
             //new SetHopperState(State.Hopper.FORWARD),
 
             // Moves Note into to Kicker
-            new MoveHopper(-16),
+            new MoveHopper(-12),
+            new SetKickerState(State.Kicker.IDLE),
 
             //new ConditionalCommand(new SetKickerState(State.Kicker.IDLE), new SetKickerNextState(), Kicker.getInstance()::isKickerBeamBreakEnabled),
             //new ConditionalCommand(new SetHopperState(State.Hopper.IDLE), new SetHopperNextState(), Kicker.getInstance()::isKickerBeamBreakEnabled),

@@ -13,12 +13,12 @@ public class StoreNote extends SequentialCommandGroup{
         super(
 
             // Sets Hopper to INTAKE
-            // new SetState(State.INTAKE),
-            // new SetHopperNextState(),
+            new SetState(State.INTAKE),
+            new SetHopperNextState(),
 
-            // // //Intakes Note until it Hits the BeamBreak
-            // new WaitUntilCommand(() -> Hopper.getInstance().getBackBeamBreak()),
-            // new MoveHopper(2),
+            // //Intakes Note until it Hits the BeamBreak
+            new WaitUntilCommand(() -> Hopper.getInstance().getBackBeamBreak()),
+            new MoveHopper(-2),
             //Sets Hopper to IDLE
             new SetState(State.IDLE),
             new SetHopperNextState()

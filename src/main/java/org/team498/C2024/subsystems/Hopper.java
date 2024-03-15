@@ -46,6 +46,9 @@ public class Hopper extends SubsystemBase {
         setpoint = 0;
         currentState = State.Hopper.IDLE;
         pidEnabled = false;
+
+        backBeamBreakEnabled = true;
+        frontBeamBreakEnabled = true;
     }
 
     public void configMotors() {

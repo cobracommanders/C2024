@@ -10,6 +10,7 @@ import org.team498.lib.auto.Auto;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -19,12 +20,16 @@ public class LongTaxi implements Auto{
     public Command getCommand() {
 
         return new SequentialCommandGroup(
-            new  WaitCommand(0.5),
-            new SubwooferScore(3),
-            //new ParallelDeadlineGroup( 
-                new PathPlannerFollower(PathLib.long_taxi), //new LoadGround()),
-            new ReturnToIdle()
-        );
+            new WaitCommand(0.5),
+            new SubwooferScore(2),
+            new ParallelDeadlineGroup( 
+                new PathPlannerFollower(PathLib.long_taxi),
+                new SequentialCommandGroup(
+                new WaitCommand(2),
+                new LoadGround(),
+                new WaitCommand(2),
+                new SubwooferScore(1), 
+                new ReturnToIdle())));
             
 }
 

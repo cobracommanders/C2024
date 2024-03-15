@@ -237,6 +237,10 @@ public class Shooter extends SubsystemBase {
         return currentState;
     }
 
+    public boolean isSubwoofer(){
+        return State.Shooter.SUBWOOFER == currentState;
+    }
+
     /**
      * returns leftController, rightController, and angleController setpoints
      */
