@@ -98,7 +98,7 @@ public class Drivetrain extends SubsystemBase {
             resultPose = leftPose.get();
         else if (rightPose.isPresent())
             resultPose = rightPose.get();
-        if (resultPose != null)
+        if (resultPose != null)// && RobotPosition.isNear(resultPose.estimatedPose.toPose2d(), 1.5))
             poseEstimator.addVisionMeasurement(resultPose.estimatedPose.toPose2d(), resultPose.timestampSeconds);
         // if (leftPose.isPresent()) {
         //     poseEstimator.addVisionMeasurement(leftPose.get().estimatedPose.toPose2d(), leftPose.get().timestampSeconds);
@@ -113,6 +113,15 @@ public class Drivetrain extends SubsystemBase {
         
         SmartDashboard.putBoolean("left Camera Connected", PhotonVision.getInstance().leftCameraConnected());
         SmartDashboard.putBoolean("right camera connected", PhotonVision.getInstance().rightCameraConnected());
+
+        if (rightPose.isPresent()) {
+            SmartDashboard.putNumber("right Camera X", rightPose.get().estimatedPose.getX());
+            SmartDashboard.putNumber("right Camera Y", rightPose.get().estimatedPose.getY());
+        }
+        if (leftPose.isPresent()) {
+            SmartDashboard.putNumber("left Camera X", leftPose.get().estimatedPose.getX());
+            SmartDashboard.putNumber("left Camera Y", leftPose.get().estimatedPose.getY());
+            }
         // for (int i = 0; i < modules.length; i++) {
         //     //modules[i].setBrakeMode(RobotState.isEnabled());
         //     SmartDashboard.putNumber(i + " CanCoder Value", modules[i].getAngle());

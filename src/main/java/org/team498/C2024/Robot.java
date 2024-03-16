@@ -88,6 +88,8 @@ public class Robot extends TimedRobot{
         controls.configureDefaultCommands();
         controls.configureDriverCommands();
         controls.configureOperatorCommands();
+
+        PathLib.four_port_1.getClass();
         // PathLib.SL1Note1.getClass();
         drivetrain.enableBrakeMode(true);
         // Register Subsystems
@@ -175,7 +177,7 @@ public class Robot extends TimedRobot{
         rotationOffset = alliance.get() == Alliance.Blue
                          ? 0
                          : 180;
-        if (setupTime < 5) {
+        if (setupTime < 10) {
             setupTime = setupTimer.get();
             drivetrain.updateIntegratedEncoders();
         } else {
@@ -244,10 +246,10 @@ public class Robot extends TimedRobot{
         //autoToRun = new HighHighCone();
 
         if (alliance.get() == Alliance.Blue) {
-            Drivetrain.getInstance().setYaw(180 + rotationOffset);
+            Drivetrain.getInstance().setYaw(autoToRun.getInitialPose().getRotation().getDegrees());
             Drivetrain.getInstance().setPose(autoToRun.getInitialPose());
         } else {
-            Drivetrain.getInstance().setYaw(180 + rotationOffset);
+            Drivetrain.getInstance().setYaw(PoseUtil.flipAngleDegrees(autoToRun.getInitialPose().getRotation().getDegrees()));
             Drivetrain.getInstance().setPose(PoseUtil.flip(autoToRun.getInitialPose()));
         }
         //SmartDashboard.putData((Sendable) autoToRun.getInitialPose());

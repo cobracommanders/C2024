@@ -63,11 +63,12 @@ public class Controls {
             .onFalse(new SlowDrive(DrivetrainConstants.FULL_SPEED_SCALAR));
         driver.leftBumper().onTrue(new ConditionalCommand(
                 runOnce(()->StateController.getInstance().setAngleOverride(-90)),
-                new ConditionalCommand(
-                    runOnce(()-> {}),
-                    runOnce(()->StateController.getInstance().setTargetDrive(FieldPositions.getSpeaker())).alongWith(new SlowDrive(DrivetrainConstants.TARGET_SPEED_SCALAR)), 
-                    ()-> StateController.getInstance().getNextScoringState() == State.SUBWOOFER  || StateController.getInstance().getNextScoringState() == State.PODIUM || StateController.getInstance().getNextScoringState() == State.AMP_SPEAKER
-                ),
+                runOnce(()->StateController.getInstance().setTargetDrive(FieldPositions.getSpeaker())).alongWith(new SlowDrive(DrivetrainConstants.TARGET_SPEED_SCALAR)), 
+                // new ConditionalCommand(
+                //     runOnce(()-> {}),
+                //     runOnce(()->StateController.getInstance().setTargetDrive(FieldPositions.getSpeaker())).alongWith(new SlowDrive(DrivetrainConstants.TARGET_SPEED_SCALAR)), 
+                //     ()-> StateController.getInstance().getNextScoringState() == State.SUBWOOFER  || StateController.getInstance().getNextScoringState() == State.PODIUM || StateController.getInstance().getNextScoringState() == State.AMP_SPEAKER
+                // ),
                 //runOnce(()->StateController.getInstance().setTargetDrive(FieldPositions.getSpeaker())),
                 
                 ()-> StateController.getInstance().getNextScoringState() == State.AMP))
@@ -77,13 +78,13 @@ public class Controls {
         driver.Y().onTrue(runOnce(() -> Drivetrain.getInstance().setPose(new Pose2d(15.07, 5.55, Rotation2d.fromDegrees(0 + Robot.rotationOffset)))));
         driver.leftTrigger().onTrue(new LoadGround())
             .onFalse(new SetIntakeIdle());
-        driver.leftBumper().onTrue(new PrepareToScore())
-            .onFalse(runOnce(()-> {
-                    if (!StateController.getInstance().isScoring()) {
-                        CommandScheduler.getInstance().schedule(new ConditionalCommand(new CancelAmp(), new CancelSpeaker(), ()-> StateController.getInstance().getState() == State.AMP));
-                    }
-                }   
-            ));
+        // driver.leftBumper().onTrue(new PrepareToScore())
+        //     .onFalse(runOnce(()-> {
+        //             if (!StateController.getInstance().isScoring()) {
+        //                 CommandScheduler.getInstance().schedule(new ConditionalCommand(new CancelAmp(), new CancelSpeaker(), ()-> StateController.getInstance().getState() == State.AMP));
+        //             }
+        //         }   
+        //     ));
         //driver.rightTrigger().onTrue(runOnce(()-> CommandScheduler.getInstance().schedule(scoreCommand)));//.onFalse(runOnce(()-> scoreCommand.cancel()));
         driver.rightTrigger().onTrue(new SetScoringState().andThen(runOnce(()-> CommandScheduler.getInstance().schedule(scoreCommand))));
     }

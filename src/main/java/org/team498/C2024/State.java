@@ -33,7 +33,7 @@ public enum State {
 
     //Sets Speed and Angle for Shooter
     public enum Shooter {
-        IDLE(0, 0, 30),
+        IDLE(0, 0, 33),
         SUBWOOFER(3200, 1000, 53), //49 //3200
         AMP(0, 0, 35),
         PODIUM(3700, 1000, 30), //37

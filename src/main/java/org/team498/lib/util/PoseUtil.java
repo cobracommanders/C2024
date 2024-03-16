@@ -26,6 +26,10 @@ public class PoseUtil {
         return new Pose2d(FieldPositions.midline + (FieldPositions.midline - input.getX()), input.getY(), Rotation2d.fromDegrees((input.getRotation().getDegrees() + 180) * -1));
     }
 
+    public static double flipAngleDegrees(double angle) {
+        return (angle + 180) * -1;
+    }
+
     public static Transform2d toTransform2d(Transform3d transform) {
         return new Transform2d(transform.getTranslation().toTranslation2d(), transform.getRotation().toRotation2d());
     }

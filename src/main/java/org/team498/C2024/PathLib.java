@@ -44,7 +44,7 @@ public class PathLib {
 
     public static final PathPlannerTrajectory spit = Trajectories.getChoreoTrajectory("spit", Rotation2d.fromDegrees(180));
 
-    public static final PathPlannerTrajectory long_taxi = Trajectories.getChoreoTrajectory("long_taxi", Rotation2d.fromRadians(180));
+    public static final PathPlannerTrajectory long_taxi = Trajectories.getChoreoTrajectory("long_taxi", Rotation2d.fromRadians(2.048));
 
     public static final PathPlannerTrajectory troll = Trajectories.getChoreoTrajectory("troll", Rotation2d.fromDegrees(180));
     // public static final PathPlannerTrajectory Note3Mid5 = Trajectories.getChoreoTrajectory("Note3Mid5");
