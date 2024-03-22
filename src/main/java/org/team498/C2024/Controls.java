@@ -108,15 +108,16 @@ public class Controls {
 
 
 
-        operator.X().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.AMP_SPEAKER)));
+        operator.X().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.PODIUM)));
         operator.X().toggleOnTrue(new PrepareToScore());
 
+        //operator.A().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.SUBWOOFER)));
         operator.A().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.SUBWOOFER)));
         operator.A().toggleOnTrue(new PrepareToScore());
 
         // operator.B().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.PODIUM)));
         // operator.B().toggleOnTrue(new PrepareToScore());
-        operator.B().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.PODIUM)));
+        operator.B().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.CRESCENDO)));
         operator.B().toggleOnTrue(new PrepareToScore());
 
         operator.Y().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.AMP)));

@@ -12,7 +12,7 @@ public class SetIntakeRollerState extends InstantCommand {
 
     public SetIntakeRollerState(State.IntakeRollers state) {
         this.state = state;
-        addRequirements(intakeRollers);
+        // addRequirements(intakeRollers);
     }
 
     @Override

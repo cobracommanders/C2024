@@ -33,6 +33,7 @@ import org.team498.C2024.Ports;
 import org.team498.C2024.Robot;
 import org.team498.C2024.RobotPosition;
 import org.team498.lib.drivers.Gyro;
+import org.team498.lib.util.PoseUtil;
 import org.team498.lib.wpilib.ChassisSpeeds;
 
 public class Drivetrain extends SubsystemBase {
@@ -75,7 +76,7 @@ public class Drivetrain extends SubsystemBase {
 
         poseEstimator = new SwerveDrivePoseEstimator(kinematics, Rotation2d.fromDegrees(getYaw()), getModulePositions(), new Pose2d(), 
             VecBuilder.fill(Units.inchesToMeters(3), Units.inchesToMeters(3), Math.toRadians(4)), // Odometry standard deviation
-            VecBuilder.fill(Units.inchesToMeters(10), Units.inchesToMeters(10), Math.toRadians(10))); // Vision standard deviation
+            VecBuilder.fill(Units.inchesToMeters(20), Units.inchesToMeters(20), Math.toRadians(15))); // Vision standard deviation
 
         stateSetpoints = getModuleStates();
 
@@ -98,8 +99,11 @@ public class Drivetrain extends SubsystemBase {
             resultPose = leftPose.get();
         else if (rightPose.isPresent())
             resultPose = rightPose.get();
-        if (resultPose != null)// && RobotPosition.isNear(resultPose.estimatedPose.toPose2d(), 1.5))
+        if (resultPose != null && RobotPosition.distanceToSpeaker(resultPose.estimatedPose.toPose2d()) < 4.5)// && RobotPosition.isNear(resultPose.estimatedPose.toPose2d(), 1.0) && !isStopped())
             poseEstimator.addVisionMeasurement(resultPose.estimatedPose.toPose2d(), resultPose.timestampSeconds);
+        // else if (resultPose != null && isStopped()) {
+        //     poseEstimator.addVisionMeasurement(resultPose.estimatedPose.toPose2d(), resultPose.timestampSeconds);
+        // }
         // if (leftPose.isPresent()) {
         //     poseEstimator.addVisionMeasurement(leftPose.get().estimatedPose.toPose2d(), leftPose.get().timestampSeconds);
         // }
@@ -121,7 +125,7 @@ public class Drivetrain extends SubsystemBase {
         if (leftPose.isPresent()) {
             SmartDashboard.putNumber("left Camera X", leftPose.get().estimatedPose.getX());
             SmartDashboard.putNumber("left Camera Y", leftPose.get().estimatedPose.getY());
-            }
+        }
         // for (int i = 0; i < modules.length; i++) {
         //     //modules[i].setBrakeMode(RobotState.isEnabled());
         //     SmartDashboard.putNumber(i + " CanCoder Value", modules[i].getAngle());
@@ -154,6 +158,10 @@ public class Drivetrain extends SubsystemBase {
     }
     private Pose2d averagePoses(EstimatedRobotPose pose1, EstimatedRobotPose pose2) {
         return new Pose2d(new Translation2d((pose1.estimatedPose.getX() + pose2.estimatedPose.getX()) / 2, (pose1.estimatedPose.getY() + pose2.estimatedPose.getY()) / 2), Rotation2d.fromDegrees((pose1.estimatedPose.getRotation().toRotation2d().getDegrees() + pose2.estimatedPose.getRotation().toRotation2d().getDegrees()) / 2));
+    }
+
+    private boolean isStopped() {
+        return Math.abs(getCurrentSpeeds().omegaRadiansPerSecond) <= 0.5 && Math.abs(getCurrentSpeeds().vxMetersPerSecond) < 0.1 && Math.abs(getCurrentSpeeds().vyMetersPerSecond) < 0.1;
     }
 
     public void drive(double vx, double vy, double degreesPerSecond, boolean fieldOriented) {

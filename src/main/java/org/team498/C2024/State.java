@@ -36,7 +36,7 @@ public enum State {
         IDLE(0, 0, 33),
         SUBWOOFER(3200, 1000, 53), //49 //3200
         AMP(0, 0, 35),
-        PODIUM(3700, 1000, 30), //37
+        PODIUM(3700, 1000, 31), //37
         CRESCENDO(3700, 1000, 40),
         SOURCE(0, 0, 50),
         PREPARE(3700, 1000, 40),
@@ -93,6 +93,7 @@ public enum State {
     public enum Intake {
         IDLE(2.23), //0.304
         INTAKE(0.5),
+        AUTO_INTAKE(0.7),
         OUTTAKE(2.23);
 
         public final double speed;

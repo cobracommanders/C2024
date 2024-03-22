@@ -148,8 +148,10 @@ public class Shooter extends SubsystemBase {
             this.angle = ShooterConstants.AngleConstants.MAX_ANGLE;
         // } else if (this.angle < ShooterConstants.AngleConstants.MIN_ANGLE && Intake.getInstance().getState() == State.Intake.IDLE) {
         //     this.angle = ShooterConstants.AngleConstants.MIN_ANGLE;
-        } else if (this.angle < ShooterConstants.AngleConstants.MIN_ANGLE) {
+        } else if (this.angle < ShooterConstants.AngleConstants.MIN_ANGLE && Intake.getInstance().getState() == State.Intake.IDLE) {
             this.angle = ShooterConstants.AngleConstants.MIN_ANGLE;
+        } else if(this.angle < ShooterConstants.AngleConstants.AUTO_MIN_ANGLE && Intake.getInstance().getState() != State.Intake.IDLE) {
+            this.angle = ShooterConstants.AngleConstants.AUTO_MIN_ANGLE;
         }
 
         if (currentState.speed == 0) {
@@ -274,11 +276,11 @@ public class Shooter extends SubsystemBase {
     }
 
     public double getTimeOfFlight() {
-        //double yVelocity = getRightSpeedMPS() * Math.sin(Math.toRadians(getAngle()));
-        double yVelocity = RPM_to_MPS(2700) * Math.sin(Math.toRadians(getAngle()));
+        // double yVelocity = getRightSpeedMPS() * Math.sin(Math.toRadians(getAngle()));
+        double yVelocity = RPM_to_MPS(2900) * Math.sin(Math.toRadians(getAngle()));
         double distanceToSpeaker = RobotPosition.distanceToSpeakerStatic();
-        // return (distanceToSpeaker / yVelocity) + RobotPosition.defaultTOF;
-        return RobotPosition.defaultTOF;
+        return (distanceToSpeaker / yVelocity) + RobotPosition.defaultTOF;
+        // return RobotPosition.defaultTOF;
     }
 
     public boolean shooterState(){
@@ -310,12 +312,14 @@ public class Shooter extends SubsystemBase {
     // }
 
     private double calculateAngle(double distance){
+        if (distance > 4.5)
+        return ShooterConstants.AngleConstants.MIN_ANGLE;
         double v = RPM_to_MPS(currentState.speed);
-        double c1 = 179.357;
-        double c2 = -143.418;
-        double c3 = 48.543;
-        double c4 = -5.607;
-        double theta = c4 * Math.pow(distance, 3) + c3 * distance * distance + c2 * distance + c1 - 1; //angle in degrees as given in team498/notebook/shooter_model.ipynb
+        double c1 = 71.381;
+        double c2 = -26.351;
+        double c3 = 6.056;
+        double c4 = -0.533;
+        double theta = c4 * Math.pow(distance, 3) + c3 * distance * distance + c2 * distance + c1 + 2; //angle in degrees as given in team498/notebook/shooter_model.ipynb
         // if (distance > 5) {
         //     theta = 40;
         // }

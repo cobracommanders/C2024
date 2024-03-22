@@ -22,7 +22,7 @@ public class Troll implements Auto{
 
     @Override
     public Pose2d getInitialPose() {
-        return PathLib.troll.getInitialTargetHolonomicPose();//PathLib.MidSubwooferToFirstNote.getInitialTargetHolonomicPose();
+        return PathLib.troll.getInitialTargetHolonomicPose();
     }
     
 }

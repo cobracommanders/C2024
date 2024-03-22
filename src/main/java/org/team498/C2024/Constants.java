@@ -20,7 +20,7 @@ public final class Constants {
 
         public static final float SLOW_SPEED_SCALAR = 0.5f;
         public static final float TARGET_SPEED_SCALAR = 0.8f;
-        public static final float AUTO_SPEED_SCALAR = 0f;
+        public static final float AUTO_SPEED_SCALAR = 0.2f;
         public static final short FULL_SPEED_SCALAR = 1;
 
         public static final double SWERVE_MODULE_DISTANCE_FROM_CENTER = 10.75;
@@ -94,10 +94,10 @@ public final class Constants {
             public static final double V = 0;
             public static final double G = 0; //0.03
             public static final double MAX_ANGLE = 73;
-            public static final double MIN_ANGLE = 29;
+            public static final double MIN_ANGLE = 31;
             public static final double AUTO_MIN_ANGLE = 29;
 
-            public static final double ANGLE_OFFSET = 0.18900256; //- 0.006; 
+            public static final double ANGLE_OFFSET = 0.18900256;// - 0.00873; //- 0.006
         }
     }
 

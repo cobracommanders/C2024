@@ -1,8 +1,10 @@
 package org.team498.C2024;
+import org.team498.C2024.commands.drivetrain.PathPlannerFollower;
 import org.team498.lib.util.Trajectories;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.Command;
 
 public class PathLib {
     //public static final PathPlannerTrajectory choreoTest = Trajectories.getChoreoTrajectory("NewPath");
@@ -31,8 +33,8 @@ public class PathLib {
     public static final PathPlannerTrajectory SixAmp3 = Trajectories.getChoreoTrajectory("six_amp_3", Rotation2d.fromDegrees(180));
 
     public static final PathPlannerTrajectory four_port_1 = Trajectories.getChoreoTrajectory("four_port_1", Rotation2d.fromDegrees(180));
-    public static final PathPlannerTrajectory four_port_2 = Trajectories.getChoreoTrajectory("four_port_2", Rotation2d.fromRadians(2.212));
-    public static final PathPlannerTrajectory four_port_3 = Trajectories.getChoreoTrajectory("four_port_3", Rotation2d.fromRadians(2.107));
+    public static final PathPlannerTrajectory four_port_2 = Trajectories.getChoreoTrajectory("four_port_2", Rotation2d.fromRadians(2.616));
+    public static final PathPlannerTrajectory four_port_3 = Trajectories.getChoreoTrajectory("four_port_3", Rotation2d.fromRadians(2.321));
 
     public static final PathPlannerTrajectory pre_taxi_1 = Trajectories.getChoreoTrajectory("pre_taxi_1", Rotation2d.fromRadians(2.4));
     public static final PathPlannerTrajectory pre_taxi_2 = Trajectories.getChoreoTrajectory("pre_taxi_2", Rotation2d.fromDegrees(180));
@@ -47,6 +49,11 @@ public class PathLib {
     public static final PathPlannerTrajectory long_taxi = Trajectories.getChoreoTrajectory("long_taxi", Rotation2d.fromRadians(2.048));
 
     public static final PathPlannerTrajectory troll = Trajectories.getChoreoTrajectory("troll", Rotation2d.fromDegrees(180));
+
+
+    // public static final Command FourPortOne = new PathPlannerFollower(four_port_1);
+    // public static final Command FourPortTwo = new PathPlannerFollower(four_port_2);
+    // public static final Command FourPortThree = new PathPlannerFollower(four_port_3);
     // public static final PathPlannerTrajectory Note3Mid5 = Trajectories.getChoreoTrajectory("Note3Mid5");
     // public static final PathPlannerTrajectory Mid5Note3 = Trajectories.getChoreoTrajectory("Mid5Note3");
 }

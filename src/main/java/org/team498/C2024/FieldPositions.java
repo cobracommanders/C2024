@@ -20,7 +20,7 @@ public final class FieldPositions {
 
     public static final double midline = width / 2;
 
-    public static final Point blueSpeaker = new Point(0.16, 5.57); //5.57
+    public static final Point blueSpeaker = new Point(0.16, 5.57); //0.16, 5.57
     // public static final Point blueAmp = new Point(1.82, 8.10);
 
     public static final Point[] blueNotes = {

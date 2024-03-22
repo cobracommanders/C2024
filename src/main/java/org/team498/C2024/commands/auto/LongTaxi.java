@@ -34,10 +34,12 @@ public class LongTaxi implements Auto{
             new ParallelDeadlineGroup( 
                 new PathPlannerFollower(PathLib.long_taxi),
                 new SequentialCommandGroup(
-                    new WaitCommand(3),
-                    new LoadGround().withTimeout(1),
-                    new SetIntakeIdle(),
-                    new SubwooferScore(1)
+                    new WaitCommand(2),
+                    new LoadGround().withTimeout(2),
+                    new SetIntakeIdle()
+                    // new WaitCommand(1),
+                    // new PrepareToScore(),
+                    // new AutoScore()
                 )
             )
         );

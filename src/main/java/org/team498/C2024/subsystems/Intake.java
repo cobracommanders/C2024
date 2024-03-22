@@ -88,7 +88,10 @@ public class Intake extends SubsystemBase {
             double rotationOffset = rotationFeedforward.calculate(Math.abs(rotation));
 
             speed = initialPID + gravityOffset + driveOffset + rotationOffset; // adjust for feedback error using proportional gain
-        } 
+        }
+        if (Shooter.getInstance().getAngle() < ShooterConstants.AngleConstants.MIN_ANGLE - 1) {
+            speed = 0;
+        }
         // if (Shooter.getInstance().getAngle() < ShooterConstants.AngleConstants.MIN_ANGLE - 1) //Tolerance for Intake Angle
         //     speed = 0;
         if (isManual) speed = manualSpeed;

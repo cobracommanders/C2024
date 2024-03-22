@@ -59,7 +59,7 @@ public class Robot extends TimedRobot{
     //private final RobotState robotState = RobotState.getInstance();
 
     private final SendableChooser<Auto> autoChooser = new SendableChooser<Auto>();
-    private Auto defaultAuto = new FourPort();
+    private Auto defaultAuto = new LongTaxi();
     private Auto autoToRun = defaultAuto;
 
     // private boolean matchStarted = false;
@@ -255,6 +255,7 @@ public class Robot extends TimedRobot{
         //SmartDashboard.putData((Sendable) autoToRun.getInitialPose());
 
         autoToRun.getCommand().schedule();
+        //new LongTaxi().getCommand().schedule();
 
         // CommandScheduler.getInstance().run();
 

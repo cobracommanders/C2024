@@ -89,6 +89,11 @@ public class RobotPosition {
         Point speakerPoint = new Point(speakerPose.getX(), speakerPose.getY());
         return distanceTo(speakerPoint, getFuturePose());
     }
+    public static double distanceToSpeaker(Pose2d reference){
+        Pose2d speakerPose = FieldPositions.getSpeaker();
+        Point speakerPoint = new Point(speakerPose.getX(), speakerPose.getY());
+        return distanceTo(speakerPoint, reference);
+    }
 
     private static Transform2d getVelocity(double tof) {
         var currentSpeeds = drivetrain.getCurrentSpeeds();

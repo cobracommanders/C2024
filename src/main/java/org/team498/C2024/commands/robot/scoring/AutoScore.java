@@ -14,6 +14,7 @@ public class AutoScore extends SequentialCommandGroup {
         super(
 
             //Starts in CRESCENDO, SUBWOOFER, PODIUM, or AMP
+            new SetState(State.CRESCENDO),
 
             //Sets Hopper, Shooter and Kicker to Next state
             new SetKickerNextState(),

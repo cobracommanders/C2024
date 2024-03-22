@@ -54,7 +54,7 @@ public class PathPlannerFollower extends Command {
             if (hasTargetDrive) drivetrain.setAngleGoal(RobotPosition.calculateDegreesToTarget(targetPose));
         } else {
             drivetrain.setPositionGoal(PoseUtil.flip(new Pose2d(state.positionMeters.getX(), state.positionMeters.getY(), state.targetHolonomicRotation)));
-            if (hasTargetDrive) drivetrain.setAngleGoal(RobotPosition.calculateDegreesToTarget(PoseUtil.flip(targetPose)));
+            if (hasTargetDrive) drivetrain.setAngleGoal(RobotPosition.calculateDegreesToTarget(targetPose));
         }
         ChassisSpeeds speeds = drivetrain.calculatePositionSpeed();
         drivetrain.drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, true);
