@@ -117,7 +117,7 @@ public class Controls {
 
         // operator.B().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.PODIUM)));
         // operator.B().toggleOnTrue(new PrepareToScore());
-        operator.B().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.CRESCENDO)));
+        operator.B().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.FRONT_PODIUM)));
         operator.B().toggleOnTrue(new PrepareToScore());
 
         operator.Y().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.AMP)));

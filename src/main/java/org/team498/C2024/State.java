@@ -14,7 +14,7 @@ public enum State {
     TRACK_NOTE(Shooter.VISION, Hopper.REVERSE, Intake.INTAKE, IntakeRollers.INTAKE, Kicker.IDLE),
     AUTO(Shooter.AUTO, Hopper.REVERSE, Intake.INTAKE, IntakeRollers.INTAKE, Kicker.REVERSE),
     SPIT(Shooter.SPIT, Hopper.REVERSE, Intake.INTAKE, IntakeRollers.INTAKE, Kicker.REVERSE),
-    AMP_SPEAKER(Shooter.AMP_SPEAKER, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.REVERSE);
+    FRONT_PODIUM(Shooter.FRONT_PODIUM, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.REVERSE);
 
     public final Shooter shooter;
     public final Hopper hopper;
@@ -47,7 +47,7 @@ public enum State {
         CLIMB_DOWN(0, 0, 30),
         TRAP(3500, 1000, 50),
         SPIT(900, 1000, 40),
-        AMP_SPEAKER(3700, 1000, 32);
+        FRONT_PODIUM(3700, 1000, 31.5);
 
         public final double speed;
         public final double feedSpeed;
@@ -80,7 +80,7 @@ public enum State {
         IDLE(0),
         FORWARD(0.5),
         REVERSE(-0.5),
-        AMP(-0.7);
+        AMP(-1);
 
         public final double speed;
 
@@ -92,7 +92,7 @@ public enum State {
     //Sets Positions for Intake
     public enum Intake {
         IDLE(2.23), //0.304
-        INTAKE(0.5),
+        INTAKE(0.4),
         AUTO_INTAKE(0.7),
         OUTTAKE(2.23);
 

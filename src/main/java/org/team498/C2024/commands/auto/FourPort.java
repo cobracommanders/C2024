@@ -61,7 +61,7 @@ public class FourPort implements Auto{
 
                     //new SetIntakeRollerState(State.IntakeRollers.IDLE),
 
-                    new FullScore(1.5),
+                    new FullScore(1.75),
                     new LoadGround().withTimeout(4),
                     new SetIntakeState(State.Intake.IDLE),
                         //for testing paths without intake

@@ -33,8 +33,8 @@ public class PathLib {
     public static final PathPlannerTrajectory SixAmp3 = Trajectories.getChoreoTrajectory("six_amp_3", Rotation2d.fromDegrees(180));
 
     public static final PathPlannerTrajectory four_port_1 = Trajectories.getChoreoTrajectory("four_port_1", Rotation2d.fromDegrees(180));
-    public static final PathPlannerTrajectory four_port_2 = Trajectories.getChoreoTrajectory("four_port_2", Rotation2d.fromRadians(2.616));
-    public static final PathPlannerTrajectory four_port_3 = Trajectories.getChoreoTrajectory("four_port_3", Rotation2d.fromRadians(2.321));
+    public static final PathPlannerTrajectory four_port_2 = Trajectories.getChoreoTrajectory("four_port_2", Rotation2d.fromRadians(2.028));
+    public static final PathPlannerTrajectory four_port_3 = Trajectories.getChoreoTrajectory("four_port_3", Rotation2d.fromRadians(2.142));
 
     public static final PathPlannerTrajectory pre_taxi_1 = Trajectories.getChoreoTrajectory("pre_taxi_1", Rotation2d.fromRadians(2.4));
     public static final PathPlannerTrajectory pre_taxi_2 = Trajectories.getChoreoTrajectory("pre_taxi_2", Rotation2d.fromDegrees(180));

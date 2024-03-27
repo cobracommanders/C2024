@@ -319,7 +319,7 @@ public class Shooter extends SubsystemBase {
         double c2 = -26.351;
         double c3 = 6.056;
         double c4 = -0.533;
-        double theta = c4 * Math.pow(distance, 3) + c3 * distance * distance + c2 * distance + c1 + 2; //angle in degrees as given in team498/notebook/shooter_model.ipynb
+        double theta = c4 * Math.pow(distance, 3) + c3 * distance * distance + c2 * distance + c1 + 1.9; //angle in degrees as given in team498/notebook/shooter_model.ipynb
         // if (distance > 5) {
         //     theta = 40;
         // }
