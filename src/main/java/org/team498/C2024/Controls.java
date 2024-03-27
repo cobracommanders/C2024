@@ -31,9 +31,11 @@ import org.team498.C2024.commands.shooter.SetShooterNextState;
 import org.team498.C2024.commands.shooter.SetShooterState;
 import org.team498.C2024.subsystems.Drivetrain;
 import org.team498.lib.drivers.Xbox;
+import org.team498.lib.util.PoseUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -63,7 +65,7 @@ public class Controls {
             .onFalse(new SlowDrive(DrivetrainConstants.FULL_SPEED_SCALAR));
         driver.leftBumper().onTrue(new ConditionalCommand(
                 runOnce(()->StateController.getInstance().setAngleOverride(-90)),
-                runOnce(()->StateController.getInstance().setTargetDrive(FieldPositions.getSpeaker())).alongWith(new SlowDrive(DrivetrainConstants.TARGET_SPEED_SCALAR)), 
+                runOnce(()->StateController.getInstance().setAngleOverride((Robot.alliance.get() == Alliance.Blue) ? 0 : PoseUtil.flipAngleDegrees(0))), 
                 // new ConditionalCommand(
                 //     runOnce(()-> {}),
                 //     runOnce(()->StateController.getInstance().setTargetDrive(FieldPositions.getSpeaker())).alongWith(new SlowDrive(DrivetrainConstants.TARGET_SPEED_SCALAR)), 

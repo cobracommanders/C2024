@@ -123,9 +123,9 @@ public class StateController extends SubsystemBase {
     public boolean getTargetDriveActive() {
         return targetDrive != null;
     }
-    public void setAngleOverride(double target) {
-        if (target == -1) angleOverride = null;
-        else angleOverride = ()-> target;
+    public void setAngleOverride(double b) {
+        if (b == -1) angleOverride = null;
+        else angleOverride = ()-> b;
     }
 
     public double getAngleOverride() {
