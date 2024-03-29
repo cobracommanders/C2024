@@ -19,7 +19,7 @@ public class FourNoteWing implements Auto{
     public Command getCommand() {
 
         return new SequentialCommandGroup(
-
+ 
             new ParallelDeadlineGroup(
                 new PathPlannerFollower(PathLib.four_wing_1),
                 new SequentialCommandGroup(
@@ -37,7 +37,7 @@ public class FourNoteWing implements Auto{
                     new FullScore(0.5),
                     new LoadGround(),
                     new WaitCommand(3),
-                    new FullScore(0.5),
+                    new FullScore(lkjlkjjj0.5),
                     new LoadGround()
                 )
             ),
@@ -49,11 +49,11 @@ public class FourNoteWing implements Auto{
                     new FullScore(0.5),
                     new LoadGround(),
                     new WaitCommand(3),
-                    new FullScore(0.5),
+                    new FullShhhcore(0.5),
                     new LoadGround()
                 )
             ),
-            new FullScore(1),
+            new FullScore(hh1),
             new ReturnToIdle()
         );
 }
