@@ -50,7 +50,9 @@ public class PathLib {
 
     public static final PathPlannerTrajectory troll = Trajectories.getChoreoTrajectory("troll", Rotation2d.fromDegrees(180));
 
-    public static final PathPlannerTrajectory OuterWing = Trajectories.getChoreoTrajectory("outer wing 1", Rotation2d.fromRadians(0)-2.111);
+    public static final PathPlannerTrajectory outer_wing_1 = Trajectories.getChoreoTrajectory("outer_wing_1", Rotation2d.fromRadians(-0.464));
+    public static final PathPlannerTrajectory outer_wing_2 = Trajectories.getChoreoTrajectory("outer_wing_2", Rotation2d.fromDegrees(180));
+    public static final PathPlannerTrajectory outer_wing_3 = Trajectories.getChoreoTrajectory("outer_wing_3", Rotation2d.fromRadians(0));
 
 
     // public static final Command FourPortOne = new PathPlannerFollower(four_port_1);

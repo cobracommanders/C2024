@@ -20,9 +20,11 @@ import org.team498.C2024.commands.auto.FourNoteWing;
 import org.team498.C2024.commands.auto.FourPort;
 import org.team498.C2024.commands.auto.LongTaxi;
 import org.team498.C2024.commands.auto.OneTaxi;
+import org.team498.C2024.commands.auto.OuterWing;
 import org.team498.C2024.commands.auto.SixNoteAmp;
 import org.team498.C2024.commands.auto.Spit;
 import org.team498.C2024.commands.auto.TestAuto;
+import org.team498.C2024.commands.auto.TestPathing;
 import org.team498.C2024.commands.auto.Troll;
 import org.team498.C2024.commands.robot.ReturnToIdle;
 import org.team498.C2024.commands.robot.scoring.FullScore;
@@ -59,7 +61,7 @@ public class Robot extends TimedRobot{
     //private final RobotState robotState = RobotState.getInstance();
 
     private final SendableChooser<Auto> autoChooser = new SendableChooser<Auto>();
-    private Auto defaultAuto = new LongTaxi();
+    private Auto defaultAuto = new OuterWing();
     private Auto autoToRun = defaultAuto;
 
     // private boolean matchStarted = false;
@@ -74,7 +76,9 @@ public class Robot extends TimedRobot{
         new OneTaxi(),
         new LongTaxi(),
         //new Spit(),
-        new Troll()
+        new Troll(),
+        new OuterWing(),
+        new TestPathing()
         //    new PracticeAuto()
                                                   );
 
@@ -149,7 +153,13 @@ public class Robot extends TimedRobot{
 
         // }
         if (RobotState.isEnabled()) {
-            if (Shooter.getInstance().isSubwoofer()){
+            if(StateController.getInstance().getState() == State.IDLE){
+                blinkin.setColor(BlinkinColor.SOLID_DARK_RED);
+            }
+            else if(Shooter.getInstance().atSetpoint()) {
+                blinkin.setColor(BlinkinColor.SOLID_GREEN);
+            }
+            else if (Shooter.getInstance().isSubwoofer()){
                 blinkin.setColor(BlinkinColor.SOLID_HOT_PINK);
             }
             else if(Hopper.getInstance().getBackBeamBreak()) {

@@ -37,7 +37,7 @@ public class FourNoteWing implements Auto{
                     new FullScore(0.5),
                     new LoadGround(),
                     new WaitCommand(3),
-                    new FullScore(lkjlkjjj0.5),
+                    new FullScore(0.5),
                     new LoadGround()
                 )
             ),
@@ -49,11 +49,11 @@ public class FourNoteWing implements Auto{
                     new FullScore(0.5),
                     new LoadGround(),
                     new WaitCommand(3),
-                    new FullShhhcore(0.5),
+                    new FullScore(0.5),
                     new LoadGround()
                 )
             ),
-            new FullScore(hh1),
+            new FullScore(1),
             new ReturnToIdle()
         );
 }

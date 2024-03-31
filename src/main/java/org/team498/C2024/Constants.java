@@ -19,8 +19,9 @@ public final class Constants {
         public static final double MAX_AUTO_ACCELERATION = 3;
 
         public static final float SLOW_SPEED_SCALAR = 0.5f;
+        public static final float AUTO_SLOW_SPEED_SCALAR = 0.7f;//0.3
         public static final float TARGET_SPEED_SCALAR = 0.8f;
-        public static final float AUTO_SPEED_SCALAR = 0.2f;
+        public static final float AUTO_SPEED_SCALAR = 0.25f;//0.2
         public static final short FULL_SPEED_SCALAR = 1;
 
         public static final double SWERVE_MODULE_DISTANCE_FROM_CENTER = 10.75;
@@ -102,16 +103,16 @@ public final class Constants {
     }
 
     public static final class IntakeConstants {
-        public static final double P = 0.14;
+        public static final double P = 0.2;//0.14
         public static final double I = 0;
-        public static final double D = 0; //0.15
+        public static final double D = 0.01; //0.15
         public static final double S = 0;
         public static final double V = 0;
         public static final double G = 0;
         public static final double dV = 0;//0.2 / 1800.0; // 20% power per 6 m/s
         public static final double rV = 0;//0.3 / (3 * Math.PI); // 50% power per 3pi r/s (120 deg/s)
 
-        public static final double ENCODER_OFFSET = 6.21;
+        public static final double ENCODER_OFFSET = 8.29;
     }
 
     public static final class HopperConstants {

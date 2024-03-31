@@ -141,11 +141,11 @@ public class Intake extends SubsystemBase {
     }
 
     public double getRawEncoder(){
-            double angle = angleEncoder.getOutput() + 0.4;
+            double angle = angleEncoder.getOutput() + 0.8;
             if (angle < 1)
                 angle += 1;
     
-            return angle - 0.4;
+            return angle + 0.4;
     }
     
     // Using static instances to reference the flywheel object ensures that we only use ONE FLywheel throughout the code 
