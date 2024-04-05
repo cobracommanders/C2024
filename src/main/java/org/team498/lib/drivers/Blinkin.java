@@ -6,7 +6,8 @@ import edu.wpi.first.wpilibj.motorcontrol.Spark;
 
 public class Blinkin {
     private final Spark blinkin;
-    private BlinkinColor color = BlinkinColor.SOLID_BLUE;
+    //got rid of the color it set by itself
+    private BlinkinColor color;
     // private DigitalOutput digitalOutput = new DigitalOutput(BLINKIN);
 
     private Blinkin() {

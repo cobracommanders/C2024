@@ -3,6 +3,7 @@ package org.team498.C2024;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotState;
@@ -26,6 +27,7 @@ import org.team498.C2024.commands.auto.Spit;
 import org.team498.C2024.commands.auto.TestAuto;
 import org.team498.C2024.commands.auto.TestPathing;
 import org.team498.C2024.commands.auto.Troll;
+import org.team498.C2024.commands.led.GreenFlash;
 import org.team498.C2024.commands.robot.ReturnToIdle;
 import org.team498.C2024.commands.robot.scoring.FullScore;
 import org.team498.C2024.subsystems.Drivetrain;
@@ -33,9 +35,11 @@ import org.team498.C2024.subsystems.Hopper;
 import org.team498.C2024.subsystems.Intake;
 import org.team498.C2024.subsystems.IntakeRollers;
 import org.team498.C2024.subsystems.Kicker;
+import org.team498.C2024.subsystems.LED;
 import org.team498.C2024.subsystems.Limelight;
 import org.team498.C2024.subsystems.PhotonVision;
 import org.team498.C2024.subsystems.Shooter;
+import org.team498.C2024.subsystems.LED.LEDState;
 import org.team498.lib.auto.Auto;
 import org.team498.lib.drivers.Blinkin;
 import org.team498.lib.drivers.Gyro;
@@ -54,6 +58,9 @@ public class Robot extends TimedRobot{
 
     public static Optional<Alliance> alliance = Optional.empty();
     public static final Controls controls = new Controls();
+
+    private PowerDistribution pdh;
+    private LED led;
 
     private final Drivetrain drivetrain = Drivetrain.getInstance();
     private final Gyro gyro = Gyro.getInstance();
@@ -112,7 +119,8 @@ public class Robot extends TimedRobot{
         IntakeRollers.getInstance().configMotors();
 
         // Limelight.getInstance();
-
+        
+        
     }
 
     @Override
@@ -152,28 +160,8 @@ public class Robot extends TimedRobot{
         //     else blinkin.setColor(BlinkinColor.SOLID_HOT_PINK);
 
         // }
-        if (RobotState.isEnabled()) {
-            if(StateController.getInstance().getState() == State.IDLE){
-                blinkin.setColor(BlinkinColor.SOLID_DARK_RED);
-            }
-            else if(Shooter.getInstance().atSetpoint()) {
-                blinkin.setColor(BlinkinColor.SOLID_GREEN);
-            }
-            else if (Shooter.getInstance().isSubwoofer()){
-                blinkin.setColor(BlinkinColor.SOLID_HOT_PINK);
-            }
-            else if(Hopper.getInstance().getBackBeamBreak()) {
-                blinkin.setColor(BlinkinColor.SOLID_BLUE);
-            }
-            else if(Hopper.getInstance().getFrontBeamBreak()) {
-                blinkin.setColor(BlinkinColor.SOLID_DARK_GREEN);
-            }
-            // else if(Kicker.getInstance().getKickerBeamBreak()) {
-            //     blinkin.setColor(BlinkinColor.SOLID_BLUE);
-            }
-            else {
-                blinkin.setColor(BlinkinColor.SOLID_DARK_RED);
-            }
+
+        
         }
 
     @Override
@@ -199,6 +187,16 @@ public class Robot extends TimedRobot{
         // if (autoToRun != null) {
         //     // robotState.setState(autoToRun.getInitialState());
         // }
+
+
+            //Displays Battery Voltage via the LEDs on the Robot NEW
+
+        if(pdh.getVoltage() < 12.3 ){
+            led.setState(LEDState.BATTERY_LOW);
+        } else {
+            led.setState(LEDState.BATTERY_GOOD);
+        }
+        //Could be used to check vision, subsystem positions, or even the robot position if there is one hardset with the april tags
     }
 
     @Override
@@ -210,6 +208,9 @@ public class Robot extends TimedRobot{
         IntakeRollers.getInstance().set(0);
         Kicker.getInstance().set(0);
         CommandScheduler.getInstance().schedule(new ReturnToIdle());
+
+        
+
         // matchStarted = true;
         // drivetrain.enableBrakeMode(true);
     }
@@ -224,6 +225,56 @@ public class Robot extends TimedRobot{
             controls.driver.rumble(0);
             controls.operator.rumble(0);
         }
+        
+    if(RobotState.isEnabled()){
+            //When The intake beam break is activated
+        if(Hopper.getInstance().getFrontBeamBreak()){
+            led.setState(LEDState.INTAKE_SUCCESS);
+        // or run the one below for flashing
+        // if(Hopper.getInstance().getFrontBeamBreak()){
+        //     new GreenFlash();
+        // }
+        } //When the middle beam break is activated
+        else if(Hopper.getInstance().getBackBeamBreak()){
+            led.setState(LEDState.SECURE);
+        } //When the Amping Beam Break is activated
+        /*else if(Kicker.getInstance().getKickerBeamBreak()){
+            led.setState(LEDState.AMP);
+        } */ //When the Shooter is in Subwoofer mode
+        else if(Shooter.getInstance().isSubwoofer()){
+            led.setState(LEDState.SUBWOOFER);
+        } //When the Shooter is Aligned
+        else if(Shooter.getInstance().atSetpoint()){
+            led.setState(LEDState.SHOOTER_READY);
+        } //When no other cases are true
+        else {
+            led.setState(LEDState.IDLE);
+        }
+    }
+
+        /* OLD Blinkin Code
+        if (RobotState.isEnabled()) {
+            if(StateController.getInstance().getState() == State.IDLE){
+                blinkin.setColor(BlinkinColor.SOLID_DARK_RED);
+            }
+            else if(Shooter.getInstance().atSetpoint()) {
+                blinkin.setColor(BlinkinColor.SOLID_GREEN);
+            }
+            else if (Shooter.getInstance().isSubwoofer()){
+                blinkin.setColor(BlinkinColor.SOLID_HOT_PINK);
+            }
+            else if(Hopper.getInstance().getBackBeamBreak()) {
+                blinkin.setColor(BlinkinColor.SOLID_BLUE);
+            }
+            else if(Hopper.getInstance().getFrontBeamBreak()) {
+                blinkin.setColor(BlinkinColor.SOLID_DARK_GREEN);
+            }
+            // else if(Kicker.getInstance().getKickerBeamBreak()) {
+            //     blinkin.setColor(BlinkinColor.SOLID_BLUE);
+            }
+            else {
+                blinkin.setColor(BlinkinColor.SOLID_DARK_RED);
+            }*/
 
     }
 
@@ -276,6 +327,8 @@ public class Robot extends TimedRobot{
         //     Drivetrain.getInstance().setYaw(PoseUtil.flip(autoToRun.getInitialPose()).getRotation().getDegrees());
         //     Drivetrain.getInstance().setPose(PoseUtil.flip(autoToRun.getInitialPose()));
         // }
+        led.setState(LEDState.AUTO);
+        //Sets the LEDs to a pattern for auto, this could be edited to include code for if vision is aligned for auto diagnosis
     }
 
     @Override
