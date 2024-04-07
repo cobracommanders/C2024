@@ -191,11 +191,11 @@ public class Robot extends TimedRobot{
 
             //Displays Battery Voltage via the LEDs on the Robot NEW
 
-        if(pdh.getVoltage() < 12.3 ){
-            led.setState(LEDState.BATTERY_LOW);
-        } else {
-            led.setState(LEDState.BATTERY_GOOD);
-        }
+        // if(pdh.getVoltage() < 12.3 ){
+        //     led.setState(LEDState.BATTERY_LOW);
+        // } else {
+        //     led.setState(LEDState.BATTERY_GOOD);
+        // }
         //Could be used to check vision, subsystem positions, or even the robot position if there is one hardset with the april tags
     }
 

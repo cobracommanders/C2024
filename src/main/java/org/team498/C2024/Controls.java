@@ -59,13 +59,27 @@ public class Controls {
     public void configureDefaultCommands() {
         Drivetrain.getInstance().setDefaultCommand(new HybridDrive(driver::leftYSquared, driver::leftXSquared, driver::rightX, driver::rawPOVAngle));
     }
+    private double frontPodiumAngle = -125;
+    private double ampSpeakerAngle = 155;
 
     public void configureDriverCommands() {
         driver.rightBumper().onTrue(new SlowDrive(DrivetrainConstants.SLOW_SPEED_SCALAR))
             .onFalse(new SlowDrive(DrivetrainConstants.FULL_SPEED_SCALAR));
         driver.leftBumper().onTrue(new ConditionalCommand(
                 runOnce(()->StateController.getInstance().setAngleOverride(-90)),
-                runOnce(()->StateController.getInstance().setAngleOverride((Robot.alliance.get() == Alliance.Blue) ? 0 : PoseUtil.flipAngleDegrees(0))), 
+                new ConditionalCommand(
+                    runOnce(()->StateController.getInstance().setAngleOverride((Robot.alliance.get() == Alliance.Blue) ? 180 : PoseUtil.flipAngleDegrees(180))), 
+                    new ConditionalCommand(
+                        runOnce(()->StateController.getInstance().setAngleOverride((Robot.alliance.get() == Alliance.Blue) ? frontPodiumAngle : PoseUtil.flipAngleDegrees(frontPodiumAngle))), 
+                        new ConditionalCommand(
+                            runOnce(()->StateController.getInstance().setAngleOverride((Robot.alliance.get() == Alliance.Blue) ? ampSpeakerAngle : PoseUtil.flipAngleDegrees(ampSpeakerAngle))),
+                            runOnce(()->StateController.getInstance().setAngleOverride(RobotPosition.calculateDegreesToSpeaker())),
+                            ()-> StateController.getInstance().getNextScoringState() == State.AMP_SPEAKER
+                        ),
+                        ()-> StateController.getInstance().getNextScoringState() == State.FRONT_PODIUM
+                    ),
+                    ()-> StateController.getInstance().getNextScoringState() == State.PODIUM
+                ), 
                 // new ConditionalCommand(
                 //     runOnce(()-> {}),
                 //     runOnce(()->StateController.getInstance().setTargetDrive(FieldPositions.getSpeaker())).alongWith(new SlowDrive(DrivetrainConstants.TARGET_SPEED_SCALAR)), 
@@ -80,7 +94,7 @@ public class Controls {
         driver.Y().onTrue(runOnce(() -> Drivetrain.getInstance().setPose(new Pose2d(15.07, 5.55, Rotation2d.fromDegrees(0 + Robot.rotationOffset)))));
         driver.leftTrigger().onTrue(new LoadGround())
             .onFalse(new SetIntakeIdle());
-        // driver.leftBumper().onTrue(new PrepareToScore())
+        // driver.leftBumper().onTrue(new PrepareToScore())z
         //     .onFalse(runOnce(()-> {
         //             if (!StateController.getInstance().isScoring()) {
         //                 CommandScheduler.getInstance().schedule(new ConditionalCommand(new CancelAmp(), new CancelSpeaker(), ()-> StateController.getInstance().getState() == State.AMP));

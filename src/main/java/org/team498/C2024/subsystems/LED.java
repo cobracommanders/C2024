@@ -5,12 +5,15 @@ package org.team498.C2024.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 //import edu.wpi.first.wpilibj2.command.WaitCommand;
 
+import org.team498.C2024.Ports;
+import org.team498.lib.drivers.Blinkin;
 import org.team498.lib.drivers.Blinkin.BlinkinColor;
 
 
 public class LED extends SubsystemBase {
   private BlinkinColor ledColor;
   private LEDState state = LEDState.IDLE;
+  private Blinkin blinkin = new Blinkin(Ports.Accessories.BLINKIN);
 
 
   public enum LEDState {
@@ -42,6 +45,7 @@ public class LED extends SubsystemBase {
 
 public void setState(LEDState state){
   this.state = state;
+  blinkin.setColor(state.ledColor);
 }
 
 private static LED instance;
