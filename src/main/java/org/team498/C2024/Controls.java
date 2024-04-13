@@ -59,8 +59,8 @@ public class Controls {
     public void configureDefaultCommands() {
         Drivetrain.getInstance().setDefaultCommand(new HybridDrive(driver::leftYSquared, driver::leftXSquared, driver::rightX, driver::rawPOVAngle));
     }
-    private double frontPodiumAngle = -125;
-    private double ampSpeakerAngle = 155;
+    private double frontPodiumAngle = 147;
+    private double ampSpeakerAngle = -130;
 
     public void configureDriverCommands() {
         driver.rightBumper().onTrue(new SlowDrive(DrivetrainConstants.SLOW_SPEED_SCALAR))
@@ -73,7 +73,7 @@ public class Controls {
                         runOnce(()->StateController.getInstance().setAngleOverride((Robot.alliance.get() == Alliance.Blue) ? frontPodiumAngle : PoseUtil.flipAngleDegrees(frontPodiumAngle))), 
                         new ConditionalCommand(
                             runOnce(()->StateController.getInstance().setAngleOverride((Robot.alliance.get() == Alliance.Blue) ? ampSpeakerAngle : PoseUtil.flipAngleDegrees(ampSpeakerAngle))),
-                            runOnce(()->StateController.getInstance().setAngleOverride(RobotPosition.calculateDegreesToSpeaker())),
+                            runOnce(()->StateController.getInstance().setAngleOverride(()-> RobotPosition.calculateDegreesToSpeaker())),
                             ()-> StateController.getInstance().getNextScoringState() == State.AMP_SPEAKER
                         ),
                         ()-> StateController.getInstance().getNextScoringState() == State.FRONT_PODIUM
@@ -138,6 +138,12 @@ public class Controls {
 
         operator.Y().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.AMP)));
         operator.Y().toggleOnTrue(new PrepareAmp());
+
+        operator.POV0().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.AMP_SPEAKER)));
+        operator.POV0().toggleOnTrue(new PrepareToScore());
+
+        operator.POV90().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.CRESCENDO)));
+        operator.POV90().toggleOnTrue(new PrepareToScore());
 
         // operator.leftBumper().onTrue(runOnce(() -> StateController.getInstance().setNextLoadingOption(LoadingOption.GROUND)));
         // operator.leftTrigger().onTrue(new LoadSource())

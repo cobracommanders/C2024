@@ -35,12 +35,12 @@ public enum State {
     //Sets Speed and Angle for Shooter
     public enum Shooter {
         IDLE(0, 0, 33),
-        SUBWOOFER(3200, 1000, 53), //49 //3200
+        SUBWOOFER(3900, 1000, 53), //49 //3200
         AMP(0, 0, 35),
-        PODIUM(3700, 1000, 32), //37
-        CRESCENDO(3700, 1000, 40),
+        PODIUM(4500, 1000, 32), //37
+        CRESCENDO(4500, 1000, 40),
         SOURCE(0, 0, 50),
-        PREPARE(3700, 1000, 40),
+        PREPARE(4500, 1000, 40),
         CANCEL_AMP(0, 0, 35),
         VISION(0, 0, 40),
         AUTO(4000, 1000, 40),
@@ -48,8 +48,8 @@ public enum State {
         CLIMB_DOWN(0, 0, 30),
         TRAP(3500, 1000, 50),
         SPIT(900, 1000, 40),
-        FRONT_PODIUM(3700, 1000, 31.5),
-        AMP_SPEAKER(3700, 1000, 33);
+        FRONT_PODIUM(4500, 1000, 31.5),
+        AMP_SPEAKER(4500, 1000, 33);
 
         public final double speed;
         public final double feedSpeed;
@@ -93,10 +93,10 @@ public enum State {
 
     //Sets Positions for Intake
     public enum Intake {
-        IDLE(-1.23), //0.304
-        INTAKE(-3),
+        IDLE(1.96), //1.96
+        INTAKE(0.17),
         // AUTO_INTAKE(0.7),
-        OUTTAKE(-1.23);
+        OUTTAKE(1.96);
 
         public final double speed;
         
@@ -109,7 +109,7 @@ public enum State {
     //Sets Speeds for IntakeRollers
     public enum IntakeRollers {
         IDLE(0),
-        INTAKE(1),
+        INTAKE(0.5),
         OUTTAKE(-1);
 
         public final double speed;

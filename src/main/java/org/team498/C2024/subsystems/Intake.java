@@ -137,7 +137,7 @@ public class Intake extends SubsystemBase {
      * returns encoder angle
      */
     public double getPosition() {
-        return -(getRawEncoder() * Math.PI * 2 - Constants.IntakeConstants.ENCODER_OFFSET);
+        return (getRawEncoder() * Math.PI * 2 - Constants.IntakeConstants.ENCODER_OFFSET); // -(getRawEncoder())
     }
 
     public double getRawEncoder(){

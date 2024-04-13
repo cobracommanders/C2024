@@ -129,11 +129,15 @@ public class StateController extends SubsystemBase {
         if (b == -1) angleOverride = null;
         else angleOverride = ()-> b;
     }
-
+    public void setAngleOverride(DoubleSupplier b) {
+        if (b == null) angleOverride = null;
+        else angleOverride = b;
+    }
     public double getAngleOverride() {
         if (angleOverride == null) return Double.NaN;
         return angleOverride.getAsDouble();
     }
+    
 
     //returns target drive if it is active
     public boolean getAngleOverrideActive() {

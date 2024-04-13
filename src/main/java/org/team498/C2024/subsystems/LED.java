@@ -5,7 +5,6 @@ package org.team498.C2024.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 //import edu.wpi.first.wpilibj2.command.WaitCommand;
 
-import org.team498.C2024.Ports;
 import org.team498.lib.drivers.Blinkin;
 import org.team498.lib.drivers.Blinkin.BlinkinColor;
 
@@ -13,11 +12,11 @@ import org.team498.lib.drivers.Blinkin.BlinkinColor;
 public class LED extends SubsystemBase {
   private BlinkinColor ledColor;
   private LEDState state = LEDState.IDLE;
-  private Blinkin blinkin = new Blinkin(Ports.Accessories.BLINKIN);
+  private Blinkin blinkin = Blinkin.getInstance();
 
 
   public enum LEDState {
-    IDLE(BlinkinColor.SOLID_DARK_RED),
+    IDLE(BlinkinColor.SOLID_VIOLET),
     //Idle means the robot without a note | RED
     INTAKE_SUCCESS(BlinkinColor.SOLID_DARK_GREEN),
     //INTAKE_SUCCESS is when the first beam breaks are activated | Strobe Green
@@ -30,11 +29,13 @@ public class LED extends SubsystemBase {
     SHOOTER_READY(BlinkinColor.SOLID_GREEN),
     //Communicates the Shooter being aligned
     AUTO(BlinkinColor.OCEAN_PALETTE),
-    BATTERY_LOW(BlinkinColor.STROBE_RED),
+    //BATTERY_LOW(BlinkinColor.STROBE_RED),
     //If the battery is low at the start of the match it will flash red TODO: Check if it works correctly
-    BATTERY_GOOD(BlinkinColor.FOREST_PALETTE),
+    //BATTERY_GOOD(BlinkinColor.FOREST_PALETTE),
     //If the battery is charged at the start of the match it will have a green pattern TODO: Check if it works correctly
-    OFF(BlinkinColor.SOLID_BLACK);
+    OFF(BlinkinColor.SOLID_BLACK),
+
+    DISABLED(BlinkinColor.BREATH_RED);
 
     public BlinkinColor ledColor;
 

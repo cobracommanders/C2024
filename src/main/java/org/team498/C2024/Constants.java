@@ -72,20 +72,20 @@ public final class Constants {
         public static final double fD = 0;
         public static final double fV = 0.00025;
         // P, I, D are the flywheel Constants for the shooter
-        public static final double P = 0.0003; // 0.001 //3.273
+        public static final double P = 0.0007; // 0.001 //3.273
         public static final double I = 0;
         public static final double D = 0;
         public static final double S = 0;
-        public static final double V = 0.00013;   //0.0005
+        public static final double V = 0.00014;   //0.0005
         public static final double A = 0;
 
-        public static final double GEAR_RATIO = 36.0 / 18.0;
+        public static final double GEAR_RATIO = 18.0 / 11.0;
         public static final double CIRCUMFERENCE = Units.inchesToMeters(3) * Math.PI;
 
         
         public static final double MAX_RPM = 6000 * GEAR_RATIO;
         public static final double MAX_MPS = MAX_RPM * CIRCUMFERENCE;
-        public static final double SPIN_DIFF = 1000;
+        public static final double SPIN_DIFF = 1500;
 
         public static final class AngleConstants{
             public static final double P = 0.05;
@@ -95,24 +95,24 @@ public final class Constants {
             public static final double V = 0;
             public static final double G = 0; //0.03
             public static final double MAX_ANGLE = 73;
-            public static final double MIN_ANGLE = 31;
-            public static final double AUTO_MIN_ANGLE = 31;
+            public static final double MIN_ANGLE = 29;
+            public static final double AUTO_MIN_ANGLE = 29;
 
             public static final double ANGLE_OFFSET = 0.18900256; //- 0.00556 - 0.00556 - 0.00556;
         }
     }
 
     public static final class IntakeConstants {
-        public static final double P = 0.2;//0.14
+        public static final double P = 0.51;//0.2
         public static final double I = 0;
-        public static final double D = 0.01; //0.15
+        public static final double D = 0.038; //0.01 //0.038
         public static final double S = 0;
         public static final double V = 0;
         public static final double G = 0;
         public static final double dV = 0;//0.2 / 1800.0; // 20% power per 6 m/s
         public static final double rV = 0;//0.3 / (3 * Math.PI); // 50% power per 3pi r/s (120 deg/s)
 
-        public static final double ENCODER_OFFSET = 8.29;
+        public static final double ENCODER_OFFSET = 8.29 + 1.75;
     }
 
     public static final class HopperConstants {

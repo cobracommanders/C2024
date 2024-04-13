@@ -54,6 +54,11 @@ public class PathLib {
     public static final PathPlannerTrajectory outer_wing_2 = Trajectories.getChoreoTrajectory("outer_wing_2", Rotation2d.fromDegrees(180));
     public static final PathPlannerTrajectory outer_wing_3 = Trajectories.getChoreoTrajectory("outer_wing_3", Rotation2d.fromRadians(0));
 
+    public static final PathPlannerTrajectory outer_wing_4 = Trajectories.getChoreoTrajectory("outer_wing_4", Rotation2d.fromDegrees(180));
+    public static final PathPlannerTrajectory outer_wing_5 = Trajectories.getChoreoTrajectory("outer_wing_5", Rotation2d.fromDegrees(180));
+    public static final PathPlannerTrajectory outer_wing_6 = Trajectories.getChoreoTrajectory("outer_wing_6", Rotation2d.fromDegrees(180));
+    public static final PathPlannerTrajectory outer_wing_7 = Trajectories.getChoreoTrajectory("outer_wing_7", Rotation2d.fromRadians(-0.464));
+
 
     // public static final Command FourPortOne = new PathPlannerFollower(four_port_1);
     // public static final Command FourPortTwo = new PathPlannerFollower(four_port_2);

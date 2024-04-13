@@ -10,7 +10,7 @@ public class Blinkin {
     private BlinkinColor color;
     // private DigitalOutput digitalOutput = new DigitalOutput(BLINKIN);
 
-    private Blinkin() {
+    public Blinkin() {
         blinkin = new Spark(BLINKIN);
         blinkin.setSafetyEnabled(false);
         setColor(BlinkinColor.OCEAN_PALETTE);
