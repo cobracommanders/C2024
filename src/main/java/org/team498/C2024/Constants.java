@@ -13,7 +13,7 @@ public final class Constants {
 
     public static final class DrivetrainConstants {
         public static final double MAX_VELOCITY_METERS_PER_SECOND = 5.94;
-        public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 20; //TODO: test for best traction/speed
+        public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 200; //TODO: test for best traction/speed
 
         public static final double MAX_AUTO_VELOCITY = 3;
         public static final double MAX_AUTO_ACCELERATION = 3;
@@ -45,7 +45,7 @@ public final class Constants {
             public static final double EPSILON = 1.5;
 
             // Constraints for the profiled angle controller
-            public static final double MAX_ANGULAR_SPEED_DEGREES_PER_SECOND = 720;
+            public static final double MAX_ANGULAR_SPEED_DEGREES_PER_SECOND = 1080;
             public static final double MAX_ANGULAR_SPEED_DEGREES_PER_SECOND_SQUARED = Math.pow(MAX_ANGULAR_SPEED_DEGREES_PER_SECOND, 2);
 
             public static final TrapezoidProfile.Constraints CONTROLLER_CONSTRAINTS = new TrapezoidProfile.Constraints(
