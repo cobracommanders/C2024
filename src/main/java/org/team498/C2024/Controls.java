@@ -13,6 +13,7 @@ import org.team498.C2024.commands.hopper.SetHopperState;
 import org.team498.C2024.commands.intake.SetIntakeManual;
 import org.team498.C2024.commands.intake.SetIntakeState;
 import org.team498.C2024.commands.kicker.SetKickerNextState;
+import org.team498.C2024.commands.robot.IdleIntakeOn;
 import org.team498.C2024.commands.robot.ReturnToIdle;
 import org.team498.C2024.commands.robot.SetIntakeIdle;
 import org.team498.C2024.commands.robot.SetScoringState;
@@ -113,7 +114,7 @@ public class Controls {
         operator.leftTrigger().onTrue(new Outtake())
             .onFalse(new ReturnToIdle());
         operator.leftBumper().onTrue(new SetShooterState(State.Shooter.PODIUM));
-        operator.rightBumper().onTrue(new ReturnToIdle());
+        operator.rightBumper().onTrue(new IdleIntakeOn());
         // operator.back().toggleOnTrue(new SetShooterManual(true, operator::leftY, ()-> 0.5));
         // operator.A().toggleOnTrue(new SetShooterManual(true, operator::leftY, ()-> 1.0));
         // operator.B().toggleOnTrue(new SetShooterManual(true, operator::leftY, ()-> 0.0));

@@ -17,6 +17,7 @@ import org.team498.lib.auto.Auto;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -27,14 +28,14 @@ public class OuterWing implements Auto{
 
         return new SequentialCommandGroup(
 
-            new SubwooferScore(1),
+            new SubwooferScore(0.8), //0.75
 
             new ParallelDeadlineGroup(
                 new PathPlannerFollower(PathLib.outer_wing_2),
-                new SlowDrive(DrivetrainConstants.AUTO_SLOW_SPEED_SCALAR),
+                new SlowDrive(DrivetrainConstants.AUTO_SPEED_SCALAR),
                 new SequentialCommandGroup(
-                    new WaitCommand(1),
-                    new LoadGround().withTimeout(2.5),
+                    new WaitCommand(1.5),
+                    new LoadGround().withTimeout(1.75),//2
                     new SetIntakeState(State.Intake.IDLE),
                     new SetHopperState(State.Hopper.IDLE),
                     new SetIntakeRollerState(State.IntakeRollers.IDLE)
@@ -42,35 +43,36 @@ public class OuterWing implements Auto{
             ),
             new SetState(State.CRESCENDO),
             new ParallelDeadlineGroup(
-                new PathPlannerFollower(PathLib.outer_wing_3),
+                new PathPlannerFollower(PathLib.outer_wing_3).andThen(new WaitCommand(0.4)), //1
                 new SequentialCommandGroup(
-
-                    new SlowScore(4),
-                    new SlowDrive(DrivetrainConstants.AUTO_SLOW_SPEED_SCALAR),
+                    new SlowScore(2.5),
+                    new SlowDrive(DrivetrainConstants.AUTO_SPEED_SCALAR),
                     new SetState(State.CRESCENDO),
-                    new LoadGround().withTimeout(1.5),
+                    new WaitCommand(0.5),
+                    new LoadGround().withTimeout(2.2),//2.6
                     new SetIntakeState(State.Intake.IDLE),
                     new SetHopperState(State.Hopper.IDLE),
                     new SetIntakeRollerState(State.IntakeRollers.IDLE)
                 )
             ),
-            new SetState(State.CRESCENDO),
-
-            new ParallelDeadlineGroup(
+            
+            new ParallelCommandGroup(
                 new PathPlannerFollower(PathLib.outer_wing_1),
                 new SequentialCommandGroup(
-                    new WaitCommand(1),
-                    new SlowScore(2),
-                    new SlowDrive(DrivetrainConstants.AUTO_SLOW_SPEED_SCALAR),
-                    new LoadGround().withTimeout(5),
-                    new SetIntakeState(State.Intake.IDLE),
-                    new SetHopperState(State.Hopper.IDLE),
-                    new SetIntakeRollerState(State.IntakeRollers.IDLE)
+                    new WaitCommand(0.3),
+                    new SlowScore(1.6),
+                    new SlowDrive(DrivetrainConstants.AUTO_SPEED_SCALAR)
+                    //new LoadGround().withTimeout(3), // or 5
+                    // new SetIntakeState(State.Intake.IDLE),
+                    // new SetHopperState(State.Hopper.IDLE),
+                    // new SetIntakeRollerState(State.IntakeRollers.IDLE)
                 )
-            ),
-            new SetState(State.CRESCENDO),
-            new SlowScore(2),
-            new ReturnToIdle()
+            )
+
+                // new SequentialCommandGroup(
+                // new SetState(State.CRESCENDO),
+                // new SlowScore(1),
+                // new ReturnToIdle())
         );
 }
 

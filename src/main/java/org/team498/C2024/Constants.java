@@ -19,9 +19,10 @@ public final class Constants {
         public static final double MAX_AUTO_ACCELERATION = 3;
 
         public static final float SLOW_SPEED_SCALAR = 0.5f;
-        public static final float AUTO_SLOW_SPEED_SCALAR = 0.7f;//0.3
+        public static final float AUTO_SLOW_SPEED_SCALAR = 0.8f;//0.3
         public static final float TARGET_SPEED_SCALAR = 0.8f;
-        public static final float AUTO_SPEED_SCALAR = 0.25f;//0.2
+        public static final float AUTO_SPEED_SCALAR = 0.325f;//0.25
+        public static final float SUPER_SLOW = 0.2f;
         public static final short FULL_SPEED_SCALAR = 1;
 
         public static final double SWERVE_MODULE_DISTANCE_FROM_CENTER = 10.75;
@@ -32,9 +33,9 @@ public final class Constants {
         public static final double DRIVE_WHEEL_DIAMETER = 4;
         public static final double DRIVE_WHEEL_CIRCUMFERENCE = DRIVE_WHEEL_DIAMETER * Math.PI;
 
-        public static final double FL_MODULE_OFFSET = -0.984863;
-        public static final double FR_MODULE_OFFSET = -0.707031;
-        public static final double BL_MODULE_OFFSET = -0.716553 + 0.5;
+        public static final double FL_MODULE_OFFSET = -0.984863 - 0.002197; //- 0.004639;
+        public static final double FR_MODULE_OFFSET = -0.707031 - 0.487061 + 0.5; //- 0.974121;
+        public static final double BL_MODULE_OFFSET = -0.716553 + 0.5 - 0.013916 - 0.009521; //- 0.013916;
         public static final double BR_MODULE_OFFSET = -0.960449 + 0.5;
 
         public static final double ROBOT_WIDTH = 26.5 + 6; // Robot width with bumpers, in inches
@@ -85,7 +86,7 @@ public final class Constants {
         
         public static final double MAX_RPM = 6000 * GEAR_RATIO;
         public static final double MAX_MPS = MAX_RPM * CIRCUMFERENCE;
-        public static final double SPIN_DIFF = 1500;
+        public static final double SPIN_DIFF = 1200;
 
         public static final class AngleConstants{
             public static final double P = 0.05;
@@ -98,7 +99,7 @@ public final class Constants {
             public static final double MIN_ANGLE = 29;
             public static final double AUTO_MIN_ANGLE = 29;
 
-            public static final double ANGLE_OFFSET = 0.18900256; //- 0.00556 - 0.00556 - 0.00556;
+            public static final double ANGLE_OFFSET = 0.18900256 - 0.0028;
         }
     }
 

@@ -26,7 +26,7 @@ public class SubwooferScore extends SequentialCommandGroup{
                 new PrepareToScore()
                 //new WaitCommand(wait),
             ),
-            new AutoScore()
+            new HalfScore()
             // new WaitCommand(1),
             // new ReturnToIdle()
         );

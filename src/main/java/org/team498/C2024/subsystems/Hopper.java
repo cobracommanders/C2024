@@ -101,9 +101,9 @@ public class Hopper extends SubsystemBase {
      * resets encoder, enables PID and sets PID setpoint
      */
     public void setPosition(double position){
-        bottomMotor.setPosition(0);
+        // bottomMotor.setPosition(0);
         pidEnabled = true;
-        pidController.setSetpoint(position);
+        pidController.setSetpoint(bottomMotor.getPosition().getValueAsDouble() + position);
     }
 
     /**

@@ -15,7 +15,7 @@ public class FullScore extends SequentialCommandGroup{
             new ParallelDeadlineGroup(
                 new WaitCommand(wait),
                 new TargetSpeaker(),
-                new SlowDrive(DrivetrainConstants.AUTO_SPEED_SCALAR),
+                new SlowDrive(DrivetrainConstants.SUPER_SLOW),
                 new PrepareToScore()
                 //new WaitCommand(wait),
             ),

@@ -21,16 +21,16 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
-public class WingFacingSpeaker implements Auto{
+public class OuterWingTest implements Auto{
     @Override
     public Command getCommand() {
 
         return new SequentialCommandGroup(
-
+            
             new SubwooferScore(1),
 
             new ParallelDeadlineGroup(
-                new PathPlannerFollower(PathLib.outer_wing_4),
+                new PathPlannerFollower(PathLib.outer_wing_2),
                 new SlowDrive(DrivetrainConstants.AUTO_SLOW_SPEED_SCALAR),
                 new SequentialCommandGroup(
                     new WaitCommand(1),
@@ -42,10 +42,10 @@ public class WingFacingSpeaker implements Auto{
             ),
             new SetState(State.CRESCENDO),
             new ParallelDeadlineGroup(
-                new PathPlannerFollower(PathLib.outer_wing_6),
+                new PathPlannerFollower(PathLib.outer_wing_3),
                 new SequentialCommandGroup(
 
-                    new SlowScore(1),
+                    new SlowScore(4),
                     new SlowDrive(DrivetrainConstants.AUTO_SLOW_SPEED_SCALAR),
                     new SetState(State.CRESCENDO),
                     new LoadGround().withTimeout(1.5),
@@ -57,38 +57,26 @@ public class WingFacingSpeaker implements Auto{
             new SetState(State.CRESCENDO),
 
             new ParallelDeadlineGroup(
-                new PathPlannerFollower(PathLib.outer_wing_7),
-                new SequentialCommandGroup(
-                    
-                    new SetIntakeState(State.Intake.IDLE),
-                    new SetHopperState(State.Hopper.IDLE),
-                    new SetIntakeRollerState(State.IntakeRollers.IDLE)
-                )
-            ),
-            
-            new ParallelDeadlineGroup(
-                new PathPlannerFollower(PathLib.outer_wing_5),
+                new PathPlannerFollower(PathLib.outer_wing_1),
                 new SequentialCommandGroup(
                     new WaitCommand(1),
                     new SlowScore(2),
                     new SlowDrive(DrivetrainConstants.AUTO_SLOW_SPEED_SCALAR),
-                    new LoadGround().withTimeout(8), // or 5
+                    new LoadGround().withTimeout(5),
                     new SetIntakeState(State.Intake.IDLE),
                     new SetHopperState(State.Hopper.IDLE),
                     new SetIntakeRollerState(State.IntakeRollers.IDLE)
                 )
             ),
-
-                new SequentialCommandGroup(
-                new SetState(State.CRESCENDO),
-                new SlowScore(2),
-                new ReturnToIdle())
+            new SetState(State.CRESCENDO),
+            new SlowScore(2),
+            new ReturnToIdle()
         );
 }
 
     @Override
     public Pose2d getInitialPose() {
-        return PathLib.outer_wing_4.getInitialTargetHolonomicPose();
+        return PathLib.outer_wing_2.getInitialTargetHolonomicPose();
     }
     
 }

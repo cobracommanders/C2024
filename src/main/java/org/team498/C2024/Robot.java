@@ -22,11 +22,13 @@ import org.team498.C2024.commands.auto.FourPort;
 import org.team498.C2024.commands.auto.LongTaxi;
 import org.team498.C2024.commands.auto.OneTaxi;
 import org.team498.C2024.commands.auto.OuterWing;
+import org.team498.C2024.commands.auto.OuterWingTest;
 import org.team498.C2024.commands.auto.SixNoteAmp;
 import org.team498.C2024.commands.auto.Spit;
 import org.team498.C2024.commands.auto.TestAuto;
 import org.team498.C2024.commands.auto.TestPathing;
 import org.team498.C2024.commands.auto.Troll;
+import org.team498.C2024.commands.auto.WingFacingSpeaker;
 import org.team498.C2024.commands.led.GreenFlash;
 import org.team498.C2024.commands.robot.ReturnToIdle;
 import org.team498.C2024.commands.robot.scoring.FullScore;
@@ -72,7 +74,6 @@ public class Robot extends TimedRobot{
     private Auto autoToRun = defaultAuto;
 
     // private boolean matchStarted = false;
-
     private final List<Auto> autoOptions = List.of(
         //new FourNote(),
         //new FourNoteFull(),
@@ -84,8 +85,10 @@ public class Robot extends TimedRobot{
         new LongTaxi(),
         //new Spit(),
         new Troll(),
-        new OuterWing(),
-        new TestPathing()
+        //new OuterWingTest(),
+        //new TestPathing(),
+        //new WingFacingSpeaker(),
+        new OuterWing()
         //    new PracticeAuto()
                                                   );
 
@@ -231,8 +234,14 @@ public class Robot extends TimedRobot{
         }
         
     if(RobotState.isEnabled()){
+        if(Shooter.getInstance().atSetpoint()){
+            led.setState(LEDState.SHOOTER_READY);
+        }
+        else if(Shooter.getInstance().isSubwoofer()){
+            led.setState(LEDState.SUBWOOFER);
+        } //When the Shooter is Aligned
             //When The intake beam break is activated
-        if(Hopper.getInstance().getFrontBeamBreak()){
+        else if(Hopper.getInstance().getFrontBeamBreak()){
             led.setState(LEDState.INTAKE_SUCCESS);
         // or run the one below for flashing
         // if(Hopper.getInstance().getFrontBeamBreak()){
@@ -245,12 +254,8 @@ public class Robot extends TimedRobot{
         /*else if(Kicker.getInstance().getKickerBeamBreak()){
             led.setState(LEDState.AMP);
         } */ //When the Shooter is in Subwoofer mode
-        else if(Shooter.getInstance().isSubwoofer()){
-            led.setState(LEDState.SUBWOOFER);
-        } //When the Shooter is Aligned
-        else if(Shooter.getInstance().atSetpoint()){
-            led.setState(LEDState.SHOOTER_READY);
-        } //When no other cases are true
+        
+        //When no other cases are true
         else {
             led.setState(LEDState.IDLE);
         }

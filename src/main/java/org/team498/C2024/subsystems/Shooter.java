@@ -3,6 +3,7 @@ package org.team498.C2024.subsystems;
 import org.team498.C2024.Constants;
 import org.team498.C2024.Ports;
 import org.team498.C2024.RobotPosition;
+import org.team498.C2024.ShooterUtil;
 import org.team498.C2024.State;
 import org.team498.C2024.StateController;
 import org.team498.C2024.Constants.ShooterConstants;
@@ -94,10 +95,10 @@ public class Shooter extends SubsystemBase {
         feedSpeed = State.Shooter.IDLE.feedSpeed;
         angle = State.Shooter.IDLE.angle;
 
-        rightController.setTolerance(200);
-        leftController.setTolerance(200);
-        feedController.setTolerance(300);
-        angleController.setTolerance(0.3);
+        rightController.setTolerance(100);
+        leftController.setTolerance(100);
+        feedController.setTolerance(500);
+        angleController.setTolerance(0.5);
 
         // reset motor defaults to ensure all settings are clear
         TalonFXConfiguration flywheelConfig = new TalonFXConfiguration();
@@ -170,6 +171,11 @@ public class Shooter extends SubsystemBase {
             rightShooterSpeed = rightController.calculate(getRightSpeedRPM(), rightSpeed) + rightFeedForward.calculate(rightSpeed);
             feedShooterSpeed = feedController.calculate(getFeedSpeedRPM(), feedSpeed) + feedFeedforward.calculate(feedSpeed);
             angleSpeed = angleController.calculate(getAngle(), this.angle);
+
+            if (leftSpeed == 0) {
+                leftShooterSpeed = 0;
+                rightShooterSpeed = 0;
+            }
         }
 
         if (isManual) {
@@ -196,8 +202,8 @@ public class Shooter extends SubsystemBase {
     
     //sets top speed and bottom speed
     private void set(double rightSpeed, double leftSpeed) {
-        leftMotor.set(-leftSpeed);
-        rightMotor.set(rightSpeed); // invert speed on right side (assuming the motor is facing opposite the left)
+        leftMotor.set(leftSpeed);
+        rightMotor.set(-rightSpeed); // invert speed on right side (assuming the motor is facing opposite the left)
     }
 
     //sets speed for feedForward
@@ -258,17 +264,17 @@ public class Shooter extends SubsystemBase {
         return angleEncoder.getAbsolutePosition().getValueAsDouble() * 360;
     }
     public double getLeftSpeedMPS() {
-        return -leftMotor.getVelocity().getValueAsDouble() * ShooterConstants.GEAR_RATIO * ShooterConstants.CIRCUMFERENCE;
+        return leftMotor.getVelocity().getValueAsDouble() * ShooterConstants.GEAR_RATIO * ShooterConstants.CIRCUMFERENCE;
     }
 
     public double getLeftSpeedRPM() {
-        return -leftMotor.getVelocity().getValueAsDouble() * 60 * ShooterConstants.GEAR_RATIO;
+        return leftMotor.getVelocity().getValueAsDouble() * 60 * ShooterConstants.GEAR_RATIO;
     }
     public double getRightSpeedMPS() {
-        return rightMotor.getVelocity().getValueAsDouble() * ShooterConstants.GEAR_RATIO * ShooterConstants.CIRCUMFERENCE;
+        return -rightMotor.getVelocity().getValueAsDouble() * ShooterConstants.GEAR_RATIO * ShooterConstants.CIRCUMFERENCE;
     }
     public double getRightSpeedRPM() {
-        return rightMotor.getVelocity().getValueAsDouble() * 60 * ShooterConstants.GEAR_RATIO;
+        return -rightMotor.getVelocity().getValueAsDouble() * 60 * ShooterConstants.GEAR_RATIO;
     }
 
     public double getFeedSpeedRPM() {
@@ -302,7 +308,7 @@ public class Shooter extends SubsystemBase {
     // }
 
     private double calculateSpeed(double distance){
-        double v = RPM_to_MPS(currentState.speed);
+        double v = RPM_to_MPS(ShooterUtil.getShooterSpeed(distance));
         double theta = this.angle;
         return MPS_to_RPM(offsetVelocity(RobotPosition.getSpeakerRelativeVelocity(), v, theta));
     }    
@@ -314,12 +320,16 @@ public class Shooter extends SubsystemBase {
     private double calculateAngle(double distance){
         if (distance > 4.5)
         return ShooterConstants.AngleConstants.MIN_ANGLE;
+        
+        
+        
         double v = RPM_to_MPS(currentState.speed);
-        double c1 = 71.381;
-        double c2 = -26.351;
-        double c3 = 6.056;
-        double c4 = -0.533;
-        double theta = c4 * Math.pow(distance, 3) + c3 * distance * distance + c2 * distance + c1 + 1.2; //angle in degrees as given in team498/notebook/shooter_model.ipynb
+        double theta = ShooterUtil.getShooterAngle(distance);
+        // double c1 = 71.381;
+        // double c2 = -26.351;
+        // double c3 = 6.056;
+        // double c4 = -0.533;
+        // double theta = c4 * Math.pow(distance, 3) + c3 * distance * distance + c2 * distance + c1; //angle in degrees as given in team498/notebook/shooter_model.ipynb
         // if (distance > 5) {
         //     theta = 40;
         // }

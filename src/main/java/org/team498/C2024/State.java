@@ -109,7 +109,7 @@ public enum State {
     //Sets Speeds for IntakeRollers
     public enum IntakeRollers {
         IDLE(0),
-        INTAKE(0.5),
+        INTAKE(1),
         OUTTAKE(-1);
 
         public final double speed;

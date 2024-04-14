@@ -101,6 +101,8 @@ public class Drivetrain extends SubsystemBase {
             resultPose = rightPose.get();
         if (resultPose != null && RobotPosition.distanceToSpeaker(resultPose.estimatedPose.toPose2d()) < 4.5)// && RobotPosition.isNear(resultPose.estimatedPose.toPose2d(), 1.0) && !isStopped())
             poseEstimator.addVisionMeasurement(resultPose.estimatedPose.toPose2d(), resultPose.timestampSeconds);
+        if (resultPose != null && RobotPosition.distanceToSpeaker(resultPose.estimatedPose.toPose2d()) < 4.5 && isStopped()) 
+            setYaw(resultPose.estimatedPose.getRotation().toRotation2d().getDegrees());
         // else if (resultPose != null && isStopped()) {
         //     poseEstimator.addVisionMeasurement(resultPose.estimatedPose.toPose2d(), resultPose.timestampSeconds);
         // }
