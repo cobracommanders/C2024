@@ -43,13 +43,13 @@ public class OuterWing implements Auto{
             ),
             new SetState(State.CRESCENDO),
             new ParallelDeadlineGroup(
-                new PathPlannerFollower(PathLib.outer_wing_3).andThen(new WaitCommand(0.4)), //1
+                new PathPlannerFollower(PathLib.outer_wing_3).andThen(new WaitCommand(0.55)), //1
                 new SequentialCommandGroup(
                     new SlowScore(2.5),
                     new SlowDrive(DrivetrainConstants.AUTO_SPEED_SCALAR),
                     new SetState(State.CRESCENDO),
                     new WaitCommand(0.5),
-                    new LoadGround().withTimeout(2.2),//2.6
+                    new LoadGround().withTimeout(2.15),//2.6
                     new SetIntakeState(State.Intake.IDLE),
                     new SetHopperState(State.Hopper.IDLE),
                     new SetIntakeRollerState(State.IntakeRollers.IDLE)

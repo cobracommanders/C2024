@@ -57,6 +57,10 @@ public class Drivetrain extends SubsystemBase {
 
     private double dT = 0;
     private final Timer timer = new Timer();
+
+    // private double angularAccelerationRadians = 0;
+    private ChassisSpeeds acceleration = new ChassisSpeeds();
+
     public Drivetrain(){
         modules = new SwerveModule[]{
             new SwerveModule(Ports.DrivetrainPorts.FL_DRIVE, Ports.DrivetrainPorts.FL_STEER, Ports.DrivetrainPorts.FL_CANCODER, Ports.Accessories.DriveBus, FL_MODULE_OFFSET),
@@ -82,10 +86,17 @@ public class Drivetrain extends SubsystemBase {
 
     }
 
+    ChassisSpeeds previouSpeeds = new ChassisSpeeds();
+    // double lastRotationSpeeds = 0;
     @Override
     public void periodic() {
         dT = timer.get();
         timer.restart();
+        ChassisSpeeds currentSpeeds = getCurrentSpeeds();
+        acceleration = new ChassisSpeeds(currentSpeeds.vxMetersPerSecond - previouSpeeds.vxMetersPerSecond, currentSpeeds.vyMetersPerSecond - previouSpeeds.vyMetersPerSecond, currentSpeeds.omegaRadiansPerSecond - previouSpeeds.omegaRadiansPerSecond);
+        previouSpeeds = currentSpeeds;
+        // angularAccelerationRadians = getCurrentSpeeds().omegaRadiansPerSecond - lastRotationSpeeds;
+        // lastRotationSpeeds = getCurrentSpeeds().omegaRadiansPerSecond;
         field2d.setRobotPose(getPose().getX(), getPose().getY(), getPose().getRotation());
         // Optional<TimedPose> visionPose = PhotonVision.getInstance().getEstimatedPose();
         // if (visionPose.isPresent())
@@ -174,19 +185,24 @@ public class Drivetrain extends SubsystemBase {
         speeds.vxMetersPerSecond = xLimiter.calculate(speeds.vxMetersPerSecond);
         speeds.vyMetersPerSecond = yLimiter.calculate(speeds.vyMetersPerSecond);
         speeds = ChassisSpeeds.fromWPIChassisSpeeds(ChassisSpeeds.discretize(speeds, dT));
-        //speeds = updateSpeeds(speeds);
+        speeds = updateSpeeds(speeds, acceleration, dT * 14);
         stateSetpoints = kinematics.toSwerveModuleStates(speeds);
         SwerveDriveKinematics.desaturateWheelSpeeds(stateSetpoints, DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND);
 
         setModuleStates(stateSetpoints);
     }
 
-    private ChassisSpeeds updateSpeeds(ChassisSpeeds speeds){
-        double dt = Robot.DEFAULT_PERIOD * -15;
-        Pose2d newPose = new Pose2d(speeds.vxMetersPerSecond *dt, speeds.vyMetersPerSecond *dt, Rotation2d.fromRadians(speeds.omegaRadiansPerSecond *dt));
+    private ChassisSpeeds updateSpeeds(ChassisSpeeds speeds, ChassisSpeeds acceleration, double dT){
+        // double dt = Robot.DEFAULT_PERIOD * -15;
+        double dt = -dT;
+        Pose2d newPose = new Pose2d(
+             speeds.vxMetersPerSecond *dt,//-acceleration.vxMetersPerSecond *dt * dt,
+             speeds.vyMetersPerSecond *dt,//-acceleration.vyMetersPerSecond *dt*dt,
+             Rotation2d.fromRadians(speeds.omegaRadiansPerSecond *dt)// -acceleration.omegaRadiansPerSecond *dt*dt)
+        );
         Twist2d twist = new Pose2d().log(newPose);
         return new ChassisSpeeds(twist.dx/dt, twist.dy/dt, twist.dtheta/dt);
-    }   
+    }
 
     public void setModuleStates(SwerveModuleState[] states) {
         for (int i = 0; i < modules.length; i++) modules[i].setState(states[i]);

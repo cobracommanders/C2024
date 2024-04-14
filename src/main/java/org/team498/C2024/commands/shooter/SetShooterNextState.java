@@ -19,7 +19,7 @@ public class SetShooterNextState extends Command {
 
     @Override
     public boolean isFinished() {
-        return shooter.atSetpoint();
+        return true;//shooter.atSetpoint();
     }
 }
 
