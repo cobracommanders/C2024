@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 import org.team498.C2024.StateController.ScoringOption;
+import org.team498.C2024.commands.auto.AmpSideTaxi;
 import org.team498.C2024.commands.auto.FourNote;
 import org.team498.C2024.commands.auto.FourNoteFull;
 import org.team498.C2024.commands.auto.FourNoteWing;
@@ -88,7 +89,8 @@ public class Robot extends TimedRobot{
         //new OuterWingTest(),
         //new TestPathing(),
         //new WingFacingSpeaker(),
-        new OuterWing()
+        new OuterWing(),
+        new AmpSideTaxi()
         //    new PracticeAuto()
                                                   );
 
@@ -234,7 +236,7 @@ public class Robot extends TimedRobot{
         }
         
     if(RobotState.isEnabled()){
-        if(Shooter.getInstance().atSetpoint()){
+        if(Shooter.getInstance().atSetpoint() && Shooter.getInstance().getState() != State.Shooter.IDLE){
             led.setState(LEDState.SHOOTER_READY);
         }
         else if(Shooter.getInstance().isSubwoofer()){

@@ -67,12 +67,16 @@ public class HybridDrive extends Command {
         rotation *= 0.65;
         
 
+
         if (drivetrain.atAngleGoal()) isPOVControlled = false;
         // isPOVControlled = !drivetrain.atAngleGoal();
 
         if(rotation != 0){
             rotationVelocity = rotation * Robot.DEFAULT_PERIOD * 10;//Math.copySign(Math.sqrt(Math.abs(rotation)), rotation) * Robot.DEFAULT_PERIOD * 110;
             isDriverControlled = true;
+            hasAngleOverride = false;
+            hasTargetDrive = false;
+            isPOVControlled = false;
             i = 0;
         } else {
             if (rotationVelocity > 300) {
@@ -104,7 +108,7 @@ public class HybridDrive extends Command {
         if (hasAngleOverride) desiredAngle = angleOverride;
         drivetrain.setAngleGoal(desiredAngle);
 
-        rotation = drivetrain.calculateAngleSpeed();
+        rotation = drivetrain.calculateAngleSpeed(!isPOVControlled && !hasAngleOverride);
         // Set the robot to drive in field relative mode, with the rotation controlled by the snap controller
         drivetrain.drive(xTranslation, yTranslation, rotation, true);
     }

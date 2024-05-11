@@ -47,7 +47,7 @@ public class Trajectories {
     }
 
     public static PathPlannerTrajectory getOTFTrajectory(List<Pose2d> poses) {
-        PathConstraints constraints = new PathConstraints(DrivetrainConstants.MAX_AUTO_VELOCITY, DrivetrainConstants.MAX_AUTO_ACCELERATION, AngleConstants.MAX_ANGULAR_SPEED_DEGREES_PER_SECOND * Math.PI / 360.0, AngleConstants.MAX_ANGULAR_SPEED_DEGREES_PER_SECOND_SQUARED * Math.PI / 360.0);
+        PathConstraints constraints = new PathConstraints(DrivetrainConstants.MAX_AUTO_VELOCITY, DrivetrainConstants.MAX_AUTO_ACCELERATION, AngleConstants.MAX_ANGULAR_SPEED_DEGREES_PER_SECOND * Math.PI / 360.0, AngleConstants.MAX_ANGULAR_ACCELERATION_DEGREES_PER_SECOND_SQUARED * Math.PI / 360.0);
         Rotation2d endRotation = poses.get(poses.size() - 1).getRotation();
         double endVelocity = 0;
         GoalEndState endState = new GoalEndState(endVelocity, endRotation);
@@ -59,7 +59,7 @@ public class Trajectories {
     }
 
     public static PathPlannerTrajectory getOTFTrajectory(List<Pose2d> poses, double maxVelocityMPS, double maxAccelMPSSq) {
-        PathConstraints constraints = new PathConstraints(maxVelocityMPS, maxAccelMPSSq, AngleConstants.MAX_ANGULAR_SPEED_DEGREES_PER_SECOND * Math.PI / 360.0, AngleConstants.MAX_ANGULAR_SPEED_DEGREES_PER_SECOND_SQUARED * Math.PI / 360.0);
+        PathConstraints constraints = new PathConstraints(maxVelocityMPS, maxAccelMPSSq, AngleConstants.MAX_ANGULAR_SPEED_DEGREES_PER_SECOND * Math.PI / 360.0, AngleConstants.MAX_ANGULAR_ACCELERATION_DEGREES_PER_SECOND_SQUARED * Math.PI / 360.0);
         Rotation2d endRotation = poses.get(poses.size() - 1).getRotation();
         double endVelocity = 0;
         GoalEndState endState = new GoalEndState(endVelocity, endRotation);

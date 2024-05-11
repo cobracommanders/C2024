@@ -47,7 +47,8 @@ public class Drivetrain extends SubsystemBase {
 
     private final SwerveDrivePoseEstimator poseEstimator;
 
-    private final ProfiledPIDController angleController = new ProfiledPIDController(3.5, 0, 0, AngleConstants.CONTROLLER_CONSTRAINTS);
+    // private final ProfiledPIDController angleController = new ProfiledPIDController(5, 0, 0.1, AngleConstants.CONTROLLER_CONSTRAINTS);
+    private final PIDController angleController = new PIDController(4, 0, 0);
 
     private final PIDController xController = new PIDController(Constants.DrivetrainConstants.PoseConstants.P, Constants.DrivetrainConstants.PoseConstants.I,  Constants.DrivetrainConstants.PoseConstants.D);
     private final SlewRateLimiter xLimiter = new SlewRateLimiter(MAX_ACCELERATION_METERS_PER_SECOND_SQUARED);
@@ -58,7 +59,7 @@ public class Drivetrain extends SubsystemBase {
     private double dT = 0;
     private final Timer timer = new Timer();
 
-    // private double angularAccelerationRadians = 0;
+    private double angularAccelerationRadians = 0;
     private ChassisSpeeds acceleration = new ChassisSpeeds();
 
     public Drivetrain(){
@@ -70,8 +71,9 @@ public class Drivetrain extends SubsystemBase {
         };
 
         angleController.enableContinuousInput(-180, 180);
-        angleController.setTolerance(0);
-        angleController.reset(getYaw());
+        angleController.setTolerance(AngleConstants.EPSILON);
+        angleController.setSetpoint(getYaw());
+        // angleController.reset(getYaw());
         xController.setTolerance(0.1);
         yController.setTolerance(0.1);
         xLimiter.reset(0);
@@ -87,7 +89,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     ChassisSpeeds previouSpeeds = new ChassisSpeeds();
-    // double lastRotationSpeeds = 0;
+    double lastRotationSpeeds = 0;
     @Override
     public void periodic() {
         dT = timer.get();
@@ -95,8 +97,8 @@ public class Drivetrain extends SubsystemBase {
         ChassisSpeeds currentSpeeds = getCurrentSpeeds();
         acceleration = new ChassisSpeeds(currentSpeeds.vxMetersPerSecond - previouSpeeds.vxMetersPerSecond, currentSpeeds.vyMetersPerSecond - previouSpeeds.vyMetersPerSecond, currentSpeeds.omegaRadiansPerSecond - previouSpeeds.omegaRadiansPerSecond);
         previouSpeeds = currentSpeeds;
-        // angularAccelerationRadians = getCurrentSpeeds().omegaRadiansPerSecond - lastRotationSpeeds;
-        // lastRotationSpeeds = getCurrentSpeeds().omegaRadiansPerSecond;
+        angularAccelerationRadians = getCurrentSpeeds().omegaRadiansPerSecond - lastRotationSpeeds;
+        lastRotationSpeeds = getCurrentSpeeds().omegaRadiansPerSecond;
         field2d.setRobotPose(getPose().getX(), getPose().getY(), getPose().getRotation());
         // Optional<TimedPose> visionPose = PhotonVision.getInstance().getEstimatedPose();
         // if (visionPose.isPresent())
@@ -125,7 +127,7 @@ public class Drivetrain extends SubsystemBase {
         // }
         SmartDashboard.putData(field2d);
         SmartDashboard.putNumber("Yaw", getYaw());
-        SmartDashboard.putNumber("Angle Setpoint", angleController.getSetpoint().position);
+        SmartDashboard.putNumber("Angle Setpoint", angleController.getSetpoint());
         SmartDashboard.putNumber("Distance To Speaker", RobotPosition.distanceToSpeaker());
         
         SmartDashboard.putBoolean("left Camera Connected", PhotonVision.getInstance().leftCameraConnected());
@@ -139,13 +141,13 @@ public class Drivetrain extends SubsystemBase {
             SmartDashboard.putNumber("left Camera X", leftPose.get().estimatedPose.getX());
             SmartDashboard.putNumber("left Camera Y", leftPose.get().estimatedPose.getY());
         }
-        // for (int i = 0; i < modules.length; i++) {
-        //     //modules[i].setBrakeMode(RobotState.isEnabled());
-        //     SmartDashboard.putNumber(i + " CanCoder Value", modules[i].getAngle());
-        //     SmartDashboard.putNumber(i + " Velocity Setpoint", modules[i].getSpeed());
-        //     SmartDashboard.putNumber(i + " Velocity Real", modules[i].getDriveMotorSpeed());
+        for (int i = 0; i < modules.length; i++) {
+            //modules[i].setBrakeMode(RobotState.isEnabled());
+            SmartDashboard.putNumber(i + " CanCoder Value", modules[i].getAngle());
+            SmartDashboard.putNumber(i + " Velocity Setpoint", modules[i].getSpeed());
+            SmartDashboard.putNumber(i + " Velocity Real", modules[i].getDriveMotorSpeed());
             
-        // }
+        }
         poseEstimator.update(Rotation2d.fromDegrees(getYaw()), getModulePositions());
         
     }
@@ -177,6 +179,11 @@ public class Drivetrain extends SubsystemBase {
         return Math.abs(getCurrentSpeeds().omegaRadiansPerSecond) <= 0.5 && Math.abs(getCurrentSpeeds().vxMetersPerSecond) < 0.1 && Math.abs(getCurrentSpeeds().vyMetersPerSecond) < 0.1;
     }
 
+    PIDController twistXController = new PIDController(0.02, 0, 0);
+    PIDController twistYController = new PIDController(0.02, 0, 0);
+
+    // PIDController accelController = new PIDController(100e10, 0, 0);
+
     public void drive(double vx, double vy, double degreesPerSecond, boolean fieldOriented) {
         ChassisSpeeds speeds = fieldOriented
                                ? ChassisSpeeds.fromFieldRelativeSpeeds(vx, vy, Math.toRadians(degreesPerSecond), getYaw())
@@ -184,8 +191,25 @@ public class Drivetrain extends SubsystemBase {
 
         speeds.vxMetersPerSecond = xLimiter.calculate(speeds.vxMetersPerSecond);
         speeds.vyMetersPerSecond = yLimiter.calculate(speeds.vyMetersPerSecond);
-        speeds = ChassisSpeeds.fromWPIChassisSpeeds(ChassisSpeeds.discretize(speeds, dT));
-        speeds = updateSpeeds(speeds, acceleration, dT * 14);
+        Translation2d desiredFuture = new Translation2d(speeds.vxMetersPerSecond / dT, speeds.vyMetersPerSecond / dT);
+        // double desiredFVel = Math.toDegrees(speeds.omegaRadiansPerSecond) / dT;
+        //speeds = ChassisSpeeds.fromWPIChassisSpeeds(ChassisSpeeds.discretize(speeds, dT * -9));
+        speeds = updateSpeeds(speeds, acceleration, dT * -7);
+        Translation2d realFuture = new Translation2d(speeds.vxMetersPerSecond / dT, speeds.vyMetersPerSecond / dT);
+        // double realFVel = Math.toDegrees(speeds.omegaRadiansPerSecond) / dT;
+        // double diffX = desiredFuture.minus(realFuture).getX();
+        // double diffY = desiredFuture.minus(realFuture).getY();
+
+        double diffX = twistXController.calculate(realFuture.getX(), desiredFuture.getX());
+        double diffY = twistYController.calculate(realFuture.getY(), desiredFuture.getY());
+        // double accel = accelController.calculate(realFVel, desiredFVel);
+        speeds = new ChassisSpeeds(speeds.vxMetersPerSecond - diffX, speeds.vyMetersPerSecond - diffY, speeds.omegaRadiansPerSecond);
+        SmartDashboard.putNumber("xDiff", diffX);
+        SmartDashboard.putNumber("yDiff", diffY);
+
+        // SmartDashboard.putNumber("angular accel", accel);
+        
+        // speeds = updateSpeeds(speeds, acceleration, dT * 14);
         stateSetpoints = kinematics.toSwerveModuleStates(speeds);
         SwerveDriveKinematics.desaturateWheelSpeeds(stateSetpoints, DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND);
 
@@ -194,10 +218,10 @@ public class Drivetrain extends SubsystemBase {
 
     private ChassisSpeeds updateSpeeds(ChassisSpeeds speeds, ChassisSpeeds acceleration, double dT){
         // double dt = Robot.DEFAULT_PERIOD * -15;
-        double dt = -dT;
+        double dt = dT;
         Pose2d newPose = new Pose2d(
-             speeds.vxMetersPerSecond *dt,//-acceleration.vxMetersPerSecond *dt * dt,
-             speeds.vyMetersPerSecond *dt,//-acceleration.vyMetersPerSecond *dt*dt,
+             speeds.vxMetersPerSecond *dt,// +acceleration.vxMetersPerSecond *dt * dt,
+             speeds.vyMetersPerSecond *dt,// +acceleration.vyMetersPerSecond *dt*dt,
              Rotation2d.fromRadians(speeds.omegaRadiansPerSecond *dt)// -acceleration.omegaRadiansPerSecond *dt*dt)
         );
         Twist2d twist = new Pose2d().log(newPose);
@@ -221,7 +245,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void setPositionGoal(Pose2d pose) {xController.setSetpoint(pose.getX()); yController.setSetpoint(pose.getY()); setAngleGoal(pose.getRotation().getDegrees()); /*Logger.getInstance().recordOutput("TargetPose", pose);*/}
-    public ChassisSpeeds calculatePositionSpeed() {return new ChassisSpeeds(calculateXSpeed(), calculateYSpeed(), calculateAngleSpeed());}
+    public ChassisSpeeds calculatePositionSpeed() {return new ChassisSpeeds(calculateXSpeed(), calculateYSpeed(), calculateAngleSpeed(false));}
     public boolean atPositionGoal() {return (Math.abs(xController.getPositionError()) < PoseConstants.EPSILON) && (Math.abs(yController.getPositionError()) < PoseConstants.EPSILON) && atAngleGoal();}
 
     public void setXGoal(double pose) {xController.setSetpoint(pose);}
@@ -232,14 +256,30 @@ public class Drivetrain extends SubsystemBase {
     public double calculateYSpeed() {return -yController.calculate(getPose().getY());}
     public boolean atYGoal() {return Math.abs(yController.getPositionError()) < PoseConstants.EPSILON;}
 
-    public void setAngleGoal(double angle) {angleController.setGoal(angle);}
-    public double calculateAngleSpeed() {return -angleController.calculate(getYaw());}
+    public void setAngleGoal(double angle) {angleController.setSetpoint(angle);}
+    public double calculateAngleSpeed(boolean isTele) {
+        double speed = -angleController.calculate(getYaw());
+        if (!isTele) {
+            double error = Math.abs(angleController.getPositionError());
+            if (error < 20) {
+                speed /= 3;
+            }
+            if (error < 50) {
+                speed /= 2;
+            }
+            else if (error < 100.0) {
+                speed /= 1.5;
+            }
+        }
+        
+        return speed;
+    }
     public boolean atAngleGoal() {return Math.abs(angleController.getPositionError()) < AngleConstants.EPSILON;}
 
     public Pose2d getPose() {return poseEstimator.getEstimatedPosition();}
     public void setPose(Pose2d pose) {poseEstimator.resetPosition(Rotation2d.fromDegrees(getYaw()), getModulePositions(), pose);}
     public double getYaw() {return gyro.yaw();}
-    public void setYaw(double angle) {gyro.setYaw(angle); angleController.reset(angle);}
+    public void setYaw(double angle) {gyro.setYaw(angle); angleController.setSetpoint(angle);}
     /** Return a double array with a value for yaw pitch and roll in that order */
     //public double[] getGyro() {return new double[] {gyroInputs.yaw, gyroInputs.pitch, gyroInputs.roll};}
 

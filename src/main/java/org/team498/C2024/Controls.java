@@ -62,6 +62,7 @@ public class Controls {
     }
     private double frontPodiumAngle = 147;
     private double ampSpeakerAngle = -130;
+    private double feedAngle = 140.5;
 
     public void configureDriverCommands() {
         driver.rightBumper().onTrue(new SlowDrive(DrivetrainConstants.SLOW_SPEED_SCALAR))
@@ -74,7 +75,11 @@ public class Controls {
                         runOnce(()->StateController.getInstance().setAngleOverride((Robot.alliance.get() == Alliance.Blue) ? frontPodiumAngle : PoseUtil.flipAngleDegrees(frontPodiumAngle))), 
                         new ConditionalCommand(
                             runOnce(()->StateController.getInstance().setAngleOverride((Robot.alliance.get() == Alliance.Blue) ? ampSpeakerAngle : PoseUtil.flipAngleDegrees(ampSpeakerAngle))),
-                            runOnce(()->StateController.getInstance().setAngleOverride(()-> RobotPosition.calculateDegreesToSpeaker())),
+                            new ConditionalCommand(
+                                runOnce(()->StateController.getInstance().setAngleOverride((Robot.alliance.get() == Alliance.Blue) ? feedAngle : PoseUtil.flipAngleDegrees(feedAngle))),
+                                runOnce(()->StateController.getInstance().setAngleOverride(()-> RobotPosition.calculateDegreesToSpeaker())),
+                                ()-> StateController.getInstance().getNextScoringState() == State.SPIT
+                            ),
                             ()-> StateController.getInstance().getNextScoringState() == State.AMP_SPEAKER
                         ),
                         ()-> StateController.getInstance().getNextScoringState() == State.FRONT_PODIUM
@@ -104,6 +109,10 @@ public class Controls {
         //     ));
         //driver.rightTrigger().onTrue(runOnce(()-> CommandScheduler.getInstance().schedule(scoreCommand)));//.onFalse(runOnce(()-> scoreCommand.cancel()));
         driver.rightTrigger().onTrue(new SetScoringState().andThen(runOnce(()-> CommandScheduler.getInstance().schedule(scoreCommand))));
+        
+        driver.X().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.OUTREACH)));
+        driver.X().toggleOnTrue(new PrepareToScore());
+        driver.start().onTrue(new ReturnToIdle());
     }
 
     public void configureOperatorCommands() {
@@ -140,8 +149,11 @@ public class Controls {
         operator.Y().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.AMP)));
         operator.Y().toggleOnTrue(new PrepareAmp());
 
-        operator.POV0().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.AMP_SPEAKER)));
-        operator.POV0().toggleOnTrue(new PrepareToScore());
+        // operator.POV0().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.AMP_SPEAKER)));
+        // operator.POV0().toggleOnTrue(new PrepareToScore());
+
+        operator.POVMinus90().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.SPIT)));
+        operator.POVMinus90().toggleOnTrue(new PrepareToScore());
 
         operator.POV90().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.CRESCENDO)));
         operator.POV90().toggleOnTrue(new PrepareToScore());

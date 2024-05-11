@@ -4,7 +4,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants {
-    public static final double CAN_TIMEOUT_SECONDS = 0.001;
+    public static final double CAN_TIMEOUT_SECONDS = 0.01;
 
     public static final class OIConstants {
         public static final int DRIVER_CONTROLLER_ID = 0;
@@ -24,6 +24,7 @@ public final class Constants {
         public static final float AUTO_SPEED_SCALAR = 0.325f;//0.25
         public static final float SUPER_SLOW = 0.2f;
         public static final short FULL_SPEED_SCALAR = 1;
+        public static final float TEN_PERCENT = 0.1f;
 
         public static final double SWERVE_MODULE_DISTANCE_FROM_CENTER = 10.75;
 
@@ -47,12 +48,12 @@ public final class Constants {
             public static final double EPSILON = 0.5;
 
             // Constraints for the profiled angle controller
-            public static final double MAX_ANGULAR_SPEED_DEGREES_PER_SECOND = 1080;
-            public static final double MAX_ANGULAR_SPEED_DEGREES_PER_SECOND_SQUARED = Math.pow(MAX_ANGULAR_SPEED_DEGREES_PER_SECOND, 2);
+            public static final double MAX_ANGULAR_SPEED_DEGREES_PER_SECOND = 1000;
+            public static final double MAX_ANGULAR_ACCELERATION_DEGREES_PER_SECOND_SQUARED = 1000;
 
             public static final TrapezoidProfile.Constraints CONTROLLER_CONSTRAINTS = new TrapezoidProfile.Constraints(
                     MAX_ANGULAR_SPEED_DEGREES_PER_SECOND,
-                    MAX_ANGULAR_SPEED_DEGREES_PER_SECOND_SQUARED
+                    MAX_ANGULAR_ACCELERATION_DEGREES_PER_SECOND_SQUARED
             );
 
         }
@@ -86,7 +87,7 @@ public final class Constants {
         
         public static final double MAX_RPM = 6000 * GEAR_RATIO;
         public static final double MAX_MPS = MAX_RPM * CIRCUMFERENCE;
-        public static final double SPIN_DIFF = 1200;
+        public static final double SPIN_DIFF = 200;//1200
 
         public static final class AngleConstants{
             public static final double P = 0.05;
@@ -99,7 +100,7 @@ public final class Constants {
             public static final double MIN_ANGLE = 29;
             public static final double AUTO_MIN_ANGLE = 29;
 
-            public static final double ANGLE_OFFSET = 0.18900256 - 0.0028;
+            public static final double ANGLE_OFFSET = 0.18900256 - 0.0028 - 0.0014;
         }
     }
 

@@ -20,6 +20,7 @@ public class SubwooferScore extends SequentialCommandGroup{
     public SubwooferScore(double wait){
         super(
             new SetState(State.SUBWOOFER),
+            new InstantCommand(()-> StateController.getInstance().setNextScoringOption(ScoringOption.SUBWOOFER)),
             //new InstantCommand(StateController.getInstance().setNextScoringOption(ScoringOption.SUBWOOFER))),
             new ParallelDeadlineGroup(
                 new WaitCommand(wait),

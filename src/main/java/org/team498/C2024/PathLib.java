@@ -52,7 +52,7 @@ public class PathLib {
 
     public static final PathPlannerTrajectory outer_wing_1 = Trajectories.getChoreoTrajectory("outer_wing_1", Rotation2d.fromRadians(-0.464));
     public static final PathPlannerTrajectory outer_wing_2 = Trajectories.getChoreoTrajectory("outer_wing_2", Rotation2d.fromRadians(-3.140));
-    public static final PathPlannerTrajectory outer_wing_3 = Trajectories.getChoreoTrajectory("outer_wing_3", Rotation2d.fromRadians(0));
+    public static final PathPlannerTrajectory outer_wing_3 = Trajectories.getChoreoTrajectory("outer_wing_3", Rotation2d.fromRadians(0.938));
 
     public static final PathPlannerTrajectory outer_wing_4 = Trajectories.getChoreoTrajectory("outer_wing_4", Rotation2d.fromDegrees(180));
     public static final PathPlannerTrajectory outer_wing_5 = Trajectories.getChoreoTrajectory("outer_wing_5", Rotation2d.fromDegrees(180));

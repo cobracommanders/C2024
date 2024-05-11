@@ -16,7 +16,7 @@ public class LED extends SubsystemBase {
 
 
   public enum LEDState {
-    IDLE(BlinkinColor.SOLID_VIOLET),
+    IDLE(BlinkinColor.SOLID_YELLOW),
     //Idle means the robot without a note | RED
     INTAKE_SUCCESS(BlinkinColor.SOLID_DARK_GREEN),
     //INTAKE_SUCCESS is when the first beam breaks are activated | Strobe Green

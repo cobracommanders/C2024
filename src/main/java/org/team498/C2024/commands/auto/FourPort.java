@@ -11,6 +11,7 @@ import org.team498.C2024.commands.robot.SetState;
 import org.team498.C2024.commands.robot.StoreNote;
 import org.team498.C2024.commands.robot.loading.LoadGround;
 import org.team498.C2024.commands.robot.scoring.FullScore;
+import org.team498.C2024.commands.robot.scoring.FullScoreSlow;
 import org.team498.C2024.commands.shooter.SetShooterNextState;
 import org.team498.lib.auto.Auto;
 
@@ -61,7 +62,7 @@ public class FourPort implements Auto{
 
                     //new SetIntakeRollerState(State.IntakeRollers.IDLE),
 
-                    new FullScore(1.75),
+                    new FullScoreSlow(1.75),
                     new LoadGround().withTimeout(4),
                     new SetIntakeState(State.Intake.IDLE),
                         //for testing paths without intake
