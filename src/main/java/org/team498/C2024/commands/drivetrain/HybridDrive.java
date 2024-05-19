@@ -74,16 +74,14 @@ public class HybridDrive extends Command {
         if(rotation != 0){
             rotationVelocity = rotation * Robot.DEFAULT_PERIOD * 10;//Math.copySign(Math.sqrt(Math.abs(rotation)), rotation) * Robot.DEFAULT_PERIOD * 110;
             isDriverControlled = true;
-            hasAngleOverride = false;
-            hasTargetDrive = false;
             isPOVControlled = false;
             i = 0;
         } else {
             if (rotationVelocity > 300) {
-                rotationVelocity -= rotationVelocity * Robot.DEFAULT_PERIOD / 2;
+                rotationVelocity -= rotationVelocity * Robot.DEFAULT_PERIOD * 2000;
                 i = 0;
             } else if (rotationVelocity < -300) {
-                rotationVelocity += rotationVelocity * Robot.DEFAULT_PERIOD / 2;
+                rotationVelocity += rotationVelocity * Robot.DEFAULT_PERIOD * 2000;
                 i = 0;
             } else {
 

@@ -48,7 +48,7 @@ public class Drivetrain extends SubsystemBase {
     private final SwerveDrivePoseEstimator poseEstimator;
 
     // private final ProfiledPIDController angleController = new ProfiledPIDController(5, 0, 0.1, AngleConstants.CONTROLLER_CONSTRAINTS);
-    private final PIDController angleController = new PIDController(4, 0, 0);
+    private final PIDController angleController = new PIDController(8, 0, .08);
 
     private final PIDController xController = new PIDController(Constants.DrivetrainConstants.PoseConstants.P, Constants.DrivetrainConstants.PoseConstants.I,  Constants.DrivetrainConstants.PoseConstants.D);
     private final SlewRateLimiter xLimiter = new SlewRateLimiter(MAX_ACCELERATION_METERS_PER_SECOND_SQUARED);
@@ -179,8 +179,8 @@ public class Drivetrain extends SubsystemBase {
         return Math.abs(getCurrentSpeeds().omegaRadiansPerSecond) <= 0.5 && Math.abs(getCurrentSpeeds().vxMetersPerSecond) < 0.1 && Math.abs(getCurrentSpeeds().vyMetersPerSecond) < 0.1;
     }
 
-    PIDController twistXController = new PIDController(0.02, 0, 0);
-    PIDController twistYController = new PIDController(0.02, 0, 0);
+    PIDController twistXController = new PIDController(0.025, 0, 0);
+    PIDController twistYController = new PIDController(0.025, 0, 0);
 
     // PIDController accelController = new PIDController(100e10, 0, 0);
 
@@ -194,7 +194,7 @@ public class Drivetrain extends SubsystemBase {
         Translation2d desiredFuture = new Translation2d(speeds.vxMetersPerSecond / dT, speeds.vyMetersPerSecond / dT);
         // double desiredFVel = Math.toDegrees(speeds.omegaRadiansPerSecond) / dT;
         //speeds = ChassisSpeeds.fromWPIChassisSpeeds(ChassisSpeeds.discretize(speeds, dT * -9));
-        speeds = updateSpeeds(speeds, acceleration, dT * -7);
+        speeds = updateSpeeds(speeds, acceleration, dT * -6);
         Translation2d realFuture = new Translation2d(speeds.vxMetersPerSecond / dT, speeds.vyMetersPerSecond / dT);
         // double realFVel = Math.toDegrees(speeds.omegaRadiansPerSecond) / dT;
         // double diffX = desiredFuture.minus(realFuture).getX();
@@ -259,18 +259,18 @@ public class Drivetrain extends SubsystemBase {
     public void setAngleGoal(double angle) {angleController.setSetpoint(angle);}
     public double calculateAngleSpeed(boolean isTele) {
         double speed = -angleController.calculate(getYaw());
-        if (!isTele) {
-            double error = Math.abs(angleController.getPositionError());
-            if (error < 20) {
-                speed /= 3;
-            }
-            if (error < 50) {
-                speed /= 2;
-            }
-            else if (error < 100.0) {
-                speed /= 1.5;
-            }
-        }
+        // if (!isTele) {
+        //     double error = Math.abs(angleController.getPositionError());
+        //     if (error < 20) {
+        //         speed /= 3;
+        //     }
+        //     if (error < 50) {
+        //         speed /= 2;
+        //     }
+        //     else if (error < 100.0) {
+        //         speed /= 1.5;
+        //     }
+        // }
         
         return speed;
     }
