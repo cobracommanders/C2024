@@ -32,6 +32,7 @@ import org.team498.C2024.Constants.DrivetrainConstants.PoseConstants;
 import org.team498.C2024.Ports;
 import org.team498.C2024.Robot;
 import org.team498.C2024.RobotPosition;
+import org.team498.lib.LimelightHelpers;
 import org.team498.lib.drivers.Gyro;
 import org.team498.lib.util.PoseUtil;
 import org.team498.lib.wpilib.ChassisSpeeds;
@@ -48,7 +49,7 @@ public class Drivetrain extends SubsystemBase {
     private final SwerveDrivePoseEstimator poseEstimator;
 
     // private final ProfiledPIDController angleController = new ProfiledPIDController(5, 0, 0.1, AngleConstants.CONTROLLER_CONSTRAINTS);
-    private final PIDController angleController = new PIDController(8, 0, .08);
+    private final PIDController angleController = new PIDController(5, 0, 0.1); // 0.08
 
     private final PIDController xController = new PIDController(Constants.DrivetrainConstants.PoseConstants.P, Constants.DrivetrainConstants.PoseConstants.I,  Constants.DrivetrainConstants.PoseConstants.D);
     private final SlewRateLimiter xLimiter = new SlewRateLimiter(MAX_ACCELERATION_METERS_PER_SECOND_SQUARED);
@@ -103,19 +104,33 @@ public class Drivetrain extends SubsystemBase {
         // Optional<TimedPose> visionPose = PhotonVision.getInstance().getEstimatedPose();
         // if (visionPose.isPresent())
         // poseEstimator.addVisionMeasurement(visionPose.get().pose, visionPose.get().timeStamp);
-        Optional<EstimatedRobotPose> leftPose = PhotonVision.getInstance().leftEstimatedPose();
-        Optional<EstimatedRobotPose> rightPose = PhotonVision.getInstance().rightEstimatedPose();
-        EstimatedRobotPose resultPose = null;
+        // Optional<EstimatedRobotPose> leftPose = PhotonVision.getInstance().leftEstimatedPose();
+        // Optional<EstimatedRobotPose> rightPose = PhotonVision.getInstance().rightEstimatedPose();
+        // EstimatedRobotPose resultPose = null;
+        // if (leftPose.isPresent() && rightPose.isPresent())
+        //     resultPose = getClosestPose(leftPose.get(), rightPose.get());
+        // else if (leftPose.isPresent())
+        //     resultPose = leftPose.get();
+        // else if (rightPose.isPresent())
+        //     resultPose = rightPose.get();
+        // if (resultPose != null && RobotPosition.distanceToSpeaker(resultPose.estimatedPose.toPose2d()) < 4.5)// && RobotPosition.isNear(resultPose.estimatedPose.toPose2d(), 1.0) && !isStopped())
+        //     poseEstimator.addVisionMeasurement(resultPose.estimatedPose.toPose2d(), resultPose.timestampSeconds);
+        // if (resultPose != null && RobotPosition.distanceToSpeaker(resultPose.estimatedPose.toPose2d()) < 4.5 && isStopped()) 
+        //     setYaw(resultPose.estimatedPose.getRotation().toRotation2d().getDegrees());
+
+            Optional<LimelightHelpers.PoseEstimate> leftPose = Optional.of(LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("leftCamera"));
+        Optional<LimelightHelpers.PoseEstimate > rightPose = Optional.of(LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("rightCamera"));
+        LimelightHelpers.PoseEstimate resultPose = null;
         if (leftPose.isPresent() && rightPose.isPresent())
-            resultPose = getClosestPose(leftPose.get(), rightPose.get());
+            resultPose = getClosestLimelightPose(leftPose.get(), rightPose.get());
         else if (leftPose.isPresent())
             resultPose = leftPose.get();
         else if (rightPose.isPresent())
             resultPose = rightPose.get();
-        if (resultPose != null && RobotPosition.distanceToSpeaker(resultPose.estimatedPose.toPose2d()) < 4.5)// && RobotPosition.isNear(resultPose.estimatedPose.toPose2d(), 1.0) && !isStopped())
-            poseEstimator.addVisionMeasurement(resultPose.estimatedPose.toPose2d(), resultPose.timestampSeconds);
-        if (resultPose != null && RobotPosition.distanceToSpeaker(resultPose.estimatedPose.toPose2d()) < 4.5 && isStopped()) 
-            setYaw(resultPose.estimatedPose.getRotation().toRotation2d().getDegrees());
+        if (resultPose != null && RobotPosition.distanceToSpeaker(resultPose.pose) < 4.5)// && RobotPosition.isNear(resultPose.estimatedPose.toPose2d(), 1.0) && !isStopped())
+            poseEstimator.addVisionMeasurement(resultPose.pose, resultPose.timestampSeconds);
+        if (resultPose != null && RobotPosition.distanceToSpeaker(resultPose.pose) < 4.5 && isStopped()) 
+            setYaw(resultPose.pose.getRotation().getDegrees());
         // else if (resultPose != null && isStopped()) {
         //     poseEstimator.addVisionMeasurement(resultPose.estimatedPose.toPose2d(), resultPose.timestampSeconds);
         // }
@@ -133,19 +148,21 @@ public class Drivetrain extends SubsystemBase {
         SmartDashboard.putBoolean("left Camera Connected", PhotonVision.getInstance().leftCameraConnected());
         SmartDashboard.putBoolean("right camera connected", PhotonVision.getInstance().rightCameraConnected());
 
-        if (rightPose.isPresent()) {
-            SmartDashboard.putNumber("right Camera X", rightPose.get().estimatedPose.getX());
-            SmartDashboard.putNumber("right Camera Y", rightPose.get().estimatedPose.getY());
-        }
-        if (leftPose.isPresent()) {
-            SmartDashboard.putNumber("left Camera X", leftPose.get().estimatedPose.getX());
-            SmartDashboard.putNumber("left Camera Y", leftPose.get().estimatedPose.getY());
-        }
+        // if (rightPose.isPresent()) {
+        //     SmartDashboard.putNumber("right Camera X", rightPose.get().estimatedPose.getX());
+        //     SmartDashboard.putNumber("right Camera Y", rightPose.get().estimatedPose.getY());
+        // }
+        // if (leftPose.isPresent()) {
+        //     SmartDashboard.putNumber("left Camera X", leftPose.get().estimatedPose.getX());
+        //     SmartDashboard.putNumber("left Camera Y", leftPose.get().estimatedPose.getY());
+        //}
         for (int i = 0; i < modules.length; i++) {
             //modules[i].setBrakeMode(RobotState.isEnabled());
             SmartDashboard.putNumber(i + " CanCoder Value", modules[i].getAngle());
             SmartDashboard.putNumber(i + " Velocity Setpoint", modules[i].getSpeed());
             SmartDashboard.putNumber(i + " Velocity Real", modules[i].getDriveMotorSpeed());
+            SmartDashboard.putNumber(i + "Drive Setpoint", modules[i].driveSetpoint * Units.inchesToMeters(DRIVE_WHEEL_CIRCUMFERENCE) / DrivetrainConstants.MK4I_DRIVE_REDUCTION_L3);
+            SmartDashboard.putNumber(i + "Steer Setpoint", modules[i].steerSetpoint);
             
         }
         poseEstimator.update(Rotation2d.fromDegrees(getYaw()), getModulePositions());
@@ -169,6 +186,11 @@ public class Drivetrain extends SubsystemBase {
     private EstimatedRobotPose getClosestPose(EstimatedRobotPose leftPose, EstimatedRobotPose rightPose){
         double leftDistance = RobotPosition.distanceTo(leftPose.estimatedPose.toPose2d());
         double rightDistance = RobotPosition.distanceTo(rightPose.estimatedPose.toPose2d());
+        return (leftDistance > rightDistance) ? rightPose : leftPose;
+    }
+    private LimelightHelpers.PoseEstimate getClosestLimelightPose(LimelightHelpers.PoseEstimate leftPose, LimelightHelpers.PoseEstimate rightPose){
+        double leftDistance = RobotPosition.distanceTo(leftPose.pose);
+        double rightDistance = RobotPosition.distanceTo(rightPose.pose);
         return (leftDistance > rightDistance) ? rightPose : leftPose;
     }
     private Pose2d averagePoses(EstimatedRobotPose pose1, EstimatedRobotPose pose2) {

@@ -5,6 +5,7 @@ import static org.team498.C2024.Constants.DrivetrainConstants.MK4I_DRIVE_REDUCTI
 import static org.team498.C2024.Constants.DrivetrainConstants.MK4I_STEER_REDUCTION_L3;
 
 import org.team498.C2024.Constants;
+import org.team498.C2024.Constants.DrivetrainConstants;
 import org.team498.lib.util.Falcon500Conversions;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
@@ -45,14 +46,18 @@ public class SwerveModule {
         steer.setNeutralMode(setBrake ? NeutralModeValue.Brake : NeutralModeValue.Coast);
     }
 
+    public double driveSetpoint = 0;
+    public double steerSetpoint = 0;
     /**
      * sets swerve module state and sets motor setpoints
      */
     public void setState(SwerveModuleState state) {
         currentTarget = optimize(state, Falcon500Conversions.falconToDegrees(steer.getPosition().getValueAsDouble(), MK4I_STEER_REDUCTION_L3));
+        driveSetpoint = currentTarget.speedMetersPerSecond * MK4I_DRIVE_REDUCTION_L3 / Units.inchesToMeters(DRIVE_WHEEL_CIRCUMFERENCE);
+        steerSetpoint = Falcon500Conversions.degreesToFalcon(currentTarget.angle.getDegrees(), MK4I_STEER_REDUCTION_L3);
         //sets setpoints for drive and steer motors
-        drive.setControl(new VelocityVoltage(currentTarget.speedMetersPerSecond * MK4I_DRIVE_REDUCTION_L3 * MK4I_DRIVE_REDUCTION_L3 / Units.inchesToMeters(DRIVE_WHEEL_CIRCUMFERENCE)));
-        steer.setControl(new PositionVoltage(Falcon500Conversions.degreesToFalcon(currentTarget.angle.getDegrees(), MK4I_STEER_REDUCTION_L3)));
+        drive.setControl(new VelocityVoltage(driveSetpoint));
+        steer.setControl(new PositionVoltage(steerSetpoint));
     }
 
     /**
@@ -78,7 +83,7 @@ public class SwerveModule {
      * returns velocity of drive motors
      */
     public double getDriveMotorSpeed() {
-        return drive.getVelocity().getValueAsDouble() * Units.inchesToMeters(DRIVE_WHEEL_CIRCUMFERENCE) / 6.12;
+        return drive.getVelocity().getValueAsDouble() * Units.inchesToMeters(DRIVE_WHEEL_CIRCUMFERENCE) / DrivetrainConstants.MK4I_DRIVE_REDUCTION_L3;
     }
 
     /**
@@ -146,10 +151,11 @@ public class SwerveModule {
         driveConfig.CurrentLimits.StatorCurrentLimit = 50;//45
         driveConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
         driveConfig.CurrentLimits.StatorCurrentLimitEnable = true;
-        driveConfig.Slot0.kP = 0.035;//0.025;
+        driveConfig.Slot0.kP = 0.3;//0.025;
         driveConfig.Slot0.kI = 0.0;
-        driveConfig.Slot0.kD = 0.02;//0.5;
-        driveConfig.Slot0.kV = 0;
+        driveConfig.Slot0.kD = 0.0;//0.5;
+        driveConfig.Slot0.kV = 0.14;
+        driveConfig.Slot0.kA = 0.012754;
         
         //TODO: ADD FEET FOWARD
         driveConfig.OpenLoopRamps.VoltageOpenLoopRampPeriod = 1;
