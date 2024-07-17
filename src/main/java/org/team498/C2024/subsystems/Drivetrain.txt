@@ -98,8 +98,32 @@ public class Drivetrain extends SubsystemBase {
             resultPose = leftPose.get();
         else if (rightPose.isPresent())
             resultPose = rightPose.get();
+<<<<<<< Updated upstream:src/main/java/org/team498/C2024/subsystems/Drivetrain.java
         if (resultPose != null)
             poseEstimator.addVisionMeasurement(resultPose.estimatedPose.toPose2d(), resultPose.timestampSeconds);
+=======
+        if (resultPose != null && RobotPosition.distanceToSpeaker(resultPose.estimatedPose.toPose2d()) < 4.5)// && RobotPosition.isNear(resultPose.estimatedPose.toPose2d(), 1.0) && !isStopped())
+            poseEstimator.addVisionMeasurement(resultPose.estimatedPose.toPose2d(), resultPose.timestampSeconds);
+        if (resultPose != null && RobotPosition.distanceToSpeaker(resultPose.estimatedPose.toPose2d()) < 4.5 && isStopped()) 
+            setYaw(resultPose.estimatedPose.getRotation().toRotation2d().getDegrees());
+
+        //     Optional<LimelightHelpers.PoseEstimate> leftPose = Optional.of(LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("leftCamera"));
+        // Optional<LimelightHelpers.PoseEstimate > rightPose = Optional.of(LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("rightCamera"));
+        // LimelightHelpers.PoseEstimate resultPose = null;
+        // if (leftPose.isPresent() && rightPose.isPresent())
+        //     resultPose = getClosestLimelightPose(leftPose.get(), rightPose.get());
+        // else if (leftPose.isPresent())
+        //     resultPose = leftPose.get();
+        // else if (rightPose.isPresent())
+        //     resultPose = rightPose.get();
+        // if (resultPose != null && RobotPosition.distanceToSpeaker(resultPose.pose) < 4.5)// && RobotPosition.isNear(resultPose.estimatedPose.toPose2d(), 1.0) && !isStopped())
+        //     poseEstimator.addVisionMeasurement(resultPose.pose, resultPose.timestampSeconds);
+        // if (resultPose != null && RobotPosition.distanceToSpeaker(resultPose.pose) < 4.5 && isStopped()) 
+        //     setYaw(resultPose.pose.getRotation().getDegrees());
+        // else if (resultPose != null && isStopped()) {
+        //     poseEstimator.addVisionMeasurement(resultPose.estimatedPose.toPose2d(), resultPose.timestampSeconds);
+        // }
+>>>>>>> Stashed changes:src/main/java/org/team498/C2024/subsystems/Drivetrain.txt
         // if (leftPose.isPresent()) {
         //     poseEstimator.addVisionMeasurement(leftPose.get().estimatedPose.toPose2d(), leftPose.get().timestampSeconds);
         // }
