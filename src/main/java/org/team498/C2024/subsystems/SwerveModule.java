@@ -187,6 +187,5 @@ public class SwerveModule {
         CANCoder.getAbsolutePosition().setUpdateFrequency(200, Constants.CAN_TIMEOUT_SECONDS);
         //CANCoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
     }
-
-}
+}   
 

@@ -24,11 +24,11 @@ public class RobotPosition {
     public static final double defaultTOF = 0.4;
 
     public static boolean inRegion(BaseRegion region) {
-        return region.contains(Point.fromPose2d(drivetrain.getPose()));
+        return region.contains(Point.fromPose2d(CommandSwerveDrivetrain.getInstance().getState().Pose));
     }
 
     public static boolean isNear(Pose2d pose, double epsilon) {
-        return Math.hypot(drivetrain.getPose().getX() - pose.getX(), drivetrain.getPose().getY() - pose.getY()) < epsilon;
+        return Math.hypot(CommandSwerveDrivetrain.getInstance().getState().Pose.getX() - pose.getX(), CommandSwerveDrivetrain.getInstance().getState().Pose.getY() - pose.getY()) < epsilon;
     }
 
     private static double distanceTo(Point point, Pose2d reference) {
@@ -45,11 +45,11 @@ public class RobotPosition {
         return distanceTo(new Point(pose.getX(), pose.getY()));
     }
 
-    private static double distanceTo(Point point) {return distanceTo(point, drivetrain.getPose());}
+    private static double distanceTo(Point point) {return distanceTo(point, CommandSwerveDrivetrain.getInstance().getState().Pose);}
 
     public static double calculateDegreesToTarget(Pose2d target, double tof) {
-        Pose2d currentPose = drivetrain.getPose();
-        ChassisSpeeds currentSpeeds = drivetrain.getCurrentSpeeds();
+        Pose2d currentPose = CommandSwerveDrivetrain.getInstance().getState().Pose;
+        double currentSpeeds = CommandSwerveDrivetrain.getInstance().getState().speeds.omegaRadiansPerSecond;
 
         // Estimate the future pose of the robot to compensate for lag
         double newX;
@@ -91,7 +91,7 @@ public class RobotPosition {
     }
 
     private static Transform2d getVelocity(double tof) {
-        var currentSpeeds = drivetrain.getCurrentSpeeds();
+        var currentSpeeds = CommandSwerveDrivetrain.getInstance().getState().speeds.omegaRadiansPerSecond;
         return new Transform2d(new Translation2d(
             -currentSpeeds.vxMetersPerSecond * (tof),
             -currentSpeeds.vyMetersPerSecond * (tof)),
@@ -128,13 +128,13 @@ public class RobotPosition {
     
 
     public static Pose2d getPose() {
-        return drivetrain.getPose();
+        return CommandSwerveDrivetrain.getInstance().getState().Pose;
     }
     public static Pose2d getFuturePose(double tof) {
-        return drivetrain.getPose().transformBy(getVelocity(tof));
+        return CommandSwerveDrivetrain.getInstance().getState().PosetransformBy(getVelocity(tof));
     }
     public static Pose2d getFuturePose() {
-        return drivetrain.getPose().transformBy(getVelocity(shooter.getTimeOfFlight()));
+        return CommandSwerveDrivetrain.getInstance().getState().Pose.transformBy(getVelocity(shooter.getTimeOfFlight()));
     }
     public static Transform2d getFutureVelocity() {
         return getVelocity(shooter.getTimeOfFlight());

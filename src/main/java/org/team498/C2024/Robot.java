@@ -22,7 +22,6 @@ import org.team498.C2024.commands.auto.SixNoteAmp;
 import org.team498.C2024.commands.auto.TestAuto;
 import org.team498.C2024.commands.robot.scoring.FullScore;
 import org.team498.C2024.subsystems.CommandSwerveDrivetrain;
-import org.team498.C2024.subsystems.Drivetrain;
 import org.team498.C2024.subsystems.Hopper;
 import org.team498.C2024.subsystems.Intake;
 import org.team498.C2024.subsystems.IntakeRollers;
@@ -73,7 +72,7 @@ public class Robot extends TimedRobot{
     @Override
     public void robotInit() {
         //new PowerDistribution(1, PowerDistribution.ModuleType.kRev).close(); // Enables power distribution logging
-        drivetrain.setYaw(0);
+        drivetrain.tareEverything();
        // FieldPositions.displayAll();
         autoChooser.setDefaultOption(defaultAuto.getName(), defaultAuto);
         autoOptions.forEach(auto -> autoChooser.addOption(auto.getName(), auto));
@@ -81,7 +80,7 @@ public class Robot extends TimedRobot{
         controls.configureDriverCommands();
         controls.configureOperatorCommands();
         // PathLib.SL1Note1.getClass();
-        drivetrain.enableBrakeMode(false);
+        //drivetrain.enableBrakeMode(false);
         // Register Subsystems
         CommandSwerveDrivetrain.getInstance();
         Shooter.getInstance();
@@ -135,13 +134,13 @@ public class Robot extends TimedRobot{
         rotationOffset = alliance.get() == Alliance.Blue
                          ? 0
                          : 180;
-        if (setupTime < 5) {
-            setupTime = setupTimer.get();
-            drivetrain.updateIntegratedEncoders();
-        } else {
-            setupTimer.stop();
-            setupTime = setupTimer.get() + 10;
-        }
+        // if (setupTime < 5) {
+        //     setupTime = setupTimer.get();
+        //     drivetrain.updateIntegratedEncoders();
+        // } else {
+        //     setupTimer.stop();
+        //     setupTime = setupTimer.get() + 10;
+        // }
 
         autoToRun = autoChooser.getSelected();
         // if (autoToRun != null) {
@@ -181,13 +180,13 @@ public class Robot extends TimedRobot{
 
         //autoToRun = new HighHighCone();
 
-        if (alliance.get() == Alliance.Blue) {
-            CommandSwerveDrivetrain.getInstance().setYaw(180 + Robot.rotationOffset);
-            CommandSwerveDrivetrain.getInstance().setPose(autoToRun.getInitialPose());
-        } else {
-            CommandSwerveDrivetrain.getInstance().setYaw(0 + Robot.rotationOffset);
-            CommandSwerveDrivetrain.getInstance().setPose(PoseUtil.flip(autoToRun.getInitialPose()));
-        }
+        // if (alliance.get() == Alliance.Blue) {
+        //     CommandSwerveDrivetrain.getInstance().tareEverything();
+        //     CommandSwerveDrivetrain.getInstance().setPose(autoToRun.getInitialPose());
+        // } else {
+        //     CommandSwerveDrivetrain.getInstance().tareEverything();
+        //     CommandSwerveDrivetrain.getInstance().setPose(PoseUtil.flip(autoToRun.getInitialPose()));
+        // }
         //SmartDashboard.putData((Sendable) autoToRun.getInitialPose());
 
         autoToRun.getCommand().schedule();

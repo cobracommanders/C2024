@@ -28,7 +28,6 @@ import org.team498.C2024.commands.shooter.SetShooterManual;
 import org.team498.C2024.commands.shooter.SetShooterNextState;
 import org.team498.C2024.commands.shooter.SetShooterState;
 import org.team498.C2024.subsystems.CommandSwerveDrivetrain;
-import org.team498.C2024.subsystems.Drivetrain;
 import org.team498.lib.drivers.Xbox;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -70,9 +69,9 @@ public class Controls {
                 
                 ()-> StateController.getInstance().getNextScoringState() == State.AMP))
             .onFalse(new TargetDrive(null).alongWith(runOnce(()->StateController.getInstance().setAngleOverride(-1))).alongWith(new SlowDrive(DrivetrainConstants.FULL_SPEED_SCALAR)));
-        driver.A().onTrue(runOnce(() -> CommandSwerveDrivetrain.getInstance().setYaw(0 + Robot.rotationOffset)));
-        driver.B().onTrue(runOnce(() -> CommandSwerveDrivetrain.getInstance().setPose(new Pose2d(15.18, 1.32, Rotation2d.fromDegrees(0 + Robot.rotationOffset)))));
-        driver.Y().onTrue(runOnce(() -> CommandSwerveDrivetrain.getInstance().setPose(new Pose2d(15.07, 5.55, Rotation2d.fromDegrees(0 + Robot.rotationOffset)))));
+        driver.A().onTrue(runOnce(() -> CommandSwerveDrivetrain.getInstance().tareEverything()));
+       // driver.B().onTrue(runOnce(() -> CommandSwerveDrivetrain.getInstance().setPose(new Pose2d(15.18, 1.32, Rotation2d.fromDegrees(0 + Robot.rotationOffset)))));
+        //driver.Y().onTrue(runOnce(() -> CommandSwerveDrivetrain.getInstance().setPose2d(new Pose2d(15.07, 5.55, Rotation2d.fromDegrees(0 + Robot.rotationOffset)))));
         driver.leftTrigger().onTrue(new LoadGround())
             .onFalse(new SetIntakeIdle());
         driver.leftBumper().onTrue(new PrepareToScore())
