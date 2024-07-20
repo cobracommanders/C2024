@@ -8,7 +8,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 import org.team498.C2024.Constants.DrivetrainConstants;
-import org.team498.C2024.subsystems.Drivetrain;
+import org.team498.C2024.subsystems.CommandSwerveDrivetrain;
 import org.team498.C2024.subsystems.Shooter;
 import org.team498.lib.field.BaseRegion;
 import org.team498.lib.field.Point;
@@ -17,7 +17,7 @@ import org.team498.lib.util.RotationUtil;
 import org.team498.lib.wpilib.ChassisSpeeds;
 
 public class RobotPosition {
-    private static final Drivetrain drivetrain = Drivetrain.getInstance();
+    private static final CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
     private static final Shooter shooter = Shooter.getInstance();
     public static final double scoringOffset = Units.inchesToMeters((DrivetrainConstants.ROBOT_WIDTH / 2) + 10);
 

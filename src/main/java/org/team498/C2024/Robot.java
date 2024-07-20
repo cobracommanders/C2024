@@ -21,12 +21,12 @@ import org.team498.C2024.commands.auto.OneTaxi;
 import org.team498.C2024.commands.auto.SixNoteAmp;
 import org.team498.C2024.commands.auto.TestAuto;
 import org.team498.C2024.commands.robot.scoring.FullScore;
+import org.team498.C2024.subsystems.CommandSwerveDrivetrain;
 import org.team498.C2024.subsystems.Drivetrain;
 import org.team498.C2024.subsystems.Hopper;
 import org.team498.C2024.subsystems.Intake;
 import org.team498.C2024.subsystems.IntakeRollers;
 import org.team498.C2024.subsystems.Kicker;
-import org.team498.C2024.subsystems.Limelight;
 import org.team498.C2024.subsystems.PhotonVision;
 import org.team498.C2024.subsystems.Shooter;
 import org.team498.lib.auto.Auto;
@@ -48,7 +48,7 @@ public class Robot extends TimedRobot{
     public static Optional<Alliance> alliance = Optional.empty();
     public static final Controls controls = new Controls();
 
-    private final Drivetrain drivetrain = Drivetrain.getInstance();
+    private final CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
     private final Gyro gyro = Gyro.getInstance();
     private final Blinkin blinkin = Blinkin.getInstance();
     //private final RobotState robotState = RobotState.getInstance();
@@ -83,7 +83,7 @@ public class Robot extends TimedRobot{
         // PathLib.SL1Note1.getClass();
         drivetrain.enableBrakeMode(false);
         // Register Subsystems
-        Drivetrain.getInstance();
+        CommandSwerveDrivetrain.getInstance();
         Shooter.getInstance();
         Hopper.getInstance();
         Kicker.getInstance();
@@ -182,11 +182,11 @@ public class Robot extends TimedRobot{
         //autoToRun = new HighHighCone();
 
         if (alliance.get() == Alliance.Blue) {
-            Drivetrain.getInstance().setYaw(180 + Robot.rotationOffset);
-            Drivetrain.getInstance().setPose(autoToRun.getInitialPose());
+            CommandSwerveDrivetrain.getInstance().setYaw(180 + Robot.rotationOffset);
+            CommandSwerveDrivetrain.getInstance().setPose(autoToRun.getInitialPose());
         } else {
-            Drivetrain.getInstance().setYaw(0 + Robot.rotationOffset);
-            Drivetrain.getInstance().setPose(PoseUtil.flip(autoToRun.getInitialPose()));
+            CommandSwerveDrivetrain.getInstance().setYaw(0 + Robot.rotationOffset);
+            CommandSwerveDrivetrain.getInstance().setPose(PoseUtil.flip(autoToRun.getInitialPose()));
         }
         //SmartDashboard.putData((Sendable) autoToRun.getInitialPose());
 

@@ -91,8 +91,7 @@ public class TunerConstants extends SubsystemBase{
 
     private static final SwerveDrivetrainConstants DrivetrainConstants = new SwerveDrivetrainConstants()
             .withCANbusName(kCANbusName)
-            .withPigeon2Id(kPigeonId)
-            .withPigeon2Configs(pigeonConfigs);
+            .withPigeon2Id(kPigeonId);
 
     private static final SwerveModuleConstantsFactory ConstantCreator = new SwerveModuleConstantsFactory()
             .withDriveMotorGearRatio(kDriveGearRatio)
@@ -109,10 +108,10 @@ public class TunerConstants extends SubsystemBase{
             .withSteerFrictionVoltage(kSteerFrictionVoltage)
             .withDriveFrictionVoltage(kDriveFrictionVoltage)
             .withFeedbackSource(SteerFeedbackType.FusedCANcoder)
-            .withCouplingGearRatio(kCoupleRatio)
-            .withDriveInitialConfigs(driveInitialConfigs)
-            .withSteerMotorInitialConfigs(steerInitialConfigs)
-            .withCANcoderInitialConfigs(cancoderInitialConfigs);
+            .withCouplingGearRatio(kCoupleRatio);
+            //.withDriveInitialConfigs(driveInitialConfigs)
+            //.withSteerMotorInitialConfigs(steerInitialConfigs)
+            //.withCANcoderInitialConfigs(cancoderInitialConfigs);
 
 
     // Front Left

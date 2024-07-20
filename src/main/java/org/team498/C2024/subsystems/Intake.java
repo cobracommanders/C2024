@@ -68,8 +68,8 @@ public class Intake extends SubsystemBase {
         // We will use this variable to keep track of our desired speed
         double speed = 0;
         if (isActivated) {
-            double rotation = Drivetrain.getInstance().getCurrentSpeeds().omegaRadiansPerSecond;
-            double driveAccel = Drivetrain.getInstance().getRobotRelativeYAcceleration();
+            double rotation = CommandSwerveDrivetrain.getInstance().getCurrentSpeeds().omegaRadiansPerSecond;
+            double driveAccel = CommandSwerveDrivetrain.getInstance().getRobotRelativeYAcceleration();
 
             double initialPID = pidController.calculate(getPosition(), this.setpoint);
             double gravityOffset = gravityFeedforward.calculate(getPosition(), 0);

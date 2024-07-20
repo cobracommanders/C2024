@@ -2,12 +2,15 @@ package org.team498.C2024.subsystems;
 
 import java.util.function.Supplier;
 
+import org.team498.C2024.Constants.DrivetrainConstants;
+
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -79,5 +82,35 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
                 hasAppliedOperatorPerspective = true;
             });
         }
+    }
+    @Override
+    public void seedFieldRelative() {
+        try {
+            m_stateLock.writeLock().lock();
+
+            Pose2d newPose =
+                    new Pose2d(getState().Pose.getTranslation(), m_operatorForwardDirection);
+            m_odometry.resetPosition(
+                    Rotation2d.fromDegrees(m_yawGetter.getValue()), m_modulePositions, newPose);
+
+            DriverStation.getAlliance()
+                    .ifPresent(
+                            (alliance) -> {
+                                hasAppliedOperatorPerspective = true;
+                                setOperatorPerspectiveForward(
+                                        alliance == Alliance.Red ? RedAlliancePerspectiveRotation
+                                            : BlueAlliancePerspectiveRotation);
+                            });
+
+        } finally {
+            m_stateLock.writeLock().unlock();
+        }
+    }
+
+    private static CommandSwerveDrivetrain instance;
+
+    public static CommandSwerveDrivetrain getInstance() {
+        if (instance == null) instance = TunerConstants.DriveTrain; 
+        return instance;
     }
 }
