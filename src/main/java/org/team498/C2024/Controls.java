@@ -1,25 +1,17 @@
 package org.team498.C2024;
 
-import static org.team498.C2024.Constants.DrivetrainConstants.FULL_SPEED_SCALAR;
-
 import org.team498.C2024.Constants.DrivetrainConstants;
 import org.team498.C2024.Constants.OIConstants;
-import org.team498.C2024.StateController.LoadingOption;
 import org.team498.C2024.StateController.ScoringOption;
 import org.team498.C2024.commands.drivetrain.HybridDrive;
 import org.team498.C2024.commands.drivetrain.SlowDrive;
 import org.team498.C2024.commands.drivetrain.TargetDrive;
 import org.team498.C2024.commands.hopper.SetHopperState;
 import org.team498.C2024.commands.intake.SetIntakeManual;
-import org.team498.C2024.commands.kicker.SetKickerNextState;
 import org.team498.C2024.commands.robot.ReturnToIdle;
 import org.team498.C2024.commands.robot.SetIntakeIdle;
-import org.team498.C2024.commands.robot.SetScoringState;
 import org.team498.C2024.commands.robot.SetState;
-import org.team498.C2024.commands.robot.loading.CollectSource;
 import org.team498.C2024.commands.robot.loading.LoadGround;
-import org.team498.C2024.commands.robot.loading.LoadSource;
-import org.team498.C2024.commands.robot.loading.Outtake;
 import org.team498.C2024.commands.robot.scoring.CancelAmp;
 import org.team498.C2024.commands.robot.scoring.CancelSpeaker;
 import org.team498.C2024.commands.robot.scoring.PrepareToScore;
@@ -30,8 +22,6 @@ import org.team498.C2024.commands.shooter.SetShooterState;
 import org.team498.C2024.subsystems.CommandSwerveDrivetrain;
 import org.team498.lib.drivers.Xbox;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;

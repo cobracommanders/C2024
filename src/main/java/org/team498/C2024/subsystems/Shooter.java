@@ -9,7 +9,6 @@ import org.team498.C2024.Constants.ShooterConstants;
 import org.team498.C2024.Constants.ShooterConstants.AngleConstants;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
-import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;

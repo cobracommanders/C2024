@@ -9,16 +9,16 @@ import java.util.function.Supplier;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
+// import edu.wpi.first.math.VecBuilder;
+// import edu.wpi.first.math.geometry.Pose2d;
+// import edu.wpi.first.math.geometry.Translation2d;
+// import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard; 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import org.team498.lib.util.RectanglePoseArea;
+//import org.team498.lib.util.RectanglePoseArea;
 import org.team498.C2024.subsystems.CommandSwerveDrivetrain;
 import org.team498.C2024.subsystems.TunerConstants; 
 
@@ -27,14 +27,14 @@ public class Limelight extends SubsystemBase {
   Alliance alliance;
   private String ll = "limelight";
   private double tx = 0;
-  private Boolean enable = false;
-  private Boolean trust = false;
+  //private Boolean enable = false;
+  //private Boolean trust = false;
   private Supplier<SwerveRequest> request;
 
   private double MaxSpeed = TunerConstants.kSpeedAt12VoltsMps; // Initial max is true top speed
-  private final double TurtleSpeed = 0.1; // Reduction in speed from Max Speed, 0.1 = 10%
+  //private final double TurtleSpeed = 0.1; // Reduction in speed from Max Speed, 0.1 = 10%
   private final double MaxAngularRate = Math.PI * 1.5; // .75 rotation per second max angular velocity.  Adjust for max turning rate speed.
-  private final double TurtleAngularRate = Math.PI * 0.5; // .75 rotation per second max angular velocity.  Adjust for max turning rate speed.
+  //private final double TurtleAngularRate = Math.PI * 0.5; // .75 rotation per second max angular velocity.  Adjust for max turning rate speed.
   private double AngularRate = MaxAngularRate; // This will be updated when turtle and reset to MaxAngularRate
   
   SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -113,12 +113,14 @@ public Command alignToTag(){
   public void setAlliance(Alliance alliance) {
     this.alliance = alliance;
   }
-
-  public void useLimelight(boolean enable) {
-    this.enable = enable;
-  }
-
-  public void trustLL(boolean trust) {
-    this.trust = trust;
-  }
 }
+//   //public void useLimelight(boolean enable) {
+//     this.enable = enable;
+//     {
+//   }
+
+//  // public void trustLL(boolean trust) {
+//     this.trust = trust;
+//   }
+//   {
+// }
