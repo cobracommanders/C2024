@@ -6,7 +6,7 @@ import org.team498.C2024.State;
 import org.team498.C2024.StateController;
 import org.team498.C2024.commands.drivetrain.TargetDrive;
 import org.team498.C2024.commands.robot.SetScoringState;
-import org.team498.C2024.subsystems.Drivetrain;
+import org.team498.C2024.subsystems.CommandSwerveDrivetrain;
 
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;

@@ -32,7 +32,6 @@ public class Gyro extends com.ctre.phoenix6.hardware.Pigeon2 {
         config.MountPose.MountPosePitch = 1.1374881267547607;
         config.MountPose.MountPoseRoll = -0.8307186365127563;
         this.getConfigurator().apply(config);
-        this.optimizeBusUtilization(0.01);
         this.getYaw().setUpdateFrequency(20);
     }
 

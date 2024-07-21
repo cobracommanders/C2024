@@ -18,7 +18,7 @@ import org.team498.C2024.commands.auto.FourNoteFull;
 import org.team498.C2024.commands.auto.FourNoteWing;
 import org.team498.C2024.commands.auto.FourPort;
 import org.team498.C2024.commands.auto.OneTaxi;
-import org.team498.C2024.commands.auto.SixNoteAmp;
+// import org.team498.C2024.commands.auto.SixNoteAmp;
 import org.team498.C2024.commands.auto.TestAuto;
 import org.team498.C2024.commands.robot.scoring.FullScore;
 import org.team498.C2024.subsystems.CommandSwerveDrivetrain;
@@ -26,7 +26,7 @@ import org.team498.C2024.subsystems.Hopper;
 import org.team498.C2024.subsystems.Intake;
 import org.team498.C2024.subsystems.IntakeRollers;
 import org.team498.C2024.subsystems.Kicker;
-import org.team498.C2024.subsystems.PhotonVision;
+//import org.team498.C2024.subsystems.PhotonVision;
 import org.team498.C2024.subsystems.Shooter;
 import org.team498.lib.auto.Auto;
 import org.team498.lib.drivers.Blinkin;
@@ -61,7 +61,7 @@ public class Robot extends TimedRobot{
     private final List<Auto> autoOptions = List.of(
         new FourNote(),
         new FourNoteFull(),
-        new SixNoteAmp(),
+        //new SixNoteAmp(),
         new TestAuto(),
         new FourPort(),
         new FourNoteWing(),
@@ -88,7 +88,7 @@ public class Robot extends TimedRobot{
         Kicker.getInstance();
         Intake.getInstance();
         IntakeRollers.getInstance();
-        PhotonVision.getInstance();
+        //PhotonVision.getInstance();
         // Limelight.getInstance();
     }
 

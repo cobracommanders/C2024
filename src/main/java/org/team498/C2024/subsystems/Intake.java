@@ -11,7 +11,7 @@ import com.revrobotics.SparkAbsoluteEncoder;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+//import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -22,8 +22,8 @@ public class Intake extends SubsystemBase {
 
     private final PIDController pidController;
     private final ArmFeedforward gravityFeedforward;
-    private final SimpleMotorFeedforward driveFeedforward;
-    private final SimpleMotorFeedforward rotationFeedforward;
+    //private final SimpleMotorFeedforward driveFeedforward;
+    //private final SimpleMotorFeedforward rotationFeedforward;
 
     private boolean isManual;
     private double manualSpeed;
@@ -42,8 +42,8 @@ public class Intake extends SubsystemBase {
 
         pidController = new PIDController(IntakeConstants.P, IntakeConstants.I, IntakeConstants.D);
         gravityFeedforward = new ArmFeedforward(IntakeConstants.S, IntakeConstants.G, IntakeConstants.V);
-        driveFeedforward = new SimpleMotorFeedforward(0, IntakeConstants.dV, 0);
-        rotationFeedforward = new SimpleMotorFeedforward(0, IntakeConstants.rV, 0);
+        //driveFeedforward = new SimpleMotorFeedforward(0, IntakeConstants.dV, 0);
+        //rotationFeedforward = new SimpleMotorFeedforward(0, IntakeConstants.rV, 0);
 
         // Instantiate variables to intitial values
         currentState = State.Intake.IDLE;
@@ -69,12 +69,12 @@ public class Intake extends SubsystemBase {
             // //double driveAccel = CommandSwerveDrivetrain.getInstance().getRobotRelativeYAcceleration();
 
             double initialPID = pidController.calculate(getPosition(), this.setpoint);
-            // double gravityOffset = gravityFeedforward.calculate(getPosition(), 0);
+            double gravityOffset = gravityFeedforward.calculate(getPosition(), 0);
             // double driveOffset = driveFeedforward.calculate(driveAccel);
             // double rotationOffset = rotationFeedforward.calculate(Math.abs(rotation));
 
             // speed = initialPID + gravityOffset + driveOffset + rotationOffset; // adjust for feedback error using proportional gain
-            speed = initialPID;
+            speed = initialPID + gravityOffset;
         } 
         if (isManual) speed = manualSpeed;
         set(speed);

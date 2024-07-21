@@ -17,7 +17,7 @@ public class Hopper extends SubsystemBase {
 
     private final CANSparkMax topMotor;
     private final CANSparkMax bottomMotor;
-    private final RelativeEncoder topEncoder;
+    //private final RelativeEncoder topEncoder;
     private final RelativeEncoder bottomEncoder;
     private final PIDController pidController;
     private final DigitalInput beamBreak;
@@ -32,7 +32,7 @@ public class Hopper extends SubsystemBase {
     public Hopper() {
         topMotor = new CANSparkMax(Ports.HopperPorts.TOP_MOTOR, MotorType.kBrushless);
         bottomMotor = new CANSparkMax(Ports.HopperPorts.BOTTOM_MOTOR, MotorType.kBrushless);
-        topEncoder = topMotor.getEncoder(); //this can be left or right motor, whichever is most convenient
+       // topEncoder = topMotor.getEncoder(); //this can be left or right motor, whichever is most convenient
         bottomEncoder = bottomMotor.getEncoder();
         beamBreak = new DigitalInput(HopperPorts.BEAM_BREAk);
         pidController = new PIDController(HopperConstants.P, HopperConstants.I, HopperConstants.D);

@@ -3,7 +3,7 @@ package org.team498.C2024;
 import org.team498.C2024.Constants.DrivetrainConstants;
 import org.team498.C2024.Constants.OIConstants;
 import org.team498.C2024.StateController.ScoringOption;
-import org.team498.C2024.commands.drivetrain.HybridDrive;
+//import org.team498.C2024.commands.drivetrain.HybridDrive;
 import org.team498.C2024.commands.drivetrain.SlowDrive;
 import org.team498.C2024.commands.drivetrain.TargetDrive;
 import org.team498.C2024.commands.hopper.SetHopperState;
@@ -20,7 +20,12 @@ import org.team498.C2024.commands.shooter.SetShooterManual;
 import org.team498.C2024.commands.shooter.SetShooterNextState;
 import org.team498.C2024.commands.shooter.SetShooterState;
 import org.team498.C2024.subsystems.CommandSwerveDrivetrain;
+import org.team498.C2024.subsystems.TunerConstants;
 import org.team498.lib.drivers.Xbox;
+import org.team498.lib.util.CommandXboxPS5Controller;
+
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -28,10 +33,23 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 
+import java.util.function.Supplier;
+
 public class Controls {
+    private double MaxSpeed = TunerConstants.kSpeedAt12VoltsMps; // Initial max is true top speed
+    private final double TurtleSpeed = 0.1; // Reduction in speed from Max Speed, 0.1 = 10%
+    private final double MaxAngularRate = Math.PI * 1.5; // .75 rotation per second max angular velocity.  Adjust for max turning rate speed.
+    private final double TurtleAngularRate = Math.PI * 0.5; // .75 rotation per second max angular velocity.  Adjust for max turning rate speed.
+    private double AngularRate = MaxAngularRate; // This will be updated when turtle and reset to MaxAngularRate
+
+     SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+      .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
+      .withDeadband(MaxSpeed * 0.1) // Deadband is handled on input
+      .withRotationalDeadband(AngularRate * 0.1);
+
     public final Xbox driver = new Xbox(OIConstants.DRIVER_CONTROLLER_ID);
     public final Xbox operator = new Xbox(OIConstants.OPERATOR_CONTROLLER_ID);
-
+    CommandXboxPS5Controller drv = new CommandXboxPS5Controller(0); // driver xbox controller
     public static final Command scoreCommand = new Score();
 
     public Controls() {
@@ -40,10 +58,21 @@ public class Controls {
         operator.setDeadzone(0.2);
         operator.setTriggerThreshold(0.2);
     }
-
-    public void configureDefaultCommands() {
-        CommandSwerveDrivetrain.getInstance().setDefaultCommand(new HybridDrive(driver::leftYSquared, driver::leftXSquared, driver::rightX, driver::rawPOVAngle));
+    private Supplier<SwerveRequest> controlStyle;
+    private void newControlStyle () {
+        controlStyle = () -> drive.withVelocityX(-drv.getLeftY() * MaxSpeed) // Drive forward -Y
+            .withVelocityY(-drv.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+            .withRotationalRate(-drv.getRightX() * AngularRate); // Drive counterclockwise with negative X (left)
     }
+
+
+     
+    public void configureDefaultCommands() {
+         //CommandSwerveDrivetrain.getInstance().setDefaultCommand(new HybridDrive(driver::leftYSquared, driver::leftXSquared, driver::rightX, driver::rawPOVAngle));
+         CommandSwerveDrivetrain.getInstance().setDefaultCommand(repeatingSequence( // Drivetrain will execute this command periodically
+         CommandSwerveDrivetrain.getInstance().applyRequest(controlStyle).ignoringDisable(true)));
+  }
+
 
     public void configureDriverCommands() {
         driver.rightBumper().onTrue(new SlowDrive(DrivetrainConstants.SLOW_SPEED_SCALAR))
