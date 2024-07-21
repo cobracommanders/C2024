@@ -10,7 +10,7 @@ import org.team498.lib.drivers.Blinkin.BlinkinColor;
 
 
 public class LED extends SubsystemBase {
-  private BlinkinColor ledColor;
+  //private BlinkinColor ledColor;
   private LEDState state = LEDState.IDLE;
   private Blinkin blinkin = Blinkin.getInstance();
 

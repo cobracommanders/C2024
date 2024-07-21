@@ -3,19 +3,10 @@ package org.team498.C2024.subsystems;
 import org.team498.C2024.Constants;
 import org.team498.C2024.Ports;
 import org.team498.C2024.State;
-import org.team498.C2024.StateController;
 import org.team498.C2024.Constants.IntakeConstants;
 import org.team498.C2024.Constants.ShooterConstants;
-import org.team498.C2024.StateController.LoadingOption;
-import org.team498.lib.wpilib.ChassisSpeeds;
-
-import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.revrobotics.AbsoluteEncoder;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkAbsoluteEncoder;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
@@ -32,7 +23,6 @@ public class Intake extends SubsystemBase {
 
     private final PIDController pidController;
     private final ArmFeedforward gravityFeedforward;
-    private final SimpleMotorFeedforward driveFeedforward;
     private final SimpleMotorFeedforward rotationFeedforward;
 
     private boolean isManual;
@@ -52,7 +42,6 @@ public class Intake extends SubsystemBase {
 
         pidController = new PIDController(IntakeConstants.P, IntakeConstants.I, IntakeConstants.D);
         gravityFeedforward = new ArmFeedforward(IntakeConstants.S, IntakeConstants.G, IntakeConstants.V);
-        driveFeedforward = new SimpleMotorFeedforward(0, IntakeConstants.dV, 0);
         rotationFeedforward = new SimpleMotorFeedforward(0, IntakeConstants.rV, 0);
 
         // Instantiate variables to intitial values
@@ -79,15 +68,15 @@ public class Intake extends SubsystemBase {
         // We will use this variable to keep track of our desired speed
         double speed = 0;
         if (isActivated) {
-            double rotation = Drivetrain.getInstance().getCurrentSpeeds().omegaRadiansPerSecond;
-            double driveAccel = Drivetrain.getInstance().getRobotRelativeYAcceleration();
+            double rotation = CommandSwerveDrivetrain.getInstance().getState().speeds.omegaRadiansPerSecond;
+            //double driveAccel = Drivetrain.getInstance().getRobotRelativeYAcceleration();
 
             double initialPID = pidController.calculate(getPosition(), this.setpoint);
             double gravityOffset = gravityFeedforward.calculate(getPosition(), 0);
-            double driveOffset = driveFeedforward.calculate(driveAccel);
+            //double driveOffset = driveFeedforward.calculate(driveAccel);
             double rotationOffset = rotationFeedforward.calculate(Math.abs(rotation));
 
-            speed = initialPID + gravityOffset + driveOffset + rotationOffset; // adjust for feedback error using proportional gain
+            speed = initialPID + gravityOffset + rotationOffset; // adjust for feedback error using proportional gain
         }
         if (Shooter.getInstance().getAngle() < ShooterConstants.AngleConstants.MIN_ANGLE - 1) {
             speed = 0;

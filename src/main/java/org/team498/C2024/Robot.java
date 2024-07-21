@@ -1,9 +1,7 @@
 package org.team498.C2024;
 
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotState;
@@ -11,43 +9,20 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-
-import org.team498.C2024.StateController.ScoringOption;
-import org.team498.C2024.commands.auto.AmpSideTaxi;
-import org.team498.C2024.commands.auto.FourNote;
-import org.team498.C2024.commands.auto.FourNoteFull;
-import org.team498.C2024.commands.auto.FourNoteWing;
-import org.team498.C2024.commands.auto.FourPort;
-import org.team498.C2024.commands.auto.LongTaxi;
-import org.team498.C2024.commands.auto.OneTaxi;
-import org.team498.C2024.commands.auto.OuterWing;
-import org.team498.C2024.commands.auto.OuterWingTest;
-import org.team498.C2024.commands.auto.SixNoteAmp;
-import org.team498.C2024.commands.auto.Spit;
-import org.team498.C2024.commands.auto.TestAuto;
-import org.team498.C2024.commands.auto.TestPathing;
-import org.team498.C2024.commands.auto.Troll;
-import org.team498.C2024.commands.auto.WingFacingSpeaker;
-import org.team498.C2024.commands.led.GreenFlash;
 import org.team498.C2024.commands.robot.ReturnToIdle;
-import org.team498.C2024.commands.robot.scoring.FullScore;
-import org.team498.C2024.subsystems.Drivetrain;
+import org.team498.C2024.subsystems.CommandSwerveDrivetrain;
 import org.team498.C2024.subsystems.Hopper;
 import org.team498.C2024.subsystems.Intake;
 import org.team498.C2024.subsystems.IntakeRollers;
 import org.team498.C2024.subsystems.Kicker;
 import org.team498.C2024.subsystems.LED;
-import org.team498.C2024.subsystems.Limelight;
 import org.team498.C2024.subsystems.PhotonVision;
 import org.team498.C2024.subsystems.Shooter;
 import org.team498.C2024.subsystems.LED.LEDState;
 import org.team498.lib.auto.Auto;
 import org.team498.lib.drivers.Blinkin;
 import org.team498.lib.drivers.Gyro;
-import org.team498.lib.drivers.Blinkin.BlinkinColor;
-import org.team498.lib.util.PoseUtil;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,14 +40,16 @@ public class Robot extends TimedRobot{
     // private PowerDistribution pdh;
     private LED led = new LED();
 
-    private final Drivetrain drivetrain = Drivetrain.getInstance();
+    private final CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
     private final Gyro gyro = Gyro.getInstance();
     private final Blinkin blinkin = Blinkin.getInstance();
     //private final RobotState robotState = RobotState.getInstance();
 
     private final SendableChooser<Auto> autoChooser = new SendableChooser<Auto>();
-    private Auto defaultAuto = new OuterWing();
-    private Auto autoToRun = defaultAuto;
+    // private Auto defaultAuto = new Auto() {
+        
+    // };
+    // private Auto autoToRun = defaultAuto;
 
     // private boolean matchStarted = false;
     private final List<Auto> autoOptions = List.of(
@@ -80,36 +57,36 @@ public class Robot extends TimedRobot{
         //new FourNoteFull(),
         //new SixNoteAmp(),
         //new TestAuto(),
-        new FourPort(),
+        //new FourPort(),
         //new FourNoteWing(),
-        new OneTaxi(),
-        new LongTaxi(),
+        //new OneTaxi(),
+        //new LongTaxi(),
         //new Spit(),
-        new Troll(),
+        //new Troll(),
         //new OuterWingTest(),
         //new TestPathing(),
         //new WingFacingSpeaker(),
-        new OuterWing(),
-        new AmpSideTaxi()
-        //    new PracticeAuto()
+        //new OuterWing(),
+        //new AmpSideTaxi()
+        //new PracticeAuto()
                                                   );
 
     @Override
     public void robotInit() {
         //new PowerDistribution(1, PowerDistribution.ModuleType.kRev).close(); // Enables power distribution logging
-        drivetrain.setYaw(0);
+        CommandSwerveDrivetrain.getInstance().tareEverything();
        // FieldPositions.displayAll();
-        autoChooser.setDefaultOption(defaultAuto.getName(), defaultAuto);
+        // autoChooser.setDefaultOption(defaultAuto.getName(), defaultAuto);
         autoOptions.forEach(auto -> autoChooser.addOption(auto.getName(), auto));
         controls.configureDefaultCommands();
         controls.configureDriverCommands();
         controls.configureOperatorCommands();
 
-        PathLib.four_port_1.getClass();
+        // PathLib.four_port_1.getClass();
         // PathLib.SL1Note1.getClass();
-        drivetrain.enableBrakeMode(true);
+        // CommandSwerveDrivetrain.enableBrakeMode(true);
         // Register Subsystems
-        Drivetrain.getInstance();
+        CommandSwerveDrivetrain.getInstance();
         Shooter.getInstance();
         Hopper.getInstance();
         Kicker.getInstance();
@@ -180,15 +157,15 @@ public class Robot extends TimedRobot{
         rotationOffset = alliance.get() == Alliance.Blue
                          ? 0
                          : 180;
-        if (setupTime < 10) {
-            setupTime = setupTimer.get();
-            drivetrain.updateIntegratedEncoders();
-        } else {
-            setupTimer.stop();
-            setupTime = setupTimer.get() + 10;
-        }
+        // if (setupTime < 10) {
+        //     setupTime = setupTimer.get();
+        //     Commandswer.updateIntegratedEncoders();
+        // } else {
+        //     setupTimer.stop();
+        //     setupTime = setupTimer.get() + 10;
+        // }
 
-        autoToRun = autoChooser.getSelected();
+        // autoToRun = autoChooser.getSelected();
         
     if(RobotState.isDisabled()){
 
@@ -312,21 +289,21 @@ public class Robot extends TimedRobot{
         IntakeRollers.getInstance().set(0);
         Kicker.getInstance().set(0);
 
-        if (autoToRun == null)
-            autoToRun = defaultAuto;
+        // if (autoToRun == null)
+            // autoToRun = defaultAuto;
 
         //autoToRun = new HighHighCone();
 
-        if (alliance.get() == Alliance.Blue) {
-            Drivetrain.getInstance().setYaw(autoToRun.getInitialPose().getRotation().getDegrees());
-            Drivetrain.getInstance().setPose(autoToRun.getInitialPose());
-        } else {
-            Drivetrain.getInstance().setYaw(PoseUtil.flipAngleDegrees(autoToRun.getInitialPose().getRotation().getDegrees()));
-            Drivetrain.getInstance().setPose(PoseUtil.flip(autoToRun.getInitialPose()));
-        }
+        // if (alliance.get() == Alliance.Blue) {
+        //     CommandSwerveDrivetrain.getInstance().(autoToRun.getInitialPose().getRotation().getDegrees());
+        //     Drivetrain.getInstance().setPose(autoToRun.getInitialPose());
+        // } else {
+        //     Drivetrain.getInstance().setYaw(PoseUtil.flipAngleDegrees(autoToRun.getInitialPose().getRotation().getDegrees()));
+        //     Drivetrain.getInstance().setPose(PoseUtil.flip(autoToRun.getInitialPose()));
+        // }
         //SmartDashboard.putData((Sendable) autoToRun.getInitialPose());
 
-        autoToRun.getCommand().schedule();
+        // autoToRun.getCommand().schedule();
         //new LongTaxi().getCommand().schedule();
 
         // CommandScheduler.getInstance().run();

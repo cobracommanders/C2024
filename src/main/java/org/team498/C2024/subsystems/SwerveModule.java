@@ -20,7 +20,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SwerveModule {
     private final TalonFX drive;
@@ -163,8 +163,6 @@ public class SwerveModule {
         motor.setInverted(false);
         motor.setNeutralMode(NeutralModeValue.Brake);
         
-        motor.optimizeBusUtilization(Constants.CAN_TIMEOUT_SECONDS);
-        
         motor.getPosition().setUpdateFrequency(200, Constants.CAN_TIMEOUT_SECONDS);
         motor.getVelocity().setUpdateFrequency(200, Constants.CAN_TIMEOUT_SECONDS);
         motor.getAcceleration().setUpdateFrequency(200, Constants.CAN_TIMEOUT_SECONDS);
@@ -181,8 +179,7 @@ public class SwerveModule {
         steerConfig.Slot0.kD = 0.2; // 0.1
         steerConfig.OpenLoopRamps.VoltageOpenLoopRampPeriod = 1;
         motor.getConfigurator().apply(steerConfig);
-        motor.setInverted(true);    
-        motor.optimizeBusUtilization(Constants.CAN_TIMEOUT_SECONDS);
+        motor.setInverted(true);
         motor.setNeutralMode(NeutralModeValue.Brake);
         motor.getPosition().setUpdateFrequency(200, Constants.CAN_TIMEOUT_SECONDS);
         // motor.getVelocity().setUpdateFrequency(100);
@@ -194,7 +191,6 @@ public class SwerveModule {
         encoderConfig.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Unsigned_0To1;
         encoderConfig.MagnetSensor.MagnetOffset = angleOffset;
         CANCoder.getConfigurator().apply(encoderConfig);
-        CANCoder.optimizeBusUtilization(Constants.CAN_TIMEOUT_SECONDS);
         CANCoder.getAbsolutePosition().setUpdateFrequency(200, Constants.CAN_TIMEOUT_SECONDS);
         //CANCoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
     }

@@ -3,12 +3,6 @@ package org.team498.C2024.commands.robot.scoring;
 import org.team498.C2024.State;
 import org.team498.C2024.StateController;
 import org.team498.C2024.StateController.ScoringOption;
-import org.team498.C2024.Constants.DrivetrainConstants;
-import org.team498.C2024.commands.drivetrain.SlowDrive;
-import org.team498.C2024.commands.drivetrain.TargetDrive;
-import org.team498.C2024.commands.drivetrain.TargetSpeaker;
-import org.team498.C2024.commands.robot.ReturnToIdle;
-import org.team498.C2024.commands.robot.SetScoringState;
 import org.team498.C2024.commands.robot.SetState;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;

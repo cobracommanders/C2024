@@ -1,53 +1,53 @@
 package org.team498.C2024;
 
-import static org.team498.C2024.Constants.DrivetrainConstants.FULL_SPEED_SCALAR;
-
 import org.team498.C2024.Constants.DrivetrainConstants;
 import org.team498.C2024.Constants.OIConstants;
-import org.team498.C2024.StateController.LoadingOption;
 import org.team498.C2024.StateController.ScoringOption;
-import org.team498.C2024.commands.drivetrain.HybridDrive;
 import org.team498.C2024.commands.drivetrain.SlowDrive;
 import org.team498.C2024.commands.drivetrain.TargetDrive;
 import org.team498.C2024.commands.hopper.SetHopperState;
-import org.team498.C2024.commands.intake.SetIntakeManual;
-import org.team498.C2024.commands.intake.SetIntakeState;
-import org.team498.C2024.commands.kicker.SetKickerNextState;
 import org.team498.C2024.commands.robot.IdleIntakeOn;
 import org.team498.C2024.commands.robot.ReturnToIdle;
 import org.team498.C2024.commands.robot.SetIntakeIdle;
 import org.team498.C2024.commands.robot.SetScoringState;
-import org.team498.C2024.commands.robot.SetState;
-import org.team498.C2024.commands.robot.loading.CollectSource;
 import org.team498.C2024.commands.robot.loading.LoadGround;
-import org.team498.C2024.commands.robot.loading.LoadSource;
 import org.team498.C2024.commands.robot.loading.Outtake;
-import org.team498.C2024.commands.robot.scoring.CancelAmp;
-import org.team498.C2024.commands.robot.scoring.CancelSpeaker;
 import org.team498.C2024.commands.robot.scoring.PrepareAmp;
 import org.team498.C2024.commands.robot.scoring.PrepareToScore;
 import org.team498.C2024.commands.robot.scoring.Score;
 import org.team498.C2024.commands.shooter.SetShooterManual;
-import org.team498.C2024.commands.shooter.SetShooterNextState;
 import org.team498.C2024.commands.shooter.SetShooterState;
-import org.team498.C2024.subsystems.Drivetrain;
+import org.team498.C2024.subsystems.CommandSwerveDrivetrain;
+import org.team498.C2024.subsystems.TunerConstants;
 import org.team498.lib.drivers.Xbox;
 import org.team498.lib.util.PoseUtil;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 
+import java.util.function.Supplier;
+
 public class Controls {
+    private double MaxSpeed = TunerConstants.kSpeedAt12VoltsMps; // Initial max is true top speed
+    private final double TurtleSpeed = 0.1; // Reduction in speed from Max Speed, 0.1 = 10%
+    private final double MaxAngularRate = Math.PI * 1.5; // .75 rotation per second max angular velocity.  Adjust for max turning rate speed.
+    private final double TurtleAngularRate = Math.PI * 0.5; // .75 rotation per second max angular velocity.  Adjust for max turning rate speed.
+    private double AngularRate = MaxAngularRate; // This will be updated when turtle and reset to MaxAngularRate
+
+     SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+      .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
+      .withDeadband(MaxSpeed * 0.1) // Deadband is handled on input
+      .withRotationalDeadband(AngularRate * 0.1);
+
     public final Xbox driver = new Xbox(OIConstants.DRIVER_CONTROLLER_ID);
     public final Xbox operator = new Xbox(OIConstants.OPERATOR_CONTROLLER_ID);
-
+    //CommandXboxPS5Controller drv = new CommandXboxPS5Controller(0); // driver xbox controller
     public static final Command scoreCommand = new Score();
 
     public Controls() {
@@ -56,10 +56,21 @@ public class Controls {
         operator.setDeadzone(0.2);
         operator.setTriggerThreshold(0.2);
     }
-
-    public void configureDefaultCommands() {
-        Drivetrain.getInstance().setDefaultCommand(new HybridDrive(driver::leftYSquared, driver::leftXSquared, driver::rightX, driver::rawPOVAngle));
+    private Supplier<SwerveRequest> controlStyle;
+    private void newControlStyle () {
+        controlStyle = () -> drive.withVelocityX(-driver.leftY() * MaxSpeed) // Drive forward -Y
+            .withVelocityY(-driver.leftX() * MaxSpeed) // Drive left with negative X (left)
+            .withRotationalRate(-driver.rightX() * AngularRate); // Drive counterclockwise with negative X (left)
     }
+
+
+     
+    public void configureDefaultCommands() {
+        newControlStyle();
+         //CommandSwerveDrivetrain.getInstance().setDefaultCommand(new HybridDrive(driver::leftYSquared, driver::leftXSquared, driver::rightX, driver::rawPOVAngle));
+         CommandSwerveDrivetrain.getInstance().setDefaultCommand(repeatingSequence( // Drivetrain will execute this command periodically
+         CommandSwerveDrivetrain.getInstance().applyRequest(controlStyle).ignoringDisable(true)));
+  }
     private double frontPodiumAngle = 147;
     private double ampSpeakerAngle = -130;
     private double feedAngle = 140.5;
@@ -95,9 +106,9 @@ public class Controls {
                 
                 ()-> StateController.getInstance().getNextScoringState() == State.AMP))
             .onFalse(new TargetDrive(null).alongWith(runOnce(()->StateController.getInstance().setAngleOverride(-1))).alongWith(new SlowDrive(DrivetrainConstants.FULL_SPEED_SCALAR)));
-        driver.A().onTrue(runOnce(() -> Drivetrain.getInstance().setYaw(0 + Robot.rotationOffset)));
-        driver.B().onTrue(runOnce(() -> Drivetrain.getInstance().setPose(new Pose2d(15.18, 1.32, Rotation2d.fromDegrees(0 + Robot.rotationOffset)))));
-        driver.Y().onTrue(runOnce(() -> Drivetrain.getInstance().setPose(new Pose2d(15.07, 5.55, Rotation2d.fromDegrees(0 + Robot.rotationOffset)))));
+        //driver.A().onTrue(runOnce(() -> Drivetrain.getInstance().setYaw(0 + Robot.rotationOffset)));
+        //driver.B().onTrue(runOnce(() -> Drivetrain.getInstance().setPose(new Pose2d(15.18, 1.32, Rotation2d.fromDegrees(0 + Robot.rotationOffset)))));
+       // driver.Y().onTrue(runOnce(() -> Drivetrain.getInstance().setPose(new Pose2d(15.07, 5.55, Rotation2d.fromDegrees(0 + Robot.rotationOffset)))));
         driver.leftTrigger().onTrue(new LoadGround())
             .onFalse(new SetIntakeIdle());
         // driver.leftBumper().onTrue(new PrepareToScore())z
