@@ -14,10 +14,9 @@ import org.team498.lib.field.BaseRegion;
 import org.team498.lib.field.Point;
 import org.team498.lib.util.PoseUtil;
 import org.team498.lib.util.RotationUtil;
-import org.team498.lib.wpilib.ChassisSpeeds;
 
 public class RobotPosition {
-    private static final CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
+    //private static final CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
     private static final Shooter shooter = Shooter.getInstance();
     public static final double scoringOffset = Units.inchesToMeters((DrivetrainConstants.ROBOT_WIDTH / 2) + 10);
 
@@ -55,11 +54,11 @@ public class RobotPosition {
         double newX;
         double newY;
         if (Robot.alliance.get() == Alliance.Red) {
-            newX = currentPose.getX() + (-currentSpeeds.vxMetersPerSecond * tof);
-            newY = currentPose.getY() + (-currentSpeeds.vyMetersPerSecond * tof);
+            newX = currentPose.getX() + (-CommandSwerveDrivetrain.getInstance().getState().speeds.vxMetersPerSecond * tof);
+            newY = currentPose.getY() + (-CommandSwerveDrivetrain.getInstance().getState().speeds.vyMetersPerSecond * tof);
         } else {
-            newX = currentPose.getX() + (currentSpeeds.vxMetersPerSecond * tof);
-            newY = currentPose.getY() + (currentSpeeds.vyMetersPerSecond * tof);
+            newX = currentPose.getX() + (CommandSwerveDrivetrain.getInstance().getState().speeds.vxMetersPerSecond * tof);
+            newY = currentPose.getY() + (CommandSwerveDrivetrain.getInstance().getState().speeds.vyMetersPerSecond * tof);
         }
         
 
@@ -81,7 +80,7 @@ public class RobotPosition {
     public static double distanceToSpeakerStatic(){
         Pose2d speakerPose = FieldPositions.getSpeaker();
         Point speakerPoint = new Point(speakerPose.getX(), speakerPose.getY());
-        return distanceTo(speakerPoint, getFuturePose(defaultTOF));
+        return distanceTo(speakerPoint, getFuturePose(defaultTOF)); 
     }
 
     public static double distanceToSpeaker(){
@@ -93,9 +92,9 @@ public class RobotPosition {
     private static Transform2d getVelocity(double tof) {
         var currentSpeeds = CommandSwerveDrivetrain.getInstance().getState().speeds.omegaRadiansPerSecond;
         return new Transform2d(new Translation2d(
-            -currentSpeeds.vxMetersPerSecond * (tof),
-            -currentSpeeds.vyMetersPerSecond * (tof)),
-            Rotation2d.fromRadians(currentSpeeds.omegaRadiansPerSecond * (tof)));
+            -CommandSwerveDrivetrain.getInstance().getState().speeds.vxMetersPerSecond * (tof),
+            -CommandSwerveDrivetrain.getInstance().getState().speeds.vyMetersPerSecond * (tof)),
+            Rotation2d.fromRadians(CommandSwerveDrivetrain.getInstance().getState().speeds.omegaRadiansPerSecond * (tof)));
     }
 
     // private static Transform2d getVelocitySquared(double loopCycles) {
@@ -131,7 +130,7 @@ public class RobotPosition {
         return CommandSwerveDrivetrain.getInstance().getState().Pose;
     }
     public static Pose2d getFuturePose(double tof) {
-        return CommandSwerveDrivetrain.getInstance().getState().PosetransformBy(getVelocity(tof));
+        return CommandSwerveDrivetrain.getInstance().getState().Pose.transformBy(getVelocity(tof));
     }
     public static Pose2d getFuturePose() {
         return CommandSwerveDrivetrain.getInstance().getState().Pose.transformBy(getVelocity(shooter.getTimeOfFlight()));
