@@ -58,8 +58,8 @@ public class Controls {
     }
     private Supplier<SwerveRequest> controlStyle;
     private void newControlStyle () {
-        controlStyle = () -> drive.withVelocityX(-driver.leftY() * MaxSpeed) // Drive forward -Y
-            .withVelocityY(-driver.leftX() * MaxSpeed) // Drive left with negative X (left)
+        controlStyle = () -> drive.withVelocityX(-driver.leftY() * driver.leftY() * driver.leftY() * MaxSpeed) // Drive forward -Y
+            .withVelocityY(-driver.leftX() * driver.leftX() * driver.leftX() * MaxSpeed) // Drive left with negative X (left)
             .withRotationalRate(-driver.rightX() * AngularRate); // Drive counterclockwise with negative X (left)
     }
 
@@ -109,6 +109,7 @@ public class Controls {
         //driver.A().onTrue(runOnce(() -> Drivetrain.getInstance().setYaw(0 + Robot.rotationOffset)));
         //driver.B().onTrue(runOnce(() -> Drivetrain.getInstance().setPose(new Pose2d(15.18, 1.32, Rotation2d.fromDegrees(0 + Robot.rotationOffset)))));
        // driver.Y().onTrue(runOnce(() -> Drivetrain.getInstance().setPose(new Pose2d(15.07, 5.55, Rotation2d.fromDegrees(0 + Robot.rotationOffset)))));
+        driver.A().onTrue(runOnce(() -> CommandSwerveDrivetrain.getInstance().setYaw(0)));
         driver.leftTrigger().onTrue(new LoadGround())
             .onFalse(new SetIntakeIdle());
         // driver.leftBumper().onTrue(new PrepareToScore())z
