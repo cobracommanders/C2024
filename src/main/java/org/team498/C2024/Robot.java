@@ -4,13 +4,20 @@ package org.team498.C2024;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.team498.C2024.commands.robot.ReturnToIdle;
+import org.team498.C2024.commands.robot.SetIntakeIdle;
+import org.team498.C2024.commands.robot.loading.LoadGround;
+import org.team498.C2024.commands.robot.scoring.AutoScore;
+import org.team498.C2024.commands.robot.scoring.HalfScore;
+import org.team498.C2024.commands.robot.scoring.PrepareToScore;
 import org.team498.C2024.subsystems.CommandSwerveDrivetrain;
 import org.team498.C2024.subsystems.Hopper;
 import org.team498.C2024.subsystems.Intake;
@@ -25,6 +32,8 @@ import org.team498.lib.drivers.Blinkin;
 import org.team498.lib.drivers.Gyro;
 import java.util.List;
 import java.util.Optional;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 
 public class Robot extends TimedRobot{
@@ -45,39 +54,42 @@ public class Robot extends TimedRobot{
     private final Blinkin blinkin = Blinkin.getInstance();
     //private final RobotState robotState = RobotState.getInstance();
 
-    private final SendableChooser<Auto> autoChooser = new SendableChooser<Auto>();
-    // private Auto defaultAuto = new Auto() {
+    private SendableChooser<Command> autoChooser;
+        // private Auto defaultAuto = new Auto() {
         
     // };
     // private Auto autoToRun = defaultAuto;
 
     // private boolean matchStarted = false;
-    private final List<Auto> autoOptions = List.of(
-        //new FourNote(),
-        //new FourNoteFull(),
-        //new SixNoteAmp(),
-        //new TestAuto(),
-        //new FourPort(),
-        //new FourNoteWing(),
-        //new OneTaxi(),
-        //new LongTaxi(),
-        //new Spit(),
-        //new Troll(),
-        //new OuterWingTest(),
-        //new TestPathing(),
-        //new WingFacingSpeaker(),
-        //new OuterWing(),
-        //new AmpSideTaxi()
-        //new PracticeAuto()
-                                                  );
+    // private final List<Auto> autoOptions = List.of(
+    //     //new FourNote(),
+    //     //new FourNoteFull(),
+    //     //new SixNoteAmp(),
+    //     //new TestAuto(),
+    //     //new FourPort(),
+    //     //new FourNoteWing(),
+    //     //new OneTaxi(),
+    //     //new LongTaxi(),
+    //     //new Spit(),
+    //     //new Troll(),
+    //     //new OuterWingTest(),
+    //     //new TestPathing(),
+    //     //new WingFacingSpeaker(),
+    //     //new OuterWing(),
+    //     //new AmpSideTaxi()
+    //     //new PracticeAuto()
+    //                                               );
+
 
     @Override
     public void robotInit() {
+        // m_robotContainer = new RobotContainer();
         //new PowerDistribution(1, PowerDistribution.ModuleType.kRev).close(); // Enables power distribution logging
         CommandSwerveDrivetrain.getInstance().tareEverything();
+        autoChooser = AutoBuilder.buildAutoChooser();
        // FieldPositions.displayAll();
         // autoChooser.setDefaultOption(defaultAuto.getName(), defaultAuto);
-        autoOptions.forEach(auto -> autoChooser.addOption(auto.getName(), auto));
+        // autoOptions.forEach(auto -> autoChooser.addOption(auto.getName(), auto));
         controls.configureDefaultCommands();
         controls.configureDriverCommands();
         controls.configureOperatorCommands();
@@ -102,6 +114,10 @@ public class Robot extends TimedRobot{
 
         // Limelight.getInstance();
         
+        NamedCommands.registerCommand("prepareToScore", new PrepareToScore());
+        NamedCommands.registerCommand("halfScore", new HalfScore());
+        NamedCommands.registerCommand("loadGround", new LoadGround());
+        NamedCommands.registerCommand("setIntakeIdle", new SetIntakeIdle());
         
     }
 
@@ -150,13 +166,13 @@ public class Robot extends TimedRobot{
     public void disabledPeriodic() {
         alliance = DriverStation.getAlliance();
         // This reverses the coordinates/direction of the drive commands on the red alliance
-        coordinateFlip = alliance.get() == Alliance.Blue
-                         ? 1
-                         : -1;
-        // Add 180 degrees to all teleop rotation setpoints while on the red alliance
-        rotationOffset = alliance.get() == Alliance.Blue
-                         ? 0
-                         : 180;
+        // coordinateFlip = alliance.get() == Alliance.Blue
+        //                  ? 1
+        //                  : -1;
+        // // Add 180 degrees to all teleop rotation setpoints while on the red alliance
+        // rotationOffset = alliance.get() == Alliance.Blue
+        //                  ? 0
+        //                  : 180;
         // if (setupTime < 10) {
         //     setupTime = setupTimer.get();
         //     Commandswer.updateIntegratedEncoders();
@@ -184,6 +200,8 @@ public class Robot extends TimedRobot{
         //     led.setState(LEDState.BATTERY_GOOD);
         // }
         //Could be used to check vision, subsystem positions, or even the robot position if there is one hardset with the april tags
+  
+
 
     @Override
     public void teleopInit() {
@@ -320,11 +338,15 @@ public class Robot extends TimedRobot{
     }
 
     @Override
+  public void autonomousPeriodic() {}
+
+
+    @Override
     public void testInit() {
         CommandScheduler.getInstance().cancelAll();
     }
 
     public static void main(String... args) {
         RobotBase.startRobot(Robot::new);
+        }
     }
-}
