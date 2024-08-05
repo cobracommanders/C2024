@@ -3,6 +3,8 @@ package org.team498.C2024;
 import org.team498.C2024.Constants.DrivetrainConstants;
 import org.team498.C2024.Constants.OIConstants;
 import org.team498.C2024.StateController.ScoringOption;
+import org.team498.C2024.commands.drivetrain.AngleLock;
+import org.team498.C2024.commands.drivetrain.AutoAlign;
 import org.team498.C2024.commands.drivetrain.SlowDrive;
 import org.team498.C2024.commands.drivetrain.TargetDrive;
 import org.team498.C2024.commands.hopper.SetHopperState;
@@ -79,33 +81,10 @@ public class Controls {
         driver.rightBumper().onTrue(new SlowDrive(DrivetrainConstants.SLOW_SPEED_SCALAR))
             .onFalse(new SlowDrive(DrivetrainConstants.FULL_SPEED_SCALAR));
         driver.leftBumper().onTrue(new ConditionalCommand(
-                runOnce(()->StateController.getInstance().setAngleOverride(-90)),
-                new ConditionalCommand(
-                    runOnce(()->StateController.getInstance().setAngleOverride((Robot.alliance.get() == Alliance.Blue) ? 180 : PoseUtil.flipAngleDegrees(180))), 
-                    new ConditionalCommand(
-                        runOnce(()->StateController.getInstance().setAngleOverride((Robot.alliance.get() == Alliance.Blue) ? frontPodiumAngle : PoseUtil.flipAngleDegrees(frontPodiumAngle))), 
-                        new ConditionalCommand(
-                            runOnce(()->StateController.getInstance().setAngleOverride((Robot.alliance.get() == Alliance.Blue) ? ampSpeakerAngle : PoseUtil.flipAngleDegrees(ampSpeakerAngle))),
-                            new ConditionalCommand(
-                                runOnce(()->StateController.getInstance().setAngleOverride((Robot.alliance.get() == Alliance.Blue) ? feedAngle : PoseUtil.flipAngleDegrees(feedAngle))),
-                                runOnce(()->StateController.getInstance().setAngleOverride(()-> RobotPosition.calculateDegreesToSpeaker())),
-                                ()-> StateController.getInstance().getNextScoringState() == State.SPIT
-                            ),
-                            ()-> StateController.getInstance().getNextScoringState() == State.AMP_SPEAKER
-                        ),
-                        ()-> StateController.getInstance().getNextScoringState() == State.FRONT_PODIUM
-                    ),
-                    ()-> StateController.getInstance().getNextScoringState() == State.PODIUM
-                ), 
-                // new ConditionalCommand(
-                //     runOnce(()-> {}),
-                //     runOnce(()->StateController.getInstance().setTargetDrive(FieldPositions.getSpeaker())).alongWith(new SlowDrive(DrivetrainConstants.TARGET_SPEED_SCALAR)), 
-                //     ()-> StateController.getInstance().getNextScoringState() == State.SUBWOOFER  || StateController.getInstance().getNextScoringState() == State.PODIUM || StateController.getInstance().getNextScoringState() == State.AMP_SPEAKER
-                // ),
-                //runOnce(()->StateController.getInstance().setTargetDrive(FieldPositions.getSpeaker())),
-                
+                new AngleLock(-90),
+                new AutoAlign(), 
                 ()-> StateController.getInstance().getNextScoringState() == State.AMP))
-            .onFalse(new TargetDrive(null).alongWith(runOnce(()->StateController.getInstance().setAngleOverride(-1))).alongWith(new SlowDrive(DrivetrainConstants.FULL_SPEED_SCALAR)));
+            .onFalse(CommandSwerveDrivetrain.getInstance().getDefaultCommand());
         //driver.A().onTrue(runOnce(() -> Drivetrain.getInstance().setYaw(0 + Robot.rotationOffset)));
         //driver.B().onTrue(runOnce(() -> Drivetrain.getInstance().setPose(new Pose2d(15.18, 1.32, Rotation2d.fromDegrees(0 + Robot.rotationOffset)))));
        // driver.Y().onTrue(runOnce(() -> Drivetrain.getInstance().setPose(new Pose2d(15.07, 5.55, Rotation2d.fromDegrees(0 + Robot.rotationOffset)))));
@@ -122,6 +101,7 @@ public class Controls {
         //driver.rightTrigger().onTrue(runOnce(()-> CommandScheduler.getInstance().schedule(scoreCommand)));//.onFalse(runOnce(()-> scoreCommand.cancel()));
         driver.rightTrigger().onTrue(new SetScoringState().andThen(runOnce(()-> CommandScheduler.getInstance().schedule(scoreCommand))));
         
+        //driver.POV90().onTrue(new AutoAlign());
         driver.X().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.OUTREACH)));
         driver.X().toggleOnTrue(new PrepareToScore());
         driver.start().onTrue(new ReturnToIdle());

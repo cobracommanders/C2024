@@ -8,6 +8,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -29,9 +30,8 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
-    public void setYaw(double angle) {
-        this.m_pigeon2.setYaw(angle);
-    }
+
+    private final PIDController rotationController = new PIDController(5, 0, 0);
 
     /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
     private final Rotation2d BlueAlliancePerspectiveRotation = Rotation2d.fromDegrees(0);
@@ -79,8 +79,20 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         }
     }
 
+    public void setYaw(double angle) {
+        this.m_pigeon2.setYaw(angle);
+    }
+
     public void driveRobotRelative(ChassisSpeeds speeds) {
         this.setControl(new SwerveRequest.RobotCentric().withVelocityX(speeds.vxMetersPerSecond).withVelocityY(speeds.vyMetersPerSecond).withRotationalRate(speeds.omegaRadiansPerSecond));        
+    }
+    public void driveFieldRelative(ChassisSpeeds speeds) {
+        this.setControl(new SwerveRequest.FieldCentric().withVelocityX(speeds.vxMetersPerSecond).withVelocityY(speeds.vyMetersPerSecond).withRotationalRate(speeds.omegaRadiansPerSecond));
+    }
+
+    public void driveFieldRelativeAngleLock(ChassisSpeeds speeds, double degrees) {
+        double rotationRate = rotationController.calculate(CommandSwerveDrivetrain.getInstance().getState().Pose.getRotation().getDegrees(), degrees);
+        this.setControl(new SwerveRequest.FieldCentric().withVelocityX(speeds.vxMetersPerSecond).withVelocityY(speeds.vyMetersPerSecond).withRotationalRate(rotationRate));
     }
 
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
