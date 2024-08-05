@@ -14,13 +14,7 @@
         {
           "type": "named",
           "data": {
-            "name": "prepareToScore"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "halfScore"
+            "name": "subwooferScore"
           }
         },
         {
@@ -44,21 +38,22 @@
                       }
                     },
                     {
-                      "type": "named",
+                      "type": "deadline",
                       "data": {
-                        "name": "loadGround"
-                      }
-                    },
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.8
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "setIntakeIdle"
+                        "commands": [
+                          {
+                            "type": "wait",
+                            "data": {
+                              "waitTime": 2.0
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "loadGround"
+                            }
+                          }
+                        ]
                       }
                     }
                   ]
@@ -68,37 +63,32 @@
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 0.5
+            "name": "setIntakeIdle"
           }
         },
         {
-          "type": "parallel",
+          "type": "sequential",
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "parallel",
                 "data": {
-                  "pathName": "podiumScore"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "prepareToScore"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.5
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "halfScore"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "podiumShot"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "podiumScore"
+                      }
+                    }
+                  ]
                 }
               }
             ]

@@ -1,10 +1,12 @@
 package org.team498.C2024.commands.robot;
 
 import org.team498.C2024.State;
+import org.team498.C2024.commands.hopper.MoveHopper;
 import org.team498.C2024.commands.hopper.SetHopperNextState;
 import org.team498.C2024.subsystems.Hopper;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 
 public class StoreNote extends SequentialCommandGroup{
@@ -17,7 +19,7 @@ public class StoreNote extends SequentialCommandGroup{
 
             // //Intakes Note until it Hits the BeamBreak
             new WaitUntilCommand(() -> Hopper.getInstance().getBackBeamBreak()),
-            //new MoveHopper(-4),
+            //new MoveHopper(4),
             //Sets Hopper to IDLE
             new SetState(State.IDLE),
             new SetHopperNextState()

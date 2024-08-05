@@ -58,9 +58,9 @@ public class Controls {
     }
     private Supplier<SwerveRequest> controlStyle;
     private void newControlStyle () {
-        controlStyle = () -> drive.withVelocityX(-driver.leftY() * driver.leftY() * driver.leftY() * MaxSpeed) // Drive forward -Y
-            .withVelocityY(-driver.leftX() * driver.leftX() * driver.leftX() * MaxSpeed) // Drive left with negative X (left)
-            .withRotationalRate(-driver.rightX() * AngularRate); // Drive counterclockwise with negative X (left)
+        controlStyle = () -> drive.withVelocityX(driver.leftY() * driver.leftY() * driver.leftY() * MaxSpeed) // Drive forward -Y
+            .withVelocityY(driver.leftX() * driver.leftX() * driver.leftX() * MaxSpeed) // Drive left with negative X (left)
+            .withRotationalRate(driver.rightX() * AngularRate); // Drive counterclockwise with negative X (left)
     }
 
 

@@ -14,10 +14,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.team498.C2024.commands.robot.ReturnToIdle;
 import org.team498.C2024.commands.robot.SetIntakeIdle;
+import org.team498.C2024.commands.robot.SetState;
 import org.team498.C2024.commands.robot.loading.LoadGround;
 import org.team498.C2024.commands.robot.scoring.AutoScore;
 import org.team498.C2024.commands.robot.scoring.HalfScore;
+import org.team498.C2024.commands.robot.scoring.PodiumScore;
 import org.team498.C2024.commands.robot.scoring.PrepareToScore;
+import org.team498.C2024.commands.robot.scoring.SubwooferScore;
 import org.team498.C2024.subsystems.CommandSwerveDrivetrain;
 import org.team498.C2024.subsystems.Hopper;
 import org.team498.C2024.subsystems.Intake;
@@ -40,8 +43,8 @@ public class Robot extends TimedRobot{
     public static final double DEFAULT_PERIOD = 0.02;
     public final Timer setupTimer = new Timer();
     public double setupTime  = 0;
-    public static int coordinateFlip = 1;
-    public static int rotationOffset = 0;
+    // public static int coordinateFlip = 1;
+    // public static int rotationOffset = 0;
 
     public static Optional<Alliance> alliance = Optional.empty();
     public static final Controls controls = new Controls();
@@ -83,6 +86,14 @@ public class Robot extends TimedRobot{
 
     @Override
     public void robotInit() {
+
+        NamedCommands.registerCommand("prepareToScore", new PrepareToScore());
+        NamedCommands.registerCommand("halfScore", new HalfScore());
+        NamedCommands.registerCommand("loadGround", new LoadGround());
+        NamedCommands.registerCommand("setIntakeIdle", new SetIntakeIdle());
+        NamedCommands.registerCommand("subwooferScore", new SubwooferScore(1));
+        NamedCommands.registerCommand("setStatePodium", new SetState(State.PODIUM));
+        NamedCommands.registerCommand("podiumScore", new PodiumScore());
         // m_robotContainer = new RobotContainer();
         //new PowerDistribution(1, PowerDistribution.ModuleType.kRev).close(); // Enables power distribution logging
         CommandSwerveDrivetrain.getInstance().tareEverything();
@@ -114,11 +125,6 @@ public class Robot extends TimedRobot{
 
         // Limelight.getInstance();
         
-        NamedCommands.registerCommand("prepareToScore", new PrepareToScore());
-        NamedCommands.registerCommand("halfScore", new HalfScore());
-        NamedCommands.registerCommand("loadGround", new LoadGround());
-        NamedCommands.registerCommand("setIntakeIdle", new SetIntakeIdle());
-        
     }
 
     @Override
@@ -132,13 +138,13 @@ public class Robot extends TimedRobot{
         if (alliance.isEmpty()) {
             alliance = DriverStation.getAlliance();
             // This reverses the coordinates/direction of the drive commands on the red alliance
-            coordinateFlip = alliance.get() == Alliance.Blue
-                             ? 1
-                             : -1;
-            // Add 180 degrees to all teleop rotation setpoints while on the red alliance
-            rotationOffset = alliance.get() == Alliance.Blue
-                             ? 0
-                             : 180;
+            // coordinateFlip = alliance.get() == Alliance.Blue
+            //                  ? 1
+            //                  : -1;
+            // // Add 180 degrees to all teleop rotation setpoints while on the red alliance
+            // rotationOffset = alliance.get() == Alliance.Blue
+            //                  ? 0
+            //                  : 180;
         }
         // blinkin.setColor(BlinkinColor.BREATH_RED);
         SmartDashboard.putBoolean("Shooter Aligned", Shooter.getInstance().atSetpoint() && Shooter.getInstance().shooterState() && !Hopper.getInstance().isPidEnabled());
@@ -309,7 +315,8 @@ public class Robot extends TimedRobot{
 
         // if (autoToRun == null)
             // autoToRun = defaultAuto;
-
+        if (autoChooser.getSelected() != null)
+            autoChooser.getSelected().schedule();
         //autoToRun = new HighHighCone();
 
         // if (alliance.get() == Alliance.Blue) {
