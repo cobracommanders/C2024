@@ -40,19 +40,19 @@ public class AutoAlign extends Command{
                 end = false;
             }
         }
-        double speeds = 0;
-        speeds = tx * (Math.PI / 180);
-        drivetrain.driveFieldRelative(new ChassisSpeeds(
-            controller.leftY() * controller.leftY() * controller.leftY() * TunerConstants.kSpeedAt12VoltsMps,
-            controller.leftX() * controller.leftX() * controller.leftX() * TunerConstants.kSpeedAt12VoltsMps,
-            -5 * speeds
-        ));
-        // drivetrain.driveFieldRelativeAngleLock(new ChassisSpeeds(
+        // double speeds = 0;
+        // speeds = tx * (Math.PI / 180);
+        // drivetrain.driveFieldRelative(new ChassisSpeeds(
         //     controller.leftY() * controller.leftY() * controller.leftY() * TunerConstants.kSpeedAt12VoltsMps,
         //     controller.leftX() * controller.leftX() * controller.leftX() * TunerConstants.kSpeedAt12VoltsMps,
-        //     0), 
-        //     CommandSwerveDrivetrain.getInstance().getState().Pose.getRotation().getDegrees() - tx
-        // );
+        //     -5 * speeds
+        // ));
+        drivetrain.driveFieldRelativeAngleLock(new ChassisSpeeds(
+            controller.leftY() * controller.leftY() * controller.leftY() * TunerConstants.kSpeedAt12VoltsMps,
+            controller.leftX() * controller.leftX() * controller.leftX() * TunerConstants.kSpeedAt12VoltsMps,
+            0), 
+            CommandSwerveDrivetrain.getInstance().getState().Pose.getRotation().getDegrees() - tx
+        );
 
 
     }
