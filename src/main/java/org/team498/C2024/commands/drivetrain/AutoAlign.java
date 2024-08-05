@@ -40,6 +40,9 @@ public class AutoAlign extends Command{
                 end = false;
             }
         }
+        if (Math.abs(tx) < 2) {
+            LimelightHelpers.setLEDMode_ForceBlink("limelight");
+        }
         // double speeds = 0;
         // speeds = tx * (Math.PI / 180);
         // drivetrain.driveFieldRelative(new ChassisSpeeds(
@@ -48,8 +51,8 @@ public class AutoAlign extends Command{
         //     -5 * speeds
         // ));
         drivetrain.driveFieldRelativeAngleLock(new ChassisSpeeds(
-            controller.leftY() * controller.leftY() * controller.leftY() * TunerConstants.kSpeedAt12VoltsMps,
-            controller.leftX() * controller.leftX() * controller.leftX() * TunerConstants.kSpeedAt12VoltsMps,
+            -controller.leftY() * controller.leftY() * controller.leftY() * TunerConstants.kSpeedAt12VoltsMps,
+            -controller.leftX() * controller.leftX() * controller.leftX() * TunerConstants.kSpeedAt12VoltsMps,
             0), 
             CommandSwerveDrivetrain.getInstance().getState().Pose.getRotation().getDegrees() - tx
         );
@@ -61,8 +64,8 @@ public class AutoAlign extends Command{
     //     //currentTime > trajectory.getTotalTimeSeconds();
     //     return (Math.abs(tx) <= 1.5 || end);
     // }
-    // @Override
-    // public void end(boolean interrupted) {
-    //     drivetrain.driveFieldRelative(new ChassisSpeeds());
-    // }
+    @Override
+    public void end(boolean interrupted) {
+        LimelightHelpers.setLEDMode_ForceOff("limelight");
+    }
 }

@@ -60,8 +60,8 @@ public class Controls {
     }
     private Supplier<SwerveRequest> controlStyle;
     private void newControlStyle () {
-        controlStyle = () -> drive.withVelocityX(driver.leftY() * driver.leftY() * driver.leftY() * MaxSpeed) // Drive forward -Y
-            .withVelocityY(driver.leftX() * driver.leftX() * driver.leftX() * MaxSpeed) // Drive left with negative X (left)
+        controlStyle = () -> drive.withVelocityX(-driver.leftY() * driver.leftY() * driver.leftY() * MaxSpeed) // Drive forward -Y
+            .withVelocityY(-driver.leftX() * driver.leftX() * driver.leftX() * MaxSpeed) // Drive left with negative X (left)
             .withRotationalRate(driver.rightX() * AngularRate); // Drive counterclockwise with negative X (left)
     }
 
@@ -73,22 +73,22 @@ public class Controls {
          CommandSwerveDrivetrain.getInstance().setDefaultCommand(repeatingSequence( // Drivetrain will execute this command periodically
          CommandSwerveDrivetrain.getInstance().applyRequest(controlStyle).ignoringDisable(true)));
   }
-    private double frontPodiumAngle = 147;
-    private double ampSpeakerAngle = -130;
-    private double feedAngle = 140.5;
 
     public void configureDriverCommands() {
         driver.rightBumper().onTrue(new SlowDrive(DrivetrainConstants.SLOW_SPEED_SCALAR))
             .onFalse(new SlowDrive(DrivetrainConstants.FULL_SPEED_SCALAR));
         driver.leftBumper().onTrue(new ConditionalCommand(
-                new AngleLock(-90),
+                new ConditionalCommand(
+                    new AngleLock(-90),
+                    new AngleLock(90),
+                    ()-> Robot.alliance.get() == Alliance.Red),
                 new AutoAlign(), 
                 ()-> StateController.getInstance().getNextScoringState() == State.AMP))
             .onFalse(CommandSwerveDrivetrain.getInstance().getDefaultCommand());
         //driver.A().onTrue(runOnce(() -> Drivetrain.getInstance().setYaw(0 + Robot.rotationOffset)));
         //driver.B().onTrue(runOnce(() -> Drivetrain.getInstance().setPose(new Pose2d(15.18, 1.32, Rotation2d.fromDegrees(0 + Robot.rotationOffset)))));
        // driver.Y().onTrue(runOnce(() -> Drivetrain.getInstance().setPose(new Pose2d(15.07, 5.55, Rotation2d.fromDegrees(0 + Robot.rotationOffset)))));
-        driver.A().onTrue(runOnce(() -> CommandSwerveDrivetrain.getInstance().setYaw(0)));
+        driver.A().onTrue(runOnce(() ->CommandSwerveDrivetrain.getInstance().setYaw(Robot.alliance.get() == Alliance.Red?180:0)));
         driver.leftTrigger().onTrue(new LoadGround())
             .onFalse(new SetIntakeIdle());
         // driver.leftBumper().onTrue(new PrepareToScore())z
@@ -141,8 +141,8 @@ public class Controls {
         operator.Y().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.AMP)));
         operator.Y().toggleOnTrue(new PrepareAmp());
 
-        // operator.POV0().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.AMP_SPEAKER)));
-        // operator.POV0().toggleOnTrue(new PrepareToScore());
+        operator.POV0().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.AMP_SPEAKER)));
+        operator.POV0().toggleOnTrue(new PrepareToScore());
 
         operator.POVMinus90().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.SPIT)));
         operator.POVMinus90().toggleOnTrue(new PrepareToScore());

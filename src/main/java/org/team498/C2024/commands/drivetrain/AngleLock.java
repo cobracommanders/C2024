@@ -24,8 +24,8 @@ public class AngleLock extends Command {
     @Override
     public void execute() {
         drivetrain.driveFieldRelativeAngleLock(new ChassisSpeeds(
-            controller.leftY() * controller.leftY() * controller.leftY() * TunerConstants.kSpeedAt12VoltsMps,
-            controller.leftX() * controller.leftX() * controller.leftX() * TunerConstants.kSpeedAt12VoltsMps,
+            -controller.leftY() * controller.leftY() * controller.leftY() * TunerConstants.kSpeedAt12VoltsMps,
+            -controller.leftX() * controller.leftX() * controller.leftX() * TunerConstants.kSpeedAt12VoltsMps,
             0), 
             this.degrees);
     }
