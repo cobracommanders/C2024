@@ -31,7 +31,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
 
-    private final PIDController rotationController = new PIDController(5, 0, 0);
+    private final PIDController rotationController = new PIDController(5 * 3.14/180.0, 0, 0);
 
     /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
     private final Rotation2d BlueAlliancePerspectiveRotation = Rotation2d.fromDegrees(0);
