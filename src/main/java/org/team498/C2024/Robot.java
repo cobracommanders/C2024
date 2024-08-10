@@ -32,6 +32,7 @@ import org.team498.C2024.subsystems.LED;
 import org.team498.C2024.subsystems.PhotonVision;
 import org.team498.C2024.subsystems.Shooter;
 import org.team498.C2024.subsystems.LED.LEDState;
+import org.team498.lib.LimelightHelpers;
 import org.team498.lib.auto.Auto;
 import org.team498.lib.drivers.Blinkin;
 import org.team498.lib.drivers.Gyro;
@@ -89,6 +90,7 @@ public class Robot extends TimedRobot{
     @Override
     public void robotInit() {
 
+        LimelightHelpers.setLEDMode_ForceOff("limelight");
         NamedCommands.registerCommand("prepareToScore", new PrepareToScore());
         NamedCommands.registerCommand("halfScore", new HalfScore());
         NamedCommands.registerCommand("loadGround", new LoadGround());
