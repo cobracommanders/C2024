@@ -33,15 +33,16 @@ public class AutoAlign extends Command{
     public void execute() {
         //end = true;
         int desiredTagID = Robot.alliance.get() == Alliance.Red ? 7 : 4;
+        
         LimelightResults results = LimelightHelpers.getLatestResults("limelight");
         for (LimelightTarget_Fiducial tag : results.targetingResults.targets_Fiducials) {
             if (tag.fiducialID == desiredTagID) {
-                tx = tag.tx;
+                tx = LimelightHelpers.getTX("limelight");
             } else {
                 tx = 0;
             }
         }
-        if (Math.abs(tx) < 2) {
+        if (Math.abs(tx) < 3) {
             LimelightHelpers.setLEDMode_ForceBlink("limelight");
         }
         // double speeds = 0;
