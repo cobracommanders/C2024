@@ -20,7 +20,6 @@ public class PodiumScore extends SequentialCommandGroup{
                 new WaitCommand(1),
                 new PrepareToScore()
             ),
-            new WaitCommand(2),
             new HalfScore()
             // new WaitCommand(1),
             // new ReturnToIdle()
