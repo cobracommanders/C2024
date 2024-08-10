@@ -18,11 +18,13 @@ import org.team498.C2024.commands.robot.ReturnToIdle;
 import org.team498.C2024.commands.robot.SetIntakeIdle;
 import org.team498.C2024.commands.robot.SetState;
 import org.team498.C2024.commands.robot.loading.LoadGround;
+import org.team498.C2024.commands.robot.scoring.AmpZoneScore;
 import org.team498.C2024.commands.robot.scoring.AutoScore;
 import org.team498.C2024.commands.robot.scoring.HalfScore;
 import org.team498.C2024.commands.robot.scoring.PodiumScore;
 import org.team498.C2024.commands.robot.scoring.PrepareToScore;
 import org.team498.C2024.commands.robot.scoring.SubwooferScore;
+import org.team498.C2024.commands.shooter.SetShooterNextState;
 import org.team498.C2024.subsystems.CommandSwerveDrivetrain;
 import org.team498.C2024.subsystems.Hopper;
 import org.team498.C2024.subsystems.Intake;
@@ -95,10 +97,12 @@ public class Robot extends TimedRobot{
         NamedCommands.registerCommand("halfScore", new HalfScore());
         NamedCommands.registerCommand("loadGround", new LoadGround());
         NamedCommands.registerCommand("setIntakeIdle", new SetIntakeIdle());
-        NamedCommands.registerCommand("subwooferScore", new SubwooferScore(1));
+        NamedCommands.registerCommand("subwooferScore", new SubwooferScore(0.5));
         NamedCommands.registerCommand("setStatePodium", new SetState(State.PODIUM));
         NamedCommands.registerCommand("podiumScore", new PodiumScore());
         NamedCommands.registerCommand("autoAlign", new AutoAlign());
+        NamedCommands.registerCommand("setShooterNextState", new SetShooterNextState());
+        NamedCommands.registerCommand("ampZoneScore", new AmpZoneScore());
 
         // m_robotContainer = new RobotContainer();
         //new PowerDistribution(1, PowerDistribution.ModuleType.kRev).close(); // Enables power distribution logging

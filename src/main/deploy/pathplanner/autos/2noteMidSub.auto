@@ -18,6 +18,18 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "setStatePodium"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setShooterNextState"
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -34,7 +46,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 2.0
+                        "waitTime": 1.5
                       }
                     },
                     {
@@ -44,7 +56,7 @@
                           {
                             "type": "wait",
                             "data": {
-                              "waitTime": 1.5
+                              "waitTime": 1.25
                             }
                           },
                           {
@@ -85,7 +97,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.5
+                        "waitTime": 0.9
                       }
                     },
                     {
@@ -123,7 +135,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 2.0
+                        "waitTime": 1.4
                       }
                     },
                     {
@@ -161,7 +173,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.5
+                        "waitTime": 0.4
                       }
                     },
                     {
@@ -199,7 +211,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 2.0
+                        "waitTime": 2.4
                       }
                     },
                     {
@@ -237,7 +249,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.5
+                        "waitTime": 1.0
                       }
                     },
                     {
@@ -252,7 +264,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "podiumScore"
+                  "name": "ampZoneScore"
                 }
               }
             ]

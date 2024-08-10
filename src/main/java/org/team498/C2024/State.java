@@ -38,7 +38,7 @@ public enum State {
     public enum Shooter {
         IDLE(0, 0, 33),
         SUBWOOFER(3900, 1000, 53.5), //49 //3200
-        AMP(0, 0, 35),
+        AMP(0, 0, 32.5),
         PODIUM(4500, 1000, 34), //37
         CRESCENDO(4500, 1000, 40),
         SOURCE(0, 0, 50),
@@ -51,7 +51,7 @@ public enum State {
         TRAP(3500, 1000, 50),
         SPIT(3800, 1000, 43),
         FRONT_PODIUM(4500, 1000, 31.5),
-        AMP_SPEAKER(4500, 1000, 33),
+        AMP_SPEAKER(4500, 1000, 30),
         OUTREACH(2800, 1000, 55);
 
         public final double speed;

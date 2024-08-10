@@ -24,6 +24,7 @@ public class AutoAlign extends Command{
     boolean end = true;
     private final CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
     private Xbox controller = Robot.controls.driver;
+    private double lastTX = 0;
     public AutoAlign() {
             addRequirements(drivetrain);
         }
@@ -33,13 +34,14 @@ public class AutoAlign extends Command{
     public void execute() {
         //end = true;
         int desiredTagID = Robot.alliance.get() == Alliance.Red ? 7 : 4;
-        
-        LimelightResults results = LimelightHelpers.getLatestResults("limelight");
-        for (LimelightTarget_Fiducial tag : results.targetingResults.targets_Fiducials) {
-            if (tag.fiducialID == desiredTagID) {
-                tx = LimelightHelpers.getTX("limelight");
-            } else {
-                tx = 0;
+        while (tx == lastTX) {
+            LimelightResults results = LimelightHelpers.getLatestResults("limelight");
+            for (LimelightTarget_Fiducial tag : results.targetingResults.targets_Fiducials) {
+                if (tag.fiducialID == desiredTagID) {
+                    tx = tag.tx;
+                } else {
+                    tx = 0;
+                }
             }
         }
         if (Math.abs(tx) < 3) {
@@ -58,7 +60,7 @@ public class AutoAlign extends Command{
             0), 
             CommandSwerveDrivetrain.getInstance().getState().Pose.getRotation().getDegrees() - tx
         );
-
+        lastTX = tx;
 
     }
     // @Override
