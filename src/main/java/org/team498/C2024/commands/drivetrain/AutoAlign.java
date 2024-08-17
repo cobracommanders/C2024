@@ -25,6 +25,7 @@ public class AutoAlign extends Command{
     private final CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
     private Xbox controller = Robot.controls.driver;
     private double lastTX = 0;
+    private double targetAngle = -1000;
     public AutoAlign() {
             addRequirements(drivetrain);
         }
@@ -32,18 +33,22 @@ public class AutoAlign extends Command{
         /// add math code here
     @Override
     public void execute() {
-        //end = true;
-        int desiredTagID = Robot.alliance.get() == Alliance.Red ? 7 : 4;
-        while (tx == lastTX) {
-            LimelightResults results = LimelightHelpers.getLatestResults("limelight");
-            for (LimelightTarget_Fiducial tag : results.targetingResults.targets_Fiducials) {
-                if (tag.fiducialID == desiredTagID) {
-                    tx = tag.tx;
-                } else {
-                    tx = 0;
-                }
+        int desiredTagID = Robot.alliance.get() == Alliance.Red ? 4 : 7;
+        // while (tx == lastTX) {
+        LimelightResults results = LimelightHelpers.getLatestResults("limelight");
+        for (LimelightTarget_Fiducial tag : results.targetingResults.targets_Fiducials) {
+            if (tag.fiducialID == desiredTagID) {
+                tx = tag.tx;
+            } else {
+                tx = 0;
             }
         }
+        if (Math.abs(targetAngle - (drivetrain.getState().Pose.getRotation().getDegrees() - tx)) > 4 || targetAngle == -1000){
+            targetAngle = drivetrain.getState().Pose.getRotation().getDegrees() - tx;
+        }
+        //end = true;
+        
+        // }
         if (Math.abs(tx) < 3) {
             LimelightHelpers.setLEDMode_ForceBlink("limelight");
         }
@@ -54,12 +59,21 @@ public class AutoAlign extends Command{
         //     controller.leftX() * controller.leftX() * controller.leftX() * TunerConstants.kSpeedAt12VoltsMps,
         //     -5 * speeds
         // ));
+        // if (tx == lastTX) {
+        //     drivetrain.driveFieldRelative(new ChassisSpeeds(
+        //         0,
+        //         0,
+        //         0)
+        //     );
+        // } else {
         drivetrain.driveFieldRelativeAngleLock(new ChassisSpeeds(
             -controller.leftY() * controller.leftY() * controller.leftY() * TunerConstants.kSpeedAt12VoltsMps,
             -controller.leftX() * controller.leftX() * controller.leftX() * TunerConstants.kSpeedAt12VoltsMps,
             0), 
-            CommandSwerveDrivetrain.getInstance().getState().Pose.getRotation().getDegrees() - tx
+            targetAngle
         );
+        // }
+        
         lastTX = tx;
 
     }

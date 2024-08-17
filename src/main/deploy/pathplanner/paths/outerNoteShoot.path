@@ -11,7 +11,7 @@
         "x": 2.8204921149726694,
         "y": 6.952457439184077
       },
-      "isLocked": false,
+      "isLocked": true,
       "linkedName": null
     },
     {
@@ -39,7 +39,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -140.67924971638496,
+    "rotation": -150.0,
     "rotateFast": true
   },
   "reversed": false,
