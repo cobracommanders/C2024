@@ -127,15 +127,15 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putNumber("feed flywheel speed", getFeedSpeedRPM());
         SmartDashboard.putNumber("feed flywheel setpoint", feedSpeed);
         
-        SmartDashboard.putNumber("Adjusted Angle", calculateAngle(RobotPosition.distanceToSpeaker()));
-        SmartDashboard.putNumber("Adjusted Velocity", calculateSpeed(RobotPosition.distanceToSpeaker()));
+        SmartDashboard.putNumber("Adjusted Angle", calculateAngle(RobotPosition.speakerDistance()));
+        SmartDashboard.putNumber("Adjusted Velocity", calculateSpeed(RobotPosition.speakerDistance()));
         // This condition will reduce CPU utilization when the motor is not meant to run and save power because 
         // it will not actively deccelerate the wheel
         if (currentState == State.Shooter.CRESCENDO){
-            this.leftSpeed = calculateSpeed(RobotPosition.distanceToSpeaker());
+            this.leftSpeed = calculateSpeed(RobotPosition.speakerDistance());
             this.rightSpeed = this.leftSpeed - ShooterConstants.SPIN_DIFF;
             // this.feedSpeed = currentState.feedSpeed;//feedController.calculate(getFeedSpeedRPM(), feedSpeed) + feedFeedforward.calculate(feedSpeed);
-            this.angle = calculateAngle(RobotPosition.distanceToSpeaker());
+            this.angle = calculateAngle(RobotPosition.speakerDistance());
         }
 
         else if (currentState == State.Shooter.VISION) {

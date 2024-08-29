@@ -5,6 +5,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 import org.team498.C2024.Constants.DrivetrainConstants;
@@ -94,6 +97,24 @@ public class RobotPosition {
         Point speakerPoint = new Point(speakerPose.getX(), speakerPose.getY());
         return distanceTo(speakerPoint, reference);
     }
+    public static double speakerDistance(){
+    NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+    NetworkTableEntry ty = table.getEntry("ty");
+    double targetOffsetAngle_Vertical = ty.getDouble(0.0);
+    // how many degrees back is your limelight rotated from perfectly vertical?
+    double limelightMountAngleDegrees = Shooter.getInstance().getAngle() - 30; 
+    // distance from the center of the Limelight lens to the floor
+    double limelightLensHeightInches = 25; //22.5
+    // distance from the target to the floor
+    double goalHeightInches = 51.875; 
+    double angleToGoalDegrees = limelightMountAngleDegrees + targetOffsetAngle_Vertical;
+    double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
+    //calculate distance
+    double distanceFromLimelightToGoalInches = (goalHeightInches - limelightLensHeightInches) / Math.tan(angleToGoalRadians);
+
+    return (distanceFromLimelightToGoalInches);
+    }
+
 
     private static Transform2d getVelocity(double tof) {
         var currentSpeeds = CommandSwerveDrivetrain.getInstance().getState().speeds;

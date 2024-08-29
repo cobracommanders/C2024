@@ -96,7 +96,7 @@ public enum State {
 
     //Sets Positions for Intake
     public enum Intake {
-        IDLE(1.96), //1.96
+        IDLE(0), //1.96
         INTAKE(0.12),
         // AUTO_INTAKE(0.7),
         OUTTAKE(1.96);
