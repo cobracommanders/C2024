@@ -13,6 +13,9 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import org.team498.C2024.Constants.DrivetrainConstants;
 import org.team498.C2024.subsystems.CommandSwerveDrivetrain;
 import org.team498.C2024.subsystems.Shooter;
+import org.team498.lib.LimelightHelpers;
+import org.team498.lib.LimelightHelpers.LimelightResults;
+import org.team498.lib.LimelightHelpers.LimelightTarget_Fiducial;
 import org.team498.lib.field.BaseRegion;
 import org.team498.lib.field.Point;
 import org.team498.lib.util.PoseUtil;
@@ -23,7 +26,7 @@ public class RobotPosition {
     //private static final CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
     private static final Shooter shooter = Shooter.getInstance();
     public static final double scoringOffset = Units.inchesToMeters((DrivetrainConstants.ROBOT_WIDTH / 2) + 10);
-
+    
     public static final double defaultTOF = 0.4;
 
     public static boolean inRegion(BaseRegion region) {
@@ -98,21 +101,33 @@ public class RobotPosition {
         return distanceTo(speakerPoint, reference);
     }
     public static double speakerDistance(){
-    NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-    NetworkTableEntry ty = table.getEntry("ty");
-    double targetOffsetAngle_Vertical = ty.getDouble(0.0);
-    // how many degrees back is your limelight rotated from perfectly vertical?
-    double limelightMountAngleDegrees = Shooter.getInstance().getAngle() - 30; 
-    // distance from the center of the Limelight lens to the floor
-    double limelightLensHeightInches = 25; //22.5
-    // distance from the target to the floor
-    double goalHeightInches = 51.875; 
-    double angleToGoalDegrees = limelightMountAngleDegrees + targetOffsetAngle_Vertical;
-    double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
-    //calculate distance
-    double distanceFromLimelightToGoalInches = (goalHeightInches - limelightLensHeightInches) / Math.tan(angleToGoalRadians);
+        int llToShooterAxisInches = 15;
+        double shooterAxisHeightInches = 12.5;
+        double ty = 0;
+        int desiredTagID = Robot.alliance.get() == Alliance.Red ? 4 : 7;
+        // while (tx == lastTX) {
+        LimelightResults results = LimelightHelpers.getLatestResults("limelight");
+        for (LimelightTarget_Fiducial tag : results.targetingResults.targets_Fiducials) {
+            if (tag.fiducialID == desiredTagID) {
+                ty = tag.ty;
+                break;
+            } else {
+                ty = 0;
+            }
+        }
+        double targetOffsetAngle_Vertical = ty;
+        // how many degrees back is your limelight rotated from perfectly vertical?
+        double limelightMountAngleDegrees = Shooter.getInstance().getAngle() - 30; 
+        // distance from the center of the Limelight lens to the floor
+        double limelightLensHeightInches = Math.sin(Units.degreesToRadians(Shooter.getInstance().getAngle())) * llToShooterAxisInches + shooterAxisHeightInches; //22.5
+        // distance from the target to the floor
+        double goalHeightInches = 51.875; 
+        double angleToGoalDegrees = limelightMountAngleDegrees + targetOffsetAngle_Vertical;
+        double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
+        //calculate distance
+        double distanceFromLimelightToGoalInches = (goalHeightInches - limelightLensHeightInches) / Math.tan(angleToGoalRadians);
 
-    return (distanceFromLimelightToGoalInches);
+        return Units.inchesToMeters(distanceFromLimelightToGoalInches);
     }
 
 

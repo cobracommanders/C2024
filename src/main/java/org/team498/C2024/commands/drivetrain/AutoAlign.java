@@ -39,6 +39,7 @@ public class AutoAlign extends Command{
         for (LimelightTarget_Fiducial tag : results.targetingResults.targets_Fiducials) {
             if (tag.fiducialID == desiredTagID) {
                 tx = tag.tx;
+                break;
             } else {
                 tx = 0;
             }
