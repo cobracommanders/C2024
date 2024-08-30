@@ -16,7 +16,8 @@ public enum State {
     SPIT(Shooter.SPIT, Hopper.REVERSE, Intake.INTAKE, IntakeRollers.INTAKE, Kicker.REVERSE),
     FRONT_PODIUM(Shooter.FRONT_PODIUM, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.REVERSE),
     AMP_SPEAKER(Shooter.AMP_SPEAKER, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.REVERSE),
-    OUTREACH(Shooter.OUTREACH, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.REVERSE);
+    OUTREACH(Shooter.OUTREACH, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.REVERSE),
+    OUTER_STAGE(Shooter.OUTER_STAGE, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.REVERSE);
 
 
     public final Shooter shooter;
@@ -52,7 +53,8 @@ public enum State {
         SPIT(3800, 1000, 43),
         FRONT_PODIUM(4500, 1000, 31.5),
         AMP_SPEAKER(3500, 1000, 32.5),
-        OUTREACH(2800, 1000, 55);
+        OUTREACH(2800, 1000, 55),
+        OUTER_STAGE(4500, 1000, 29);
 
         public final double speed;
         public final double feedSpeed;

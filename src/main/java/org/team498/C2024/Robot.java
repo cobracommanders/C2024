@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 import org.team498.C2024.commands.drivetrain.AutoAlign;
+import org.team498.C2024.commands.intake.SetIntakeRollerState;
+import org.team498.C2024.commands.intake.SetIntakeRollersNextState;
 import org.team498.C2024.commands.robot.ReturnToIdle;
 import org.team498.C2024.commands.robot.SetIntakeIdle;
 import org.team498.C2024.commands.robot.SetState;
@@ -23,6 +25,7 @@ import org.team498.C2024.commands.robot.scoring.AutoScore;
 import org.team498.C2024.commands.robot.scoring.HalfScore;
 import org.team498.C2024.commands.robot.scoring.PodiumScore;
 import org.team498.C2024.commands.robot.scoring.PrepareToScore;
+import org.team498.C2024.commands.robot.scoring.StageScore;
 import org.team498.C2024.commands.robot.scoring.SubwooferScore;
 import org.team498.C2024.commands.shooter.SetShooterNextState;
 import org.team498.C2024.subsystems.CommandSwerveDrivetrain;
@@ -80,7 +83,7 @@ public class Robot extends TimedRobot{
     //     //new LongTaxi(),
     //     //new Spit(),
     //     //new Troll(),
-    //     //new OuterWingTest(),
+    //     //new OuterWingTest(),rad
     //     //new TestPathing(),
     //     //new WingFacingSpeaker(),
     //     //new OuterWing(),
@@ -96,13 +99,16 @@ public class Robot extends TimedRobot{
         NamedCommands.registerCommand("prepareToScore", new PrepareToScore());
         NamedCommands.registerCommand("halfScore", new HalfScore());
         NamedCommands.registerCommand("loadGround", new LoadGround());
-        NamedCommands.registerCommand("setIntakeIdle", new SetIntakeIdle());
+        NamedCommands.registerCommand("setIntakeIdle", new SetIntakeRollerState(State.IntakeRollers.IDLE).andThen(new SetIntakeRollersNextState()));
         NamedCommands.registerCommand("subwooferScore", new SubwooferScore(0.5));
         NamedCommands.registerCommand("setStatePodium", new SetState(State.PODIUM));
         NamedCommands.registerCommand("podiumScore", new PodiumScore());
         NamedCommands.registerCommand("autoAlign", new AutoAlign());
         NamedCommands.registerCommand("setShooterNextState", new SetShooterNextState());
         NamedCommands.registerCommand("ampZoneScore", new AmpZoneScore());
+        NamedCommands.registerCommand("setStateOuterStage", new SetState(State.OUTER_STAGE));
+        NamedCommands.registerCommand("stageScore", new StageScore());
+
 
         // m_robotContainer = new RobotContainer();
         //new PowerDistribution(1, PowerDistribution.ModuleType.kRev).close(); // Enables power distribution logging
