@@ -105,7 +105,7 @@ public final class Constants {
     }
 
     public static final class IntakeConstants {
-        public static final double P = 0.51;//0.2
+        public static final double P = 0.35;//0.2
         public static final double I = 0;
         public static final double D = 0.038; //0.01 //0.038
         public static final double S = 0;
@@ -114,7 +114,7 @@ public final class Constants {
         public static final double dV = 0;//0.2 / 1800.0; // 20% power per 6 m/s
         public static final double rV = 0;//0.3 / (3 * Math.PI); // 50% power per 3pi r/s (120 deg/s)
 
-        public static final double ENCODER_OFFSET = 8.29 + 1.75 + 2.084;
+        public static final double ENCODER_OFFSET = 8.29 + 1.75 + 2.084 - 0.6;
     }
 
     public static final class HopperConstants {
