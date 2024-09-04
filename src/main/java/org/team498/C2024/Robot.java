@@ -45,6 +45,8 @@ import java.util.List;
 import java.util.Optional;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import dev.doglog.DogLog;
+import dev.doglog.DogLogOptions;
 
 
 public class Robot extends TimedRobot{
@@ -244,7 +246,7 @@ public class Robot extends TimedRobot{
     @Override
     public void teleopPeriodic() {
         if (Hopper.getInstance().getBackBeamBreak()){
-            controls.driver.rumble(0.05);
+            controls.driver.rumble(0.1);
             controls.operator.rumble(0.05);
         }
         else {

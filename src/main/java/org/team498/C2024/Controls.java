@@ -123,7 +123,7 @@ public class Controls {
         // operator.Y().toggleOnTrue(new SetState(State.AMP).andThen(new SetKickerNextState()));
         // operator.X().toggleOnTrue(new SetState(State.SUBWOOFER).andThen(new SetKickerNextState()));
         // operator.rightBumper().toggleOnTrue(new SetState(State.IDLE).andThen(new SetKickerNextState()));
-        operator.back().onTrue(new SetShooterState(State.Shooter.CLIMB_UP)).onFalse(new SetShooterState(State.Shooter.CLIMB_DOWN));
+        // operator.back().onTrue(new SetShooterState(State.Shooter.CLIMB_UP)).onFalse(new SetShooterState(State.Shooter.CLIMB_DOWN));
 
 
 

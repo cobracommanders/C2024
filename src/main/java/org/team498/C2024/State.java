@@ -40,7 +40,7 @@ public enum State {
         IDLE(0, 0, 33),
         SUBWOOFER(3900, 1000, 53.5), //49 //3200
         AMP(0, 0, 32.5),
-        PODIUM(3500, 1000, 37), //37
+        PODIUM(3300, 1000, 38), //37
         CRESCENDO(4500, 1000, 40),
         SOURCE(0, 0, 50),
         PREPARE(4500, 1000, 40),
@@ -51,8 +51,8 @@ public enum State {
         CLIMB_DOWN(0, 0, 30),
         TRAP(3500, 1000, 50),
         SPIT(3800, 1000, 43),
-        FRONT_PODIUM(4500, 1000, 31.5),
-        AMP_SPEAKER(3500, 1000, 32.5),
+        FRONT_PODIUM(3300, 1000, 32.5), //31.5
+        AMP_SPEAKER(3300, 1000, 32),
         OUTREACH(2800, 1000, 55),
         OUTER_STAGE(4500, 1000, 29);
 
