@@ -76,8 +76,9 @@ public class Controls {
   }
 
     public void configureDriverCommands() {
-        driver.rightBumper().onTrue(new SlowDrive(DrivetrainConstants.SLOW_SPEED_SCALAR))
-            .onFalse(new SlowDrive(DrivetrainConstants.FULL_SPEED_SCALAR));
+        // driver.rightBumper().onTrue(new SlowDrive(DrivetrainConstants.SLOW_SPEED_SCALAR))
+        //     .onFalse(new SlowDrive(DrivetrainConstants.FULL_SPEED_SCALAR));
+        driver.rightBumper().onTrue(runOnce(() ->CommandSwerveDrivetrain.getInstance().setYaw(Robot.alliance.get() == Alliance.Red?180:0)));
         driver.leftBumper().onTrue(new ConditionalCommand(
                 new ConditionalCommand(
                     new AngleLock(-90),
@@ -88,8 +89,8 @@ public class Controls {
             .onFalse(CommandSwerveDrivetrain.getInstance().getDefaultCommand());
         //driver.A().onTrue(runOnce(() -> Drivetrain.getInstance().setYaw(0 + Robot.rotationOffset)));
         //driver.B().onTrue(runOnce(() -> Drivetrain.getInstance().setPose(new Pose2d(15.18, 1.32, Rotation2d.fromDegrees(0 + Robot.rotationOffset)))));
-       // driver.Y().onTrue(runOnce(() -> Drivetrain.getInstance().setPose(new Pose2d(15.07, 5.55, Rotation2d.fromDegrees(0 + Robot.rotationOffset)))));
-        driver.A().onTrue(runOnce(() ->CommandSwerveDrivetrain.getInstance().setYaw(Robot.alliance.get() == Alliance.Red?180:0)));
+        // driver.Y().onTrue(runOnce(() -> Drivetrain.getInstance().setPose(new Pose2d(15.07, 5.55, Rotation2d.fromDegrees(0 + Robot.rotationOffset)))));
+        // driver.A().onTrue(runOnce(() ->CommandSwerveDrivetrain.getInstance().setYaw(Robot.alliance.get() == Alliance.Red?180:0)));
         driver.leftTrigger().onTrue(new LoadGround())
             .onFalse(new SetIntakeIdle());
         // driver.leftBumper().onTrue(new PrepareToScore())z
