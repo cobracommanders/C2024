@@ -9,7 +9,7 @@ public class SetHopperNextState extends InstantCommand {
     private final Hopper hopper = Hopper.getInstance();
 
     public SetHopperNextState() {
-        addRequirements(hopper);
+        //addRequirements(hopper);
     }
 
     @Override

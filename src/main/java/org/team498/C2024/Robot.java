@@ -1,6 +1,7 @@
 package org.team498.C2024;
 
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -166,6 +167,7 @@ public class Robot extends TimedRobot{
         }
         // blinkin.setColor(BlinkinColor.BREATH_RED);
         SmartDashboard.putBoolean("Shooter Aligned", Shooter.getInstance().atSetpoint() && Shooter.getInstance().shooterState() && !Hopper.getInstance().isPidEnabled());
+        SmartDashboard.putNumber("Limelight to speaker", RobotPosition.speakerDistance());
         // if (RobotState.isEnabled()) {
         //     if(Shooter.getInstance().atSetpoint() && Shooter.getInstance().shooterState() && !Hopper.getInstance().isPidEnabled()) {
         //         blinkin.setColor(BlinkinColor.SOLID_DARK_GREEN);

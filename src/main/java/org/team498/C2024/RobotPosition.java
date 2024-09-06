@@ -9,6 +9,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.team498.C2024.Constants.DrivetrainConstants;
 import org.team498.C2024.subsystems.CommandSwerveDrivetrain;
@@ -117,7 +118,7 @@ public class RobotPosition {
         }
         double targetOffsetAngle_Vertical = ty;
         // how many degrees back is your limelight rotated from perfectly vertical?
-        double limelightMountAngleDegrees = Shooter.getInstance().getAngle() - 30; 
+        double limelightMountAngleDegrees = Shooter.getInstance().getAngle() - 30;
         // distance from the center of the Limelight lens to the floor
         double limelightLensHeightInches = Math.sin(Units.degreesToRadians(Shooter.getInstance().getAngle())) * llToShooterAxisInches + shooterAxisHeightInches; //22.5
         // distance from the target to the floor
@@ -126,7 +127,7 @@ public class RobotPosition {
         double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
         //calculate distance
         double distanceFromLimelightToGoalInches = (goalHeightInches - limelightLensHeightInches) / Math.tan(angleToGoalRadians);
-
+        
         return Units.inchesToMeters(distanceFromLimelightToGoalInches);
     }
 
