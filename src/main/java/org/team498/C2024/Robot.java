@@ -1,6 +1,7 @@
 package org.team498.C2024;
 
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -101,8 +102,8 @@ public class Robot extends TimedRobot{
         NamedCommands.registerCommand("prepareToScore", new PrepareToScore());
         NamedCommands.registerCommand("halfScore", new HalfScore());
         NamedCommands.registerCommand("loadGround", new LoadGround());
-        NamedCommands.registerCommand("setIntakeIdle", new SetIntakeRollerState(State.IntakeRollers.IDLE).andThen(new SetIntakeRollersNextState()));
-        NamedCommands.registerCommand("subwooferScore", new SubwooferScore(0.5));
+        NamedCommands.registerCommand("setIntakeIdle", new SetIntakeIdle());
+        NamedCommands.registerCommand("subwooferScore", new SubwooferScore(0.65));
         NamedCommands.registerCommand("setStatePodium", new SetState(State.PODIUM));
         NamedCommands.registerCommand("podiumScore", new PodiumScore());
         NamedCommands.registerCommand("autoAlign", new AutoAlign());
@@ -166,6 +167,7 @@ public class Robot extends TimedRobot{
         }
         // blinkin.setColor(BlinkinColor.BREATH_RED);
         SmartDashboard.putBoolean("Shooter Aligned", Shooter.getInstance().atSetpoint() && Shooter.getInstance().shooterState() && !Hopper.getInstance().isPidEnabled());
+        SmartDashboard.putNumber("Limelight to speaker", RobotPosition.speakerDistance());
         // if (RobotState.isEnabled()) {
         //     if(Shooter.getInstance().atSetpoint() && Shooter.getInstance().shooterState() && !Hopper.getInstance().isPidEnabled()) {
         //         blinkin.setColor(BlinkinColor.SOLID_DARK_GREEN);

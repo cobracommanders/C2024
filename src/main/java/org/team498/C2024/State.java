@@ -40,8 +40,8 @@ public enum State {
         IDLE(0, 0, 33),
         SUBWOOFER(3900, 1000, 53.5), //49 //3200
         AMP(0, 0, 32.5),
-        PODIUM(3300, 1000, 38), //37
-        CRESCENDO(4500, 1000, 40),
+        PODIUM(3500, 1000, 38), //38
+        CRESCENDO(3500, 1000, 40),
         SOURCE(0, 0, 50),
         PREPARE(4500, 1000, 40),
         CANCEL_AMP(0, 0, 35),
@@ -99,7 +99,7 @@ public enum State {
     //Sets Positions for Intake
     public enum Intake {
         IDLE(1.96), //1.96
-        INTAKE(0.12),
+        INTAKE(0.4),
         // AUTO_INTAKE(0.7),
         OUTTAKE(1.96);
 
