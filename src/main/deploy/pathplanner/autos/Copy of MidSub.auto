@@ -34,12 +34,6 @@
           "data": {
             "commands": [
               {
-                "type": "path",
-                "data": {
-                  "pathName": "midSub_Podium"
-                }
-              },
-              {
                 "type": "sequential",
                 "data": {
                   "commands": [
@@ -85,12 +79,6 @@
           "data": {
             "commands": [
               {
-                "type": "path",
-                "data": {
-                  "pathName": "podiumShot"
-                }
-              },
-              {
                 "type": "deadline",
                 "data": {
                   "commands": [
@@ -122,12 +110,6 @@
           "type": "parallel",
           "data": {
             "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "podiumMidNote"
-                }
-              },
               {
                 "type": "deadline",
                 "data": {
@@ -161,12 +143,6 @@
           "data": {
             "commands": [
               {
-                "type": "path",
-                "data": {
-                  "pathName": "podiumShot"
-                }
-              },
-              {
                 "type": "deadline",
                 "data": {
                   "commands": [
@@ -199,12 +175,6 @@
           "data": {
             "commands": [
               {
-                "type": "path",
-                "data": {
-                  "pathName": "podiumOuterNote"
-                }
-              },
-              {
                 "type": "deadline",
                 "data": {
                   "commands": [
@@ -236,12 +206,6 @@
           "type": "sequential",
           "data": {
             "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "outerNoteShoot"
-                }
-              },
               {
                 "type": "deadline",
                 "data": {

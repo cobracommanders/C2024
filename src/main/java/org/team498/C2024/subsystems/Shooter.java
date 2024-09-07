@@ -115,7 +115,7 @@ public class Shooter extends SubsystemBase {
     public void configMotors() {
         angleMotor.setNeutralMode(NeutralModeValue.Brake);
     }
-
+    double llSavedAngle = State.Shooter.PODIUM.angle;
     // This method will run every 10-20 milliseconds (about 50-100 times in one second)
     @Override
     public void periodic() {
@@ -132,10 +132,15 @@ public class Shooter extends SubsystemBase {
         // This condition will reduce CPU utilization when the motor is not meant to run and save power because 
         // it will not actively deccelerate the wheel
         if (currentState == State.Shooter.CRESCENDO){
+            double expectedAngle = calculateAngle(RobotPosition.speakerDistance());
+            if (expectedAngle > 25 && Math.abs(expectedAngle - llSavedAngle) < 5) {
+                llSavedAngle = expectedAngle;
+            }
+            this.angle = llSavedAngle;
             this.leftSpeed = calculateSpeed(RobotPosition.speakerDistance());
             this.rightSpeed = this.leftSpeed - ShooterConstants.SPIN_DIFF;
             // this.feedSpeed = currentState.feedSpeed;//feedController.calculate(getFeedSpeedRPM(), feedSpeed) + feedFeedforward.calculate(feedSpeed);
-            this.angle = calculateAngle(RobotPosition.speakerDistance());
+            // this.angle = calculateAngle(RobotPosition.speakerDistance());
         }
 
         else if (currentState == State.Shooter.VISION) {

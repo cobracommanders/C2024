@@ -102,8 +102,8 @@ public class Robot extends TimedRobot{
         NamedCommands.registerCommand("prepareToScore", new PrepareToScore());
         NamedCommands.registerCommand("halfScore", new HalfScore());
         NamedCommands.registerCommand("loadGround", new LoadGround());
-        NamedCommands.registerCommand("setIntakeIdle", new SetIntakeRollerState(State.IntakeRollers.IDLE).andThen(new SetIntakeRollersNextState()));
-        NamedCommands.registerCommand("subwooferScore", new SubwooferScore(0.5));
+        NamedCommands.registerCommand("setIntakeIdle", new SetIntakeIdle());
+        NamedCommands.registerCommand("subwooferScore", new SubwooferScore(0.65));
         NamedCommands.registerCommand("setStatePodium", new SetState(State.PODIUM));
         NamedCommands.registerCommand("podiumScore", new PodiumScore());
         NamedCommands.registerCommand("autoAlign", new AutoAlign());
