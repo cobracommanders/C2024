@@ -39,7 +39,7 @@ import java.util.function.Supplier;
 public class Controls {
     private double MaxSpeed = TunerConstants.kSpeedAt12VoltsMps; // Initial max is true top speed
     private final double TurtleSpeed = 0.1; // Reduction in speed from Max Speed, 0.1 = 10%
-    private final double MaxAngularRate = Math.PI * 1.5; // .75 rotation per second max angular velocity.  Adjust for max turning rate speed.
+    private final double MaxAngularRate = Math.PI * 3.5; // .75 rotation per second max angular velocity.  Adjust for max turning rate speed.
     private final double TurtleAngularRate = Math.PI * 0.5; // .75 rotation per second max angular velocity.  Adjust for max turning rate speed.
     private double AngularRate = MaxAngularRate; // This will be updated when turtle and reset to MaxAngularRate
 
@@ -128,7 +128,7 @@ public class Controls {
 
 
 
-        operator.X().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.PODIUM)));
+        operator.X().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.FRONT_PODIUM)));
         operator.X().toggleOnTrue(new PrepareToScore());
 
         //operator.A().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.SUBWOOFER)));
@@ -137,7 +137,7 @@ public class Controls {
 
         // operator.B().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.PODIUM)));
         // operator.B().toggleOnTrue(new PrepareToScore());
-        operator.B().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.FRONT_PODIUM)));
+        operator.B().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.PODIUM)));
         operator.B().toggleOnTrue(new PrepareToScore());
 
         operator.Y().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.AMP)));
