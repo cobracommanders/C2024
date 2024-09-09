@@ -51,7 +51,7 @@ public enum State {
         CLIMB_DOWN(0, 0, 30),
         TRAP(3500, 1000, 50),
         SPIT(3800, 1000, 43),
-        FRONT_PODIUM(4000, 1000, 32.5), //31.5
+        FRONT_PODIUM(4000, 1000, 33), //31.5
         AMP_SPEAKER(3300, 1000, 32),
         OUTREACH(2800, 1000, 55),
         OUTER_STAGE(4500, 1000, 29);
