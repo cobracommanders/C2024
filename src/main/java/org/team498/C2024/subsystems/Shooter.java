@@ -18,6 +18,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -62,6 +63,7 @@ public class Shooter extends SubsystemBase {
     private State.Shooter currentState;
 
     private boolean isActivated = true;
+    private TimeInterpolatableBuffer<Double> angleHistory = TimeInterpolatableBuffer.createBuffer(1.5);
     
     // Constructor: Configure Motor Controller settings and  
     // Instantiate all objects (assign values to every variable and object)
@@ -263,6 +265,9 @@ public class Shooter extends SubsystemBase {
      */
     public double getAngle() {
         return angleEncoder.getAbsolutePosition().getValueAsDouble() * 360;
+    }
+    public double getAngle(double timestamp) {
+        return angleHistory.getSample(timestamp).orElseGet(this::getAngle);
     }
     public double getLeftSpeedMPS() {
         return leftMotor.getVelocity().getValueAsDouble() * ShooterConstants.GEAR_RATIO * ShooterConstants.CIRCUMFERENCE;
