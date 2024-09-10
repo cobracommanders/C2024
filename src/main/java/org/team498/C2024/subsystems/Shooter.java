@@ -20,6 +20,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 /*
@@ -63,7 +64,7 @@ public class Shooter extends SubsystemBase {
     private State.Shooter currentState;
 
     private boolean isActivated = true;
-    private TimeInterpolatableBuffer<Double> angleHistory = TimeInterpolatableBuffer.createBuffer(1.5);
+    public TimeInterpolatableBuffer<Double> angleHistory = TimeInterpolatableBuffer.createDoubleBuffer(1.5);
     
     // Constructor: Configure Motor Controller settings and  
     // Instantiate all objects (assign values to every variable and object)
@@ -133,6 +134,7 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putNumber("Adjusted Velocity", calculateSpeed(RobotPosition.speakerDistance()));
         // This condition will reduce CPU utilization when the motor is not meant to run and save power because 
         // it will not actively deccelerate the wheel
+        angleHistory.addSample(Timer.getFPGATimestamp(), getAngle());
         if (currentState == State.Shooter.CRESCENDO){
             double expectedAngle = calculateAngle(RobotPosition.speakerDistance());
             if (expectedAngle > 25 && Math.abs(expectedAngle - llSavedAngle) < 5) {

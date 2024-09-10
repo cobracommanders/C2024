@@ -107,12 +107,17 @@ public class RobotPosition {
         return distanceTo(speakerPoint, reference);
     }
     public static double speakerDistance(){
+        LimelightResults results = LimelightHelpers.getLatestResults("limelight");
+        double limelightLatency = results.targetingResults.latency_pipeline + results.targetingResults.latency_capture + results.targetingResults.latency_jsonParse;
+        limelightLatency = limelightLatency / 1000.0;  // Limelight publishes latency in ms, we need it in seconds.
+        double limelightTimestamp = Timer.getFPGATimestamp() - limelightLatency;
+        double shooterAngle = Shooter.getInstance().getAngle(limelightTimestamp);
+
         int llToShooterAxisInches = 15;
         double shooterAxisHeightInches = 12.5;
         double ty = 0;
         int desiredTagID = Robot.alliance.get() == Alliance.Red ? 4 : 7;
         // while (tx == lastTX) {
-        LimelightResults results = LimelightHelpers.getLatestResults("limelight");
         for (LimelightTarget_Fiducial tag : results.targetingResults.targets_Fiducials) {
             if (tag.fiducialID == desiredTagID) {
                 ty = tag.ty;
@@ -123,7 +128,7 @@ public class RobotPosition {
         }
         double targetOffsetAngle_Vertical = ty;
         // how many degrees back is your limelight rotated from perfectly vertical?
-        double limelightMountAngleDegrees = (Shooter.getInstance().getAngle() - 30);
+        double limelightMountAngleDegrees = (shooterAngle - 30);
         // distance from the center of the Limelight lens to the floor
         double limelightLensHeightInches = Math.sin(Units.degreesToRadians(Shooter.getInstance().getAngle())) * llToShooterAxisInches + shooterAxisHeightInches; //22.5
         // distance from the target to the floor
