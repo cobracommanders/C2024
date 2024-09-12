@@ -137,7 +137,7 @@ public class Shooter extends SubsystemBase {
         angleHistory.addSample(Timer.getFPGATimestamp(), getAngle());
         if (currentState == State.Shooter.CRESCENDO){
             double expectedAngle = calculateAngle(RobotPosition.speakerDistance());
-            if (expectedAngle > 25 && Math.abs(expectedAngle - llSavedAngle) < 5) {
+            if (expectedAngle > 25) {
                 llSavedAngle = expectedAngle;
             }
             this.angle = llSavedAngle;

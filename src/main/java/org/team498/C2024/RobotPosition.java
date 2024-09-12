@@ -130,7 +130,7 @@ public class RobotPosition {
         // how many degrees back is your limelight rotated from perfectly vertical?
         double limelightMountAngleDegrees = (shooterAngle - 30);
         // distance from the center of the Limelight lens to the floor
-        double limelightLensHeightInches = Math.sin(Units.degreesToRadians(Shooter.getInstance().getAngle())) * llToShooterAxisInches + shooterAxisHeightInches; //22.5
+        double limelightLensHeightInches = Math.sin(Units.degreesToRadians(shooterAngle * llToShooterAxisInches + shooterAxisHeightInches)); //22.5
         // distance from the target to the floor
         double goalHeightInches = 51.875; 
         double angleToGoalDegrees = limelightMountAngleDegrees + targetOffsetAngle_Vertical;
