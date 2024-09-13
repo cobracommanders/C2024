@@ -1,52 +1,16 @@
-{
-  "version": 1.0,
-  "startingPose": {
-    "position": {
-      "x": 1.51,
-      "y": 5.52
-    },
-    "rotation": 180.0
-  },
-  "command": {
-    "type": "sequential",
-    "data": {
-      "commands": [
-        {
-          "type": "named",
-          "data": {
-            "name": "subwooferScore"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "setStatePodium"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "setShooterNextState"
-          }
-        },
-        {
-          "type": "parallel",
+"type": "parallel",
           "data": {
             "commands": [
               {
+                "type": "path",
+                "data": {
+                  "pathName": "midSub_Podium"
+                }
+              },
+              {
                 "type": "sequential",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 1.5
-                      }
-                    },
-                    {
-                      "type": "deadline",
-                      "data": {
-                        "commands": [
+
                           {
                             "type": "wait",
                             "data": {
@@ -54,66 +18,33 @@
                             }
                           },
                           {
-                            "type": "named",
-                            "data": {
-                              "name": "loadGround"
-                            }
-                          }
-                        ]
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "setIntakeIdle"
-          }
-        },
-        {
+
           "type": "sequential",
           "data": {
             "commands": [
               {
-                "type": "deadline",
+                "type": "path",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.9
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "autoAlign"
-                      }
-                    }
-                  ]
+                  "pathName": "podiumShot"
                 }
               },
               {
-                "type": "named",
+                "type": "deadline",
                 "data": {
-                  "name": "podiumScore"
-                }
-              }
-            ]
-          }
-        },
-        {
+
           "type": "parallel",
           "data": {
             "commands": [
               {
+                "type": "path",
+                "data": {
+                  "pathName": "podiumMidNote"
+                }
+              },
+              {
                 "type": "deadline",
                 "data": {
-                  "commands": [
+
                     {
                       "type": "wait",
                       "data": {
@@ -121,63 +52,33 @@
                       }
                     },
                     {
-                      "type": "named",
-                      "data": {
-                        "name": "loadGround"
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "setIntakeIdle"
-          }
-        },
-        {
+
           "type": "sequential",
           "data": {
             "commands": [
               {
-                "type": "deadline",
+                "type": "path",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.4
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "autoAlign"
-                      }
-                    }
-                  ]
+                  "pathName": "podiumShot"
                 }
               },
               {
-                "type": "named",
+                "type": "deadline",
                 "data": {
-                  "name": "podiumScore"
-                }
-              }
-            ]
-          }
-        },
-        {
+
           "type": "parallel",
           "data": {
             "commands": [
               {
+                "type": "path",
+                "data": {
+                  "pathName": "podiumOuterNote"
+                }
+              },
+              {
                 "type": "deadline",
                 "data": {
-                  "commands": [
+
                     {
                       "type": "wait",
                       "data": {
@@ -185,58 +86,16 @@
                       }
                     },
                     {
-                      "type": "named",
-                      "data": {
-                        "name": "loadGround"
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "setIntakeIdle"
-          }
-        },
-        {
+
           "type": "sequential",
           "data": {
             "commands": [
               {
-                "type": "deadline",
+                "type": "path",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 1.0
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "autoAlign"
-                      }
-                    }
-                  ]
+                  "pathName": "outerNoteShoot"
                 }
               },
               {
-                "type": "named",
+                "type": "deadline",
                 "data": {
-                  "name": "ampZoneScore"
-                }
-              }
-            ]
-          }
-        }
-      ]
-    }
-  },
-  "folder": null,
-  "choreoAuto": false
-}
