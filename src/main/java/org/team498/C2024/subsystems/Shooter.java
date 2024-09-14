@@ -64,7 +64,7 @@ public class Shooter extends SubsystemBase {
     private State.Shooter currentState;
 
     private boolean isActivated = true;
-    public TimeInterpolatableBuffer<Double> angleHistory = TimeInterpolatableBuffer.createDoubleBuffer(1.5);
+    public TimeInterpolatableBuffer<Double> angleHistory = TimeInterpolatableBuffer.createDoubleBuffer(3);
     
     // Constructor: Configure Motor Controller settings and  
     // Instantiate all objects (assign values to every variable and object)

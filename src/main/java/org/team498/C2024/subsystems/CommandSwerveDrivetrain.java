@@ -2,7 +2,10 @@ package org.team498.C2024.subsystems;
 
 import static org.team498.C2024.Constants.DrivetrainConstants.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED;
 
+import java.util.Optional;
 import java.util.function.Supplier;
+
+import org.team498.C2024.subsystems.PhotonVision.TimedPose;
 
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
@@ -14,11 +17,13 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier; 
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -33,6 +38,8 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
+    public TimeInterpolatableBuffer<Double> headingHistory = TimeInterpolatableBuffer.createDoubleBuffer(3);
+
 
     private final PIDController rotationController = new PIDController(5 * 3.14/180.0, 0, 0);
 
@@ -89,6 +96,9 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         this.seedFieldRelative(new Pose2d(getState().Pose.getTranslation(), Rotation2d.fromDegrees(angle)));
         this.m_pigeon2.setYaw(angle);
     }
+    public double getHeading(double timestamp) {
+        return headingHistory.getSample(timestamp).orElse((double) 0);
+    }
 
     public void driveRobotRelative(ChassisSpeeds speeds) {
         this.setControl(new SwerveRequest.RobotCentric().withVelocityX(speeds.vxMetersPerSecond).withVelocityY(speeds.vyMetersPerSecond).withRotationalRate(speeds.omegaRadiansPerSecond));        
@@ -136,6 +146,11 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
                 hasAppliedOperatorPerspective = true;
             });
         }
+        // Optional<TimedPose> timedPose = PhotonVision.getInstance().getEstimatedPose();
+        // if (timedPose.isPresent()) {
+        //     this.addVisionMeasurement(timedPose.get().pose, timedPose.get().timeStamp);
+        // }
+        headingHistory.addSample(Timer.getFPGATimestamp(), this.getState().Pose.getRotation().getDegrees());
     }
     @Override
     public void seedFieldRelative() {

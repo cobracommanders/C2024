@@ -128,6 +128,10 @@ public class PhotonVision {
             this.pose = pose;
             this.timeStamp = timeStamp;
         }
+
+        // public EstimatedRobotPose toEstimatedRobotPose() {
+        //     return new EstimatedRobotPose(null, timeStamp, null, null)
+        // }
     }
 
     private static PhotonVision instance;
