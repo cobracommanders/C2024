@@ -126,7 +126,7 @@ public class RobotPosition {
                 ty = tag.ty;
                 break;
             } else {
-                ty = 0;
+                return 0.0;
             }
         }
         double targetOffsetAngle_Vertical = ty;
@@ -146,6 +146,7 @@ public class RobotPosition {
         DogLog.log("Current shooter angle", Shooter.getInstance().getAngle());
         DogLog.log("Latency compensated shooter angle", shooterAngle);
         DogLog.log("Total output distance", Units.inchesToMeters(distanceFromLimelightToGoalInches));
+        DogLog.log("Limelight latency", limelightLatency);
         return Units.inchesToMeters(distanceFromLimelightToGoalInches);
     }
 

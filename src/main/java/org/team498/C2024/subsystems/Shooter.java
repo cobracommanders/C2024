@@ -2,6 +2,7 @@ package org.team498.C2024.subsystems;
 
 import org.team498.C2024.Constants;
 import org.team498.C2024.Ports;
+import org.team498.C2024.Robot;
 import org.team498.C2024.RobotPosition;
 import org.team498.C2024.ShooterUtil;
 import org.team498.C2024.State;
@@ -62,6 +63,7 @@ public class Shooter extends SubsystemBase {
     private double manualSpeedLeft;
     private double manualSpeedFeed;
     private State.Shooter currentState;
+    private double previousSpeakerDistance;
 
     private boolean isActivated = true;
     public TimeInterpolatableBuffer<Double> angleHistory = TimeInterpolatableBuffer.createDoubleBuffer(3);
@@ -136,12 +138,18 @@ public class Shooter extends SubsystemBase {
         // it will not actively deccelerate the wheel
         angleHistory.addSample(Timer.getFPGATimestamp(), getAngle());
         if (currentState == State.Shooter.CRESCENDO){
-            double expectedAngle = calculateAngle(RobotPosition.speakerDistance());
+            double speakerDistance = RobotPosition.speakerDistance();
+            if (speakerDistance == 0) {
+                speakerDistance = previousSpeakerDistance;
+            } else {
+                previousSpeakerDistance = speakerDistance;
+            }
+            double expectedAngle = calculateAngle(speakerDistance);
             if (expectedAngle > 25) {
                 llSavedAngle = expectedAngle;
             }
             this.angle = llSavedAngle;
-            this.leftSpeed = calculateSpeed(RobotPosition.speakerDistance());
+            this.leftSpeed = calculateSpeed(speakerDistance);
             this.rightSpeed = this.leftSpeed - ShooterConstants.SPIN_DIFF;
             // this.feedSpeed = currentState.feedSpeed;//feedController.calculate(getFeedSpeedRPM(), feedSpeed) + feedFeedforward.calculate(feedSpeed);
             // this.angle = calculateAngle(RobotPosition.speakerDistance());
