@@ -19,6 +19,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.proto.Kinematics;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier; 
@@ -34,7 +35,8 @@ import com.pathplanner.lib.util.ReplanningConfig;
  * Class that extends the Phoenix SwerveDrivetrain class and implements
  * subsystem so it can be used in command-based projects easily.
  */
-public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsystem {
+// camera enabled if robot is not moving
+ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsystem {
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
@@ -51,8 +53,14 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     /* Red alliance sees forward as 180 degrees (toward blue alliance wall) */
     private final Rotation2d RedAlliancePerspectiveRotation = Rotation2d.fromDegrees(180);
     /* Keep track if we've ever applied the operator perspective before or not */
-    private boolean hasAppliedOperatorPerspective = false;
-
+    private Boolean hasAppliedOperatorPerspective = false;
+    private boolean isMoving() {
+        if (Math.abs(this.getState().speeds.vxMetersPerSecond) <= 0.1 || Math.abs(this.getState().speeds.vyMetersPerSecond) <= 0.1 || Math.abs(this.getState().speeds.omegaRadiansPerSecond) <= 0.5) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
         if (Utils.isSimulation()) {
@@ -146,10 +154,12 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
                 hasAppliedOperatorPerspective = true;
             });
         }
-        // Optional<TimedPose> timedPose = PhotonVision.getInstance().getEstimatedPose();
-        // if (timedPose.isPresent()) {
-        //     this.addVisionMeasurement(timedPose.get().pose, timedPose.get().timeStamp);
-        // }
+        
+        Optional<TimedPose> timedPose = PhotonVision.getInstance().getEstimatedPose();
+        if (isMoving() == false && timedPose.isPresent()) {
+            this.addVisionMeasurement(timedPose.get().pose, timedPose.get().timeStamp);
+        }
+            
         headingHistory.addSample(Timer.getFPGATimestamp(), this.getState().Pose.getRotation().getDegrees());
     }
     @Override

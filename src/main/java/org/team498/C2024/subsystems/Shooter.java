@@ -138,7 +138,7 @@ public class Shooter extends SubsystemBase {
         // it will not actively deccelerate the wheel
         angleHistory.addSample(Timer.getFPGATimestamp(), getAngle());
         if (currentState == State.Shooter.CRESCENDO){
-            double speakerDistance = RobotPosition.speakerDistance();
+            double speakerDistance = RobotPosition.distanceToSpeaker();
             if (speakerDistance == 0) {
                 speakerDistance = previousSpeakerDistance;
             } else {
