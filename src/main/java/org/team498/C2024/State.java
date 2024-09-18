@@ -4,6 +4,7 @@ public enum State {
     IDLE(Shooter.IDLE, Hopper.IDLE, Intake.IDLE, IntakeRollers.IDLE, Kicker.IDLE),
     SOURCE(Shooter.SOURCE, Hopper.IDLE, Intake.INTAKE, IntakeRollers.IDLE, Kicker.IDLE),
     INTAKE(Shooter.IDLE, Hopper.REVERSE, Intake.INTAKE, IntakeRollers.INTAKE, Kicker.IDLE),
+    AUTO_SHOT(Shooter.IDLE, Hopper.REVERSE, Intake.AUTO_SHOT, IntakeRollers.INTAKE, Kicker.IDLE),
     OUTTAKE(Shooter.IDLE, Hopper.FORWARD, Intake.OUTTAKE, IntakeRollers.OUTTAKE, Kicker.IDLE),
     AMP(Shooter.AMP, Hopper.AMP, Intake.IDLE, IntakeRollers.IDLE, Kicker.FORWARD),
     SUBWOOFER(Shooter.SUBWOOFER, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.REVERSE),
@@ -44,7 +45,7 @@ public enum State {
         CRESCENDO(3500, 1000, 40),
         SOURCE(0, 0, 50),
         PREPARE(4500, 1000, 40),
-        CANCEL_AMP(0, 0, 35),
+        CANCEL_AMP(0, 0, 31),
         VISION(0, 0, 40),
         AUTO(4000, 1000, 40),
         CLIMB_UP(0, 0, 70),
@@ -54,7 +55,7 @@ public enum State {
         FRONT_PODIUM(4000, 1000, 33), //31.5
         AMP_SPEAKER(3300, 1000, 32),
         OUTREACH(2800, 1000, 55),
-        OUTER_STAGE(4500, 1000, 29);
+        OUTER_STAGE(4500, 1000, 25.5);
 
         public final double speed;
         public final double feedSpeed;
@@ -100,6 +101,7 @@ public enum State {
     public enum Intake {
         IDLE(1.96), //1.96
         INTAKE(0.4),
+        AUTO_SHOT(1),
         // AUTO_INTAKE(0.7),
         OUTTAKE(1.96);
 

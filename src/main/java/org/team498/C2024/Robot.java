@@ -21,6 +21,7 @@ import org.team498.C2024.commands.robot.ReturnToIdle;
 import org.team498.C2024.commands.robot.SetIntakeIdle;
 import org.team498.C2024.commands.robot.SetState;
 import org.team498.C2024.commands.robot.loading.LoadGround;
+import org.team498.C2024.commands.robot.loading.LoadGroundAuto;
 import org.team498.C2024.commands.robot.scoring.AmpZoneScore;
 import org.team498.C2024.commands.robot.scoring.AutoScore;
 import org.team498.C2024.commands.robot.scoring.HalfScore;
@@ -111,6 +112,7 @@ public class Robot extends TimedRobot{
         NamedCommands.registerCommand("ampZoneScore", new AmpZoneScore());
         NamedCommands.registerCommand("setStateOuterStage", new SetState(State.OUTER_STAGE));
         NamedCommands.registerCommand("stageScore", new StageScore());
+        NamedCommands.registerCommand("loadGroundAuto", new LoadGroundAuto());
 
 
         // m_robotContainer = new RobotContainer();
