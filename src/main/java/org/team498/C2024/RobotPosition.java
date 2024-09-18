@@ -27,6 +27,8 @@ import org.team498.lib.util.PoseUtil;
 import org.team498.lib.util.RotationUtil;
 import org.team498.lib.wpilib.ChassisSpeeds;
 
+import dev.doglog.DogLog;
+
 public class RobotPosition {
     //private static final CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
     private static final Shooter shooter = Shooter.getInstance();
@@ -112,6 +114,7 @@ public class RobotPosition {
         limelightLatency = limelightLatency / 1000.0;  // Limelight publishes latency in ms, we need it in seconds.
         double limelightTimestamp = Timer.getFPGATimestamp() - limelightLatency;
         double shooterAngle = Shooter.getInstance().getAngle(limelightTimestamp);
+        
 
         int llToShooterAxisInches = 15;
         double shooterAxisHeightInches = 12.5;
@@ -123,7 +126,7 @@ public class RobotPosition {
                 ty = tag.ty;
                 break;
             } else {
-                ty = 0;
+                return 0.0;
             }
         }
         double targetOffsetAngle_Vertical = ty;
@@ -137,7 +140,13 @@ public class RobotPosition {
         double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
         //calculate distance
         double distanceFromLimelightToGoalInches = (goalHeightInches - limelightLensHeightInches) / Math.tan(angleToGoalRadians);
-        
+        DogLog.log("Ty from limelight", ty);
+        DogLog.log("Current FPGA Timestamp", Timer.getFPGATimestamp());
+        DogLog.log("Latency compensated FPGA timestamp", limelightTimestamp);
+        DogLog.log("Current shooter angle", Shooter.getInstance().getAngle());
+        DogLog.log("Latency compensated shooter angle", shooterAngle);
+        DogLog.log("Total output distance", Units.inchesToMeters(distanceFromLimelightToGoalInches));
+        DogLog.log("Limelight latency", limelightLatency);
         return Units.inchesToMeters(distanceFromLimelightToGoalInches);
     }
 
