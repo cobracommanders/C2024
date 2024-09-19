@@ -55,11 +55,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
     /* Keep track if we've ever applied the operator perspective before or not */
     private Boolean hasAppliedOperatorPerspective = false;
     private boolean isMoving() {
-        if (Math.abs(this.getState().speeds.vxMetersPerSecond) <= 0.1 || Math.abs(this.getState().speeds.vyMetersPerSecond) <= 0.1 || Math.abs(this.getState().speeds.omegaRadiansPerSecond) <= 0.5) {
-            return true;
-        } else {
-            return false;
-        }
+        return (Math.abs(this.getState().speeds.vxMetersPerSecond) >= 0.1 || Math.abs(this.getState().speeds.vyMetersPerSecond) >= 0.1 || Math.abs(this.getState().speeds.omegaRadiansPerSecond) >= 0.5);
     }
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
