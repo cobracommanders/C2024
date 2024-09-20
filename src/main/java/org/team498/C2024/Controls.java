@@ -20,6 +20,7 @@ import org.team498.C2024.commands.robot.scoring.Score;
 import org.team498.C2024.commands.shooter.SetShooterManual;
 import org.team498.C2024.commands.shooter.SetShooterState;
 import org.team498.C2024.subsystems.CommandSwerveDrivetrain;
+import org.team498.C2024.subsystems.LED;
 import org.team498.C2024.subsystems.TunerConstants;
 import org.team498.lib.drivers.Xbox;
 import org.team498.lib.util.PoseUtil;
@@ -86,6 +87,7 @@ public class Controls {
                 new AutoAlign(), 
                 ()-> StateController.getInstance().getNextScoringState() == State.AMP))
             .onFalse(CommandSwerveDrivetrain.getInstance().getDefaultCommand());
+        driver.leftBumper().onTrue(LED.getInstance().setStateCommand(LED.State.GREEN));
         //driver.A().onTrue(runOnce(() -> Drivetrain.getInstance().setYaw(0 + Robot.rotationOffset)));
         //driver.B().onTrue(runOnce(() -> Drivetrain.getInstance().setPose(new Pose2d(15.18, 1.32, Rotation2d.fromDegrees(0 + Robot.rotationOffset)))));
        // driver.Y().onTrue(runOnce(() -> Drivetrain.getInstance().setPose(new Pose2d(15.07, 5.55, Rotation2d.fromDegrees(0 + Robot.rotationOffset)))));
@@ -117,6 +119,7 @@ public class Controls {
             .onFalse(new ReturnToIdle());
         operator.leftBumper().onTrue(new SetShooterState(State.Shooter.PODIUM));
         operator.rightBumper().onTrue(new IdleIntakeOn());
+        operator.rightBumper().onTrue(LED.getInstance().setStateCommand(LED.State.COLUMBIA_BLUE));
         // operator.back().toggleOnTrue(new SetShooterManual(true, operator::leftY, ()-> 0.5));
         // operator.A().toggleOnTrue(new SetShooterManual(true, operator::leftY, ()-> 1.0));
         // operator.B().toggleOnTrue(new SetShooterManual(true, operator::leftY, ()-> 0.0));
@@ -129,28 +132,34 @@ public class Controls {
 
         operator.X().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.PODIUM)));
         operator.X().toggleOnTrue(new PrepareToScore());
+        operator.X().onTrue(LED.getInstance().setStateCommand(LED.State.RED));
 
         //operator.A().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.SUBWOOFER)));
         operator.A().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.CRESCENDO)));
         operator.A().toggleOnTrue(new PrepareToScore());
+        operator.A().onTrue(LED.getInstance().setStateCommand(LED.State.RED));
 
         // operator.B().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.PODIUM)));
         // operator.B().toggleOnTrue(new PrepareToScore());
         operator.B().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.FRONT_PODIUM)));
         operator.B().toggleOnTrue(new PrepareToScore());
+        operator.B().onTrue(LED.getInstance().setStateCommand(LED.State.RED));
 
         operator.Y().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.AMP)));
         operator.Y().toggleOnTrue(new PrepareAmp());
+        operator.Y().onTrue(LED.getInstance().setStateCommand(LED.State.GREEN));
 
         operator.POV0().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.AMP_SPEAKER)));
         operator.POV0().toggleOnTrue(new PrepareToScore());
+        operator.POV0().onTrue(LED.getInstance().setStateCommand(LED.State.RED));
 
         operator.POVMinus90().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.SPIT)));
         operator.POVMinus90().toggleOnTrue(new PrepareToScore());
+        operator.POV0().onTrue(LED.getInstance().setStateCommand(LED.State.RED));
 
         operator.POV90().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.CRESCENDO)));
         operator.POV90().toggleOnTrue(new PrepareToScore());
-
+        operator.POV90().onTrue(LED.getInstance().setStateCommand(LED.State.RED));
         // operator.leftBumper().onTrue(runOnce(() -> StateController.getInstance().setNextLoadingOption(LoadingOption.GROUND)));
         // operator.leftTrigger().onTrue(new LoadSource())
         //     .onFalse(new ReturnToIdle());
@@ -158,4 +167,4 @@ public class Controls {
         // operator.rightTrigger().onTrue(new CollectSource())
         //     .onFalse(new ReturnToIdle());
     }
-}
+}     
