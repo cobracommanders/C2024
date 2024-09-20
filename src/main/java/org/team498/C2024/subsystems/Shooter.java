@@ -2,6 +2,7 @@ package org.team498.C2024.subsystems;
 
 import org.team498.C2024.Constants;
 import org.team498.C2024.Ports;
+import org.team498.C2024.Robot;
 import org.team498.C2024.RobotPosition;
 import org.team498.C2024.ShooterUtil;
 import org.team498.C2024.State;
@@ -18,7 +19,9 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 /*
@@ -60,8 +63,10 @@ public class Shooter extends SubsystemBase {
     private double manualSpeedLeft;
     private double manualSpeedFeed;
     private State.Shooter currentState;
+    private double previousSpeakerDistance;
 
     private boolean isActivated = true;
+    public TimeInterpolatableBuffer<Double> angleHistory = TimeInterpolatableBuffer.createDoubleBuffer(3);
     
     // Constructor: Configure Motor Controller settings and  
     // Instantiate all objects (assign values to every variable and object)
@@ -115,7 +120,7 @@ public class Shooter extends SubsystemBase {
     public void configMotors() {
         angleMotor.setNeutralMode(NeutralModeValue.Brake);
     }
-
+    double llSavedAngle = State.Shooter.PODIUM.angle;
     // This method will run every 10-20 milliseconds (about 50-100 times in one second)
     @Override
     public void periodic() {
@@ -131,11 +136,23 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putNumber("Adjusted Velocity", calculateSpeed(RobotPosition.speakerDistance()));
         // This condition will reduce CPU utilization when the motor is not meant to run and save power because 
         // it will not actively deccelerate the wheel
+        angleHistory.addSample(Timer.getFPGATimestamp(), getAngle());
         if (currentState == State.Shooter.CRESCENDO){
-            this.leftSpeed = calculateSpeed(RobotPosition.speakerDistance());
+            double speakerDistance = RobotPosition.distanceToSpeaker();
+            if (speakerDistance == 0) {
+                speakerDistance = previousSpeakerDistance;
+            } else {
+                previousSpeakerDistance = speakerDistance;
+            }
+            double expectedAngle = calculateAngle(speakerDistance);
+            if (expectedAngle > 25) {
+                llSavedAngle = expectedAngle;
+            }
+            this.angle = llSavedAngle;
+            this.leftSpeed = calculateSpeed(speakerDistance);
             this.rightSpeed = this.leftSpeed - ShooterConstants.SPIN_DIFF;
             // this.feedSpeed = currentState.feedSpeed;//feedController.calculate(getFeedSpeedRPM(), feedSpeed) + feedFeedforward.calculate(feedSpeed);
-            this.angle = calculateAngle(RobotPosition.speakerDistance());
+            // this.angle = calculateAngle(RobotPosition.speakerDistance());
         }
 
         else if (currentState == State.Shooter.VISION) {
@@ -258,6 +275,9 @@ public class Shooter extends SubsystemBase {
      */
     public double getAngle() {
         return angleEncoder.getAbsolutePosition().getValueAsDouble() * 360;
+    }
+    public double getAngle(double timestamp) {
+        return angleHistory.getSample(timestamp).orElseGet(this::getAngle);
     }
     public double getLeftSpeedMPS() {
         return leftMotor.getVelocity().getValueAsDouble() * ShooterConstants.GEAR_RATIO * ShooterConstants.CIRCUMFERENCE;

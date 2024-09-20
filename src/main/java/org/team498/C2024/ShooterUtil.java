@@ -22,7 +22,7 @@ public class ShooterUtil {
     private static double[][] speedData = new double[][] {
         {0, 4500},
         {3.7, 4500},
-        {4.0, 3000}
+        {4.0, 4500}
     };
     private static LinearInterpolator interpolator = new LinearInterpolator(data);
     private static LinearInterpolator speedInterpolator = new LinearInterpolator(speedData);

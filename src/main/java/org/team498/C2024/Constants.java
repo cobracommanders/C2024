@@ -87,7 +87,7 @@ public final class Constants {
         
         public static final double MAX_RPM = 6000 * GEAR_RATIO;
         public static final double MAX_MPS = MAX_RPM * CIRCUMFERENCE;
-        public static final double SPIN_DIFF = 200;//1200
+        public static final double SPIN_DIFF = 500;//1200
 
         public static final class AngleConstants{
             public static final double P = 0.05;
@@ -97,8 +97,8 @@ public final class Constants {
             public static final double V = 0;
             public static final double G = 0; //0.03
             public static final double MAX_ANGLE = 73;
-            public static final double MIN_ANGLE = 29;
-            public static final double AUTO_MIN_ANGLE = 29;
+            public static final double MIN_ANGLE = 25;
+            public static final double AUTO_MIN_ANGLE = 25;
 
             public static final double ANGLE_OFFSET = 0.18900256 - 0.0028 - 0.0014;
         }

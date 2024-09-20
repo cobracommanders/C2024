@@ -40,7 +40,7 @@ import java.util.function.Supplier;
 public class Controls {
     private double MaxSpeed = TunerConstants.kSpeedAt12VoltsMps; // Initial max is true top speed
     private final double TurtleSpeed = 0.1; // Reduction in speed from Max Speed, 0.1 = 10%
-    private final double MaxAngularRate = Math.PI * 1.5; // .75 rotation per second max angular velocity.  Adjust for max turning rate speed.
+    private final double MaxAngularRate = Math.PI * 3.5; // .75 rotation per second max angular velocity.  Adjust for max turning rate speed.
     private final double TurtleAngularRate = Math.PI * 0.5; // .75 rotation per second max angular velocity.  Adjust for max turning rate speed.
     private double AngularRate = MaxAngularRate; // This will be updated when turtle and reset to MaxAngularRate
 
@@ -77,8 +77,9 @@ public class Controls {
   }
 
     public void configureDriverCommands() {
-        driver.rightBumper().onTrue(new SlowDrive(DrivetrainConstants.SLOW_SPEED_SCALAR))
-            .onFalse(new SlowDrive(DrivetrainConstants.FULL_SPEED_SCALAR));
+        // driver.rightBumper().onTrue(new SlowDrive(DrivetrainConstants.SLOW_SPEED_SCALAR))
+        //     .onFalse(new SlowDrive(DrivetrainConstants.FULL_SPEED_SCALAR));
+        driver.rightBumper().onTrue(runOnce(() ->CommandSwerveDrivetrain.getInstance().setYaw(Robot.alliance.get() == Alliance.Red?180:0)));
         driver.leftBumper().onTrue(new ConditionalCommand(
                 new ConditionalCommand(
                     new AngleLock(-90),
@@ -90,8 +91,8 @@ public class Controls {
         driver.leftBumper().onTrue(LED.getInstance().setStateCommand(LED.State.GREEN));
         //driver.A().onTrue(runOnce(() -> Drivetrain.getInstance().setYaw(0 + Robot.rotationOffset)));
         //driver.B().onTrue(runOnce(() -> Drivetrain.getInstance().setPose(new Pose2d(15.18, 1.32, Rotation2d.fromDegrees(0 + Robot.rotationOffset)))));
-       // driver.Y().onTrue(runOnce(() -> Drivetrain.getInstance().setPose(new Pose2d(15.07, 5.55, Rotation2d.fromDegrees(0 + Robot.rotationOffset)))));
-        driver.A().onTrue(runOnce(() ->CommandSwerveDrivetrain.getInstance().setYaw(Robot.alliance.get() == Alliance.Red?180:0)));
+        // driver.Y().onTrue(runOnce(() -> Drivetrain.getInstance().setPose(new Pose2d(15.07, 5.55, Rotation2d.fromDegrees(0 + Robot.rotationOffset)))));
+        // driver.A().onTrue(runOnce(() ->CommandSwerveDrivetrain.getInstance().setYaw(Robot.alliance.get() == Alliance.Red?180:0)));
         driver.leftTrigger().onTrue(new LoadGround())
             .onFalse(new SetIntakeIdle());
         // driver.leftBumper().onTrue(new PrepareToScore())z
@@ -130,18 +131,18 @@ public class Controls {
 
 
 
-        operator.X().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.PODIUM)));
+        operator.X().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.FRONT_PODIUM)));
         operator.X().toggleOnTrue(new PrepareToScore());
         operator.X().onTrue(LED.getInstance().setStateCommand(LED.State.RED));
 
         //operator.A().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.SUBWOOFER)));
-        operator.A().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.CRESCENDO)));
+        operator.A().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.SUBWOOFER)));
         operator.A().toggleOnTrue(new PrepareToScore());
         operator.A().onTrue(LED.getInstance().setStateCommand(LED.State.RED));
 
         // operator.B().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.PODIUM)));
         // operator.B().toggleOnTrue(new PrepareToScore());
-        operator.B().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.FRONT_PODIUM)));
+        operator.B().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.PODIUM)));
         operator.B().toggleOnTrue(new PrepareToScore());
         operator.B().onTrue(LED.getInstance().setStateCommand(LED.State.RED));
 

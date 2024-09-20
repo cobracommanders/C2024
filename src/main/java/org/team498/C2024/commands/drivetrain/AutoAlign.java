@@ -17,6 +17,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class AutoAlign extends Command{
@@ -44,9 +45,11 @@ public class AutoAlign extends Command{
                 tx = 0;
             }
         }
-        if (Math.abs(targetAngle - (drivetrain.getState().Pose.getRotation().getDegrees() - tx)) > 4 || targetAngle == -1000){
-            targetAngle = drivetrain.getState().Pose.getRotation().getDegrees() - tx;
-        }
+        double limelightLatency = results.targetingResults.latency_pipeline + results.targetingResults.latency_capture + results.targetingResults.latency_jsonParse;
+        limelightLatency = limelightLatency / 1000.0;  // Limelight publishes latency in ms, we need it in seconds.
+        double limelightTimestamp = Timer.getFPGATimestamp() - limelightLatency;
+        
+        targetAngle = drivetrain.getHeading(limelightTimestamp) - tx;
         //end = true;
         
         // }

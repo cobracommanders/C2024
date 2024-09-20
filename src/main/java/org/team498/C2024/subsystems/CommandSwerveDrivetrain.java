@@ -2,7 +2,10 @@ package org.team498.C2024.subsystems;
 
 import static org.team498.C2024.Constants.DrivetrainConstants.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED;
 
+import java.util.Optional;
 import java.util.function.Supplier;
+
+import org.team498.C2024.subsystems.PhotonVision.TimedPose;
 
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
@@ -14,11 +17,14 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.proto.Kinematics;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier; 
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -29,10 +35,13 @@ import com.pathplanner.lib.util.ReplanningConfig;
  * Class that extends the Phoenix SwerveDrivetrain class and implements
  * subsystem so it can be used in command-based projects easily.
  */
-public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsystem {
+// camera enabled if robot is not moving
+ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsystem {
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
+    public TimeInterpolatableBuffer<Double> headingHistory = TimeInterpolatableBuffer.createDoubleBuffer(3);
+
 
     private final PIDController rotationController = new PIDController(5 * 3.14/180.0, 0, 0);
 
@@ -44,8 +53,10 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     /* Red alliance sees forward as 180 degrees (toward blue alliance wall) */
     private final Rotation2d RedAlliancePerspectiveRotation = Rotation2d.fromDegrees(180);
     /* Keep track if we've ever applied the operator perspective before or not */
-    private boolean hasAppliedOperatorPerspective = false;
-
+    private Boolean hasAppliedOperatorPerspective = false;
+    private boolean isMoving() {
+        return (Math.abs(this.getState().speeds.vxMetersPerSecond) >= 0.1 || Math.abs(this.getState().speeds.vyMetersPerSecond) >= 0.1 || Math.abs(this.getState().speeds.omegaRadiansPerSecond) >= 0.5);
+    }
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
         if (Utils.isSimulation()) {
@@ -88,6 +99,9 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     public void setYaw(double angle) {
         this.seedFieldRelative(new Pose2d(getState().Pose.getTranslation(), Rotation2d.fromDegrees(angle)));
         this.m_pigeon2.setYaw(angle);
+    }
+    public double getHeading(double timestamp) {
+        return headingHistory.getSample(timestamp).orElse((double) 0);
     }
 
     public void driveRobotRelative(ChassisSpeeds speeds) {
@@ -136,6 +150,13 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
                 hasAppliedOperatorPerspective = true;
             });
         }
+        
+        Optional<TimedPose> timedPose = PhotonVision.getInstance().getEstimatedPose();
+        if (isMoving() == false && timedPose.isPresent()) {
+            this.addVisionMeasurement(timedPose.get().pose, timedPose.get().timeStamp);
+        }
+            
+        headingHistory.addSample(Timer.getFPGATimestamp(), this.getState().Pose.getRotation().getDegrees());
     }
     @Override
     public void seedFieldRelative() {
