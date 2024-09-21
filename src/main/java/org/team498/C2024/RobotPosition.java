@@ -27,7 +27,6 @@ import org.team498.lib.util.PoseUtil;
 import org.team498.lib.util.RotationUtil;
 import org.team498.lib.wpilib.ChassisSpeeds;
 
-import dev.doglog.DogLog;
 
 public class RobotPosition {
     //private static final CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();

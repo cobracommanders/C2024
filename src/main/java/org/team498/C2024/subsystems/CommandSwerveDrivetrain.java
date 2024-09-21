@@ -152,7 +152,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
         }
         
         Optional<TimedPose> timedPose = PhotonVision.getInstance().getEstimatedPose();
-        if (isMoving() == false && timedPose.isPresent()) {
+        if (isMoving() == false && timedPose.isPresent() && DriverStation.isTeleopEnabled()) {
             this.addVisionMeasurement(timedPose.get().pose, timedPose.get().timeStamp);
         }
             

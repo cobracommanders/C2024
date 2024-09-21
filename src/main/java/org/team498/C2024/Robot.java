@@ -14,12 +14,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 import org.team498.C2024.commands.drivetrain.AutoAlign;
+import org.team498.C2024.commands.intake.SetIntakeRollerState;
+import org.team498.C2024.commands.intake.SetIntakeRollersNextState;
 import org.team498.C2024.commands.robot.ReturnToIdle;
 import org.team498.C2024.commands.robot.SetIntakeIdle;
 import org.team498.C2024.commands.robot.SetState;
 import org.team498.C2024.commands.robot.loading.LoadGround;
-import org.team498.C2024.commands.robot.loading.LoadGroundAuto;
 import org.team498.C2024.commands.robot.scoring.AmpZoneScore;
+import org.team498.C2024.commands.robot.scoring.AutoScore;
 import org.team498.C2024.commands.robot.scoring.HalfScore;
 import org.team498.C2024.commands.robot.scoring.PodiumScore;
 import org.team498.C2024.commands.robot.scoring.PrepareToScore;
@@ -30,14 +32,21 @@ import org.team498.C2024.subsystems.CommandSwerveDrivetrain;
 import org.team498.C2024.subsystems.Hopper;
 import org.team498.C2024.subsystems.Intake;
 import org.team498.C2024.subsystems.IntakeRollers;
+import org.team498.C2024.subsystems.Kicker;
 import org.team498.C2024.subsystems.LED;
+import org.team498.C2024.subsystems.PhotonVision;
 import org.team498.C2024.subsystems.Shooter;
+import org.team498.C2024.subsystems.LED.LEDState;
+import org.team498.lib.LimelightHelpers;
 import org.team498.lib.auto.Auto;
+import org.team498.lib.drivers.Blinkin;
 import org.team498.lib.drivers.Gyro;
 import java.util.List;
 import java.util.Optional;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import dev.doglog.DogLog;
+import dev.doglog.DogLogOptions;
 
 
 public class Robot extends TimedRobot{
@@ -51,11 +60,11 @@ public class Robot extends TimedRobot{
     public static final Controls controls = new Controls();
 
     // private PowerDistribution pdh;
-    // private LED led = new LED();
+    private LED led = new LED();
 
     private final CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
     private final Gyro gyro = Gyro.getInstance();
-    // private final Blinkin blinkin = Blinkin.getInstance();
+    private final Blinkin blinkin = Blinkin.getInstance();
     //private final RobotState robotState = RobotState.getInstance();
 
     private SendableChooser<Command> autoChooser;
@@ -76,7 +85,7 @@ public class Robot extends TimedRobot{
     //     //new LongTaxi(),
     //     //new Spit(),
     //     //new Troll(),
-    //     //new OuterWingTest(),
+    //     //new OuterWingTest(),rad
     //     //new TestPathing(),
     //     //new WingFacingSpeaker(),
     //     //new OuterWing(),
@@ -88,19 +97,21 @@ public class Robot extends TimedRobot{
     @Override
     public void robotInit() {
 
+        LimelightHelpers.setLEDMode_ForceOff("limelight");
         NamedCommands.registerCommand("prepareToScore", new PrepareToScore());
         NamedCommands.registerCommand("halfScore", new HalfScore());
         NamedCommands.registerCommand("loadGround", new LoadGround());
-        NamedCommands.registerCommand("setIntakeIdle", new SetIntakeIdle());
+        NamedCommands.registerCommand("setIntakeIdle", new SetIntakeRollerState(State.IntakeRollers.IDLE).andThen(new SetIntakeRollersNextState()));
+        NamedCommands.registerCommand("subwooferScore", new SubwooferScore(0.5));
         NamedCommands.registerCommand("setStatePodium", new SetState(State.PODIUM));
         NamedCommands.registerCommand("podiumScore", new PodiumScore());
         NamedCommands.registerCommand("autoAlign", new AutoAlign());
         NamedCommands.registerCommand("setShooterNextState", new SetShooterNextState());
-        NamedCommands.registerCommand("subwooferScore", new SubwooferScore(0.7));
         NamedCommands.registerCommand("ampZoneScore", new AmpZoneScore());
         NamedCommands.registerCommand("setStateOuterStage", new SetState(State.OUTER_STAGE));
         NamedCommands.registerCommand("stageScore", new StageScore());
-        NamedCommands.registerCommand("loadGroundAuto", new LoadGroundAuto());
+
+
         // m_robotContainer = new RobotContainer();
         //new PowerDistribution(1, PowerDistribution.ModuleType.kRev).close(); // Enables power distribution logging
         CommandSwerveDrivetrain.getInstance().tareEverything();
@@ -118,13 +129,17 @@ public class Robot extends TimedRobot{
         // Register Subsystems
         CommandSwerveDrivetrain.getInstance();
         Shooter.getInstance();
+        Hopper.getInstance();
+        Kicker.getInstance();
         Intake.getInstance();
         IntakeRollers.getInstance();
+        PhotonVision.getInstance();
 
         Shooter.getInstance().configMotors();
+        Hopper.getInstance().configMotors();
+        Kicker.getInstance().configMotors();
         Intake.getInstance().configMotors();
         IntakeRollers.getInstance().configMotors();
-        LED.getInstance();
 
         // Limelight.getInstance();
         
@@ -134,6 +149,7 @@ public class Robot extends TimedRobot{
     public void robotPeriodic() {
         CommandScheduler.getInstance().run();
         SmartDashboard.putData(autoChooser);
+        SmartDashboard.putBoolean("Note Ready To AMP", Kicker.getInstance().getKickerBeamBreak());
         // SmartDashboard.putNumber("bl cancoder", kDefaultPeriod)
         // SmartDashboard.putBoolean("is Scoring", StateController.getInstance().isScoring());
 
@@ -149,34 +165,23 @@ public class Robot extends TimedRobot{
             //                  : 180;
         }
         // blinkin.setColor(BlinkinColor.BREATH_RED);
-        if (RobotState.isEnabled()) {
-            if(Shooter.getInstance().atSetpoint() && Shooter.getInstance().shooterState() && !Hopper.getInstance().isPidEnabled()) {
-                LED.getInstance().setState(LED.State.GREEN);
-                SmartDashboard.putBoolean("Shooter Aligned", true);
-            }
-            else if(Hopper.getInstance().getBackBeamBreak()){
-                LED.getInstance().setState(LED.State.WHITE);
-            }
-            else if(Hopper.getInstance().getFrontBeamBreak()){
-                LED.getInstance().setState(LED.State.YELLOW);
-            }
-            else {
-                // blinkin.setColor(BlinkinColor.SOLID_BLUE);
-                SmartDashboard.putBoolean("Shooter Aligned", false);
-            }
-        }
-        else { 
-            if (alliance.get() == Alliance.Blue) {
-                LED.getInstance().setState(LED.State.BLUE);
-            }
-            else {
-                LED.getInstance().setState(LED.State.RED);
-            }
-            // if (RobotPosition.isNear(autoToRun.getInitialPose(), 1))
-            //     blinkin.setColor(BlinkinColor.SOLID_DARK_GREEN);
-            // else blinkin.setColor(BlinkinColor.SOLID_HOT_PINK);
+        SmartDashboard.putBoolean("Shooter Aligned", Shooter.getInstance().atSetpoint() && Shooter.getInstance().shooterState() && !Hopper.getInstance().isPidEnabled());
+        // if (RobotState.isEnabled()) {
+        //     if(Shooter.getInstance().atSetpoint() && Shooter.getInstance().shooterState() && !Hopper.getInstance().isPidEnabled()) {
+        //         blinkin.setColor(BlinkinColor.SOLID_DARK_GREEN);
+        //         SmartDashboard.putBoolean("Shooter Aligned", true);
+        //     }
+        //     else {
+        //         blinkin.setColor(BlinkinColor.SOLID_BLUE);
+        //         SmartDashboard.putBoolean("Shooter Aligned", false);
+        //     }
+        // }
+        // else { 
+        //     if (RobotPosition.isNear(autoToRun.getInitialPose(), 1))
+        //         blinkin.setColor(BlinkinColor.SOLID_DARK_GREEN);
+        //     else blinkin.setColor(BlinkinColor.SOLID_HOT_PINK);
 
-        }
+        // }
 
         
         }
@@ -202,9 +207,6 @@ public class Robot extends TimedRobot{
 
         // autoToRun = autoChooser.getSelected();
         
-    if(RobotState.isDisabled()){
-
-        }
     }
         // if (autoToRun != null) {
         //     // robotState.setState(autoToRun.getInitialState());
@@ -225,8 +227,11 @@ public class Robot extends TimedRobot{
     @Override
     public void teleopInit() {
         Shooter.getInstance().setFeed(0);
+        Shooter.getInstance().setAngle(0);
+        Hopper.getInstance().set(0);
         Intake.getInstance().set(0);
         IntakeRollers.getInstance().set(0);
+        Kicker.getInstance().set(0);
         CommandScheduler.getInstance().schedule(new ReturnToIdle());
 
         
@@ -237,35 +242,40 @@ public class Robot extends TimedRobot{
 
     @Override
     public void teleopPeriodic() {
-        // if (Hopper.getInstance().getBackBeamBreak()){
-        //     controls.driver.rumble(0.05);
-        //     controls.operator.rumble(0.05);
-        // }
-        // else {
-        //     controls.driver.rumble(0);
-        //     controls.operator.rumble(0);
-        // }
+        if (Hopper.getInstance().getBackBeamBreak()){
+            controls.driver.rumble(0.1);
+            controls.operator.rumble(0.05);
+        }
+        else {
+            controls.driver.rumble(0);
+            controls.operator.rumble(0);
+        }
         
     if(RobotState.isEnabled()){
+        if(Shooter.getInstance().atSetpoint() && Shooter.getInstance().getState() != State.Shooter.IDLE){
+            led.setState(LEDState.SHOOTER_READY);
+        }
+        else if(Shooter.getInstance().isSubwoofer()){
+            led.setState(LEDState.SUBWOOFER);
         } //When the Shooter is Aligned
             //When The intake beam break is activated
-        // else if(Hopper.getInstance().getFrontBeamBreak()){
-        //     led.setState(LEDState.INTAKE_SUCCESS);
-        // // or run the one below for flashing
-        // // if(Hopper.getInstance().getFrontBeamBreak()){
-        // //     new GreenFlash();
-        // // }
-        // } //When the middle beam break is activated
+        else if(Hopper.getInstance().getFrontBeamBreak()){
+            led.setState(LEDState.INTAKE_SUCCESS);
+        // or run the one below for flashing
+        // if(Hopper.getInstance().getFrontBeamBreak()){
+        //     new GreenFlash();
+        // }
+        } //When the middle beam break is activated
         else if(Hopper.getInstance().getBackBeamBreak()){
-            LED.getInstance().setStateCommand(LED.State.YELLOW);}
-        // } //When the Amping Beam Break is activated
+            led.setState(LEDState.SECURE);
+        } //When the Amping Beam Break is activated
         /*else if(Kicker.getInstance().getKickerBeamBreak()){
             led.setState(LEDState.AMP);
         } */ //When the Shooter is in Subwoofer mode
         
         //When no other cases are true
         else {
-            // led.setState(LEDState.IDLE);
+            led.setState(LEDState.IDLE);
         }
     }
 
@@ -293,12 +303,12 @@ public class Robot extends TimedRobot{
                 blinkin.setColor(BlinkinColor.SOLID_DARK_RED);
             }*/
 
-    
+    }
 
 
     @Override
     public void teleopExit() {
-        
+        controls.driver.rumble(0);
     }
 
     @Override
@@ -312,10 +322,11 @@ public class Robot extends TimedRobot{
         // drivetrain.enableBrakeMode(true);
         // matchStarted = true;
         Shooter.getInstance().setFeed(0);
-        // Hopper.getInstance().set(0);
+        Shooter.getInstance().setAngle(0);
+        Hopper.getInstance().set(0);
         Intake.getInstance().set(0);
         IntakeRollers.getInstance().set(0);
-        // Kicker.getInstance().set(0);
+        Kicker.getInstance().set(0);
 
         // if (autoToRun == null)
             // autoToRun = defaultAuto;
@@ -344,7 +355,7 @@ public class Robot extends TimedRobot{
         //     Drivetrain.getInstance().setYaw(PoseUtil.flip(autoToRun.getInitialPose()).getRotation().getDegrees());
         //     Drivetrain.getInstance().setPose(PoseUtil.flip(autoToRun.getInitialPose()));
         // }
-        // led.setState(LEDState.AUTO);
+        led.setState(LEDState.AUTO);
         //Sets the LEDs to a pattern for auto, this could be edited to include code for if vision is aligned for auto diagnosis
     }
 
