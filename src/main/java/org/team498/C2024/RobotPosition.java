@@ -140,13 +140,13 @@ public class RobotPosition {
         double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
         //calculate distance
         double distanceFromLimelightToGoalInches = (goalHeightInches - limelightLensHeightInches) / Math.tan(angleToGoalRadians);
-        DogLog.log("Ty from limelight", ty);
-        DogLog.log("Current FPGA Timestamp", Timer.getFPGATimestamp());
-        DogLog.log("Latency compensated FPGA timestamp", limelightTimestamp);
-        DogLog.log("Current shooter angle", Shooter.getInstance().getAngle());
-        DogLog.log("Latency compensated shooter angle", shooterAngle);
-        DogLog.log("Total output distance", Units.inchesToMeters(distanceFromLimelightToGoalInches));
-        DogLog.log("Limelight latency", limelightLatency);
+        // DogLog.log("Ty from limelight", ty);
+        // DogLog.log("Current FPGA Timestamp", Timer.getFPGATimestamp());
+        // DogLog.log("Latency compensated FPGA timestamp", limelightTimestamp);
+        // DogLog.log("Current shooter angle", Shooter.getInstance().getAngle());
+        // DogLog.log("Latency compensated shooter angle", shooterAngle);
+        // DogLog.log("Total output distance", Units.inchesToMeters(distanceFromLimelightToGoalInches));
+        // DogLog.log("Limelight latency", limelightLatency);
         return Units.inchesToMeters(distanceFromLimelightToGoalInches);
     }
 
