@@ -3,9 +3,6 @@ package org.team498.lib;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
-import org.team498.lib.drivers.Blinkin;
-import org.team498.lib.drivers.Blinkin.BlinkinColor;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.BooleanSupplier;
@@ -41,31 +38,31 @@ public class SystemsCheck {
         var testCommands = new LinkedList<Command>();
         for (TestableObject test : tests) {
             test.hasPassed = false;
-            testCommands.add(getTestCommand(test));
+            // testCommands.add(getTestCommand(test));
         }
         testCommands.add(resetCommand);
         return sequence(testCommands.toArray(new Command[testCommands.size()]));
     }
 
-    private Command getTestCommand(TestableObject test) {
-        return sequence(
-                runOnce(() -> Blinkin.getInstance().setColor(BlinkinColor.SOLID_YELLOW)),
-                race(
-                        sequence(
-                                waitSeconds(test.timeout),
-                                runOnce(() -> {
-                                    test.hasPassed = false;
-                                    Blinkin.getInstance().setColor(BlinkinColor.SOLID_RED);
-                                })),
-                        sequence(
-                                waitUntil(test.isWorking),
-                                runOnce(() -> {
-                                    test.hasPassed = true;
-                                    Blinkin.getInstance().setColor(BlinkinColor.SOLID_LIME);
-                                })),
-                        run(test.runnable),
-                        waitSeconds(0.5)));
-    }
+    // private Command getTestCommand(TestableObject test) {
+    //     return sequence(
+    //             runOnce(() -> Blinkin.getInstance().setColor(BlinkinColor.SOLID_YELLOW)),
+    //             race(
+    //                     sequence(
+    //                             waitSeconds(test.timeout),
+    //                             runOnce(() -> {
+    //                                 test.hasPassed = false;
+    //                                 Blinkin.getInstance().setColor(BlinkinColor.SOLID_RED);
+    //                             })),
+    //                     sequence(
+    //                             waitUntil(test.isWorking),
+    //                             runOnce(() -> {
+    //                                 test.hasPassed = true;
+    //                                 Blinkin.getInstance().setColor(BlinkinColor.SOLID_LIME);
+    //                             })),
+    //                     run(test.runnable),
+    //                     waitSeconds(0.5)));
+    // }
 
     public static class TestableObject {
         public final String name;
@@ -82,3 +79,4 @@ public class SystemsCheck {
         }
     }
 }
+
