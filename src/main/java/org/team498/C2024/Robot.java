@@ -150,7 +150,7 @@ public class Robot extends TimedRobot{
         CommandScheduler.getInstance().run();
         SmartDashboard.putData(autoChooser);
         SmartDashboard.putBoolean("Note Ready To AMP", Kicker.getInstance().getKickerBeamBreak());
-        SmartDashboard.putNumber("Distance To Speaker", RobotPosition.speakerDistance());
+        SmartDashboard.putNumber("Distance To Speaker", RobotPosition.distanceToSpeaker());
         // SmartDashboard.putNumber("bl cancoder", kDefaultPeriod)
         // SmartDashboard.putBoolean("is Scoring", StateController.getInstance().isScoring());
 
