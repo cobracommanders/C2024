@@ -150,6 +150,7 @@ public class Robot extends TimedRobot{
         CommandScheduler.getInstance().run();
         SmartDashboard.putData(autoChooser);
         SmartDashboard.putBoolean("Note Ready To AMP", Kicker.getInstance().getKickerBeamBreak());
+        SmartDashboard.putNumber("Distance To Speaker", RobotPosition.speakerDistance());
         // SmartDashboard.putNumber("bl cancoder", kDefaultPeriod)
         // SmartDashboard.putBoolean("is Scoring", StateController.getInstance().isScoring());
 
@@ -163,7 +164,9 @@ public class Robot extends TimedRobot{
             // rotationOffset = alliance.get() == Alliance.Blue
             //                  ? 0
             //                  : 180;
+    
         }
+        
         // blinkin.setColor(BlinkinColor.BREATH_RED);
         SmartDashboard.putBoolean("Shooter Aligned", Shooter.getInstance().atSetpoint() && Shooter.getInstance().shooterState() && !Hopper.getInstance().isPidEnabled());
         // if (RobotState.isEnabled()) {
