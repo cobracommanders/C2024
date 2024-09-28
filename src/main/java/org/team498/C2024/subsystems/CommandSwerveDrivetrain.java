@@ -22,6 +22,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.proto.Kinematics;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Notifier; 
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
@@ -135,6 +137,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
         m_simNotifier.startPeriodic(kSimLoopPeriod);
     }
 
+    Field2d field = new Field2d();
     @Override
     public void periodic() {
         /* Periodically try to apply the operator perspective */
@@ -151,13 +154,32 @@ import com.pathplanner.lib.util.ReplanningConfig;
             });
         }
         
-        Optional<TimedPose> timedPose = PhotonVision.getInstance().getEstimatedPose();
-        if (isMoving() == false && timedPose.isPresent() && DriverStation.isTeleopEnabled()) {
-            this.addVisionMeasurement(timedPose.get().pose, timedPose.get().timeStamp);
-        }
-            
         headingHistory.addSample(Timer.getFPGATimestamp(), this.getState().Pose.getRotation().getDegrees());
+        
+        
+        Optional<PhotonVision.TimedPose> timedPose = PhotonVision.getInstance().getEstimatedPose();
+        if (isMoving() == false && timedPose.isPresent()) {
+            TimedPose useGyro = new TimedPose(new Pose2d(timedPose.get().pose.getTranslation(), Rotation2d.fromDegrees(getHeading(timedPose.get().timeStamp))), timedPose.get().timeStamp);
+            this.addVisionMeasurement(useGyro.pose, useGyro.timeStamp);
+        }
+        field.setRobotPose(this.getState().Pose);
+        SmartDashboard.putData(field);
+            
     }
+    public class TimedPose{
+        Pose2d pose;
+        double timeStamp;
+
+        public TimedPose(Pose2d pose, double timeStamp){
+            this.pose = pose;
+            this.timeStamp = timeStamp;
+        }
+
+        // public EstimatedRobotPose toEstimatedRobotPose() {
+        //     return new EstimatedRobotPose(null, timeStamp, null, null)
+        // }
+    }
+
     @Override
     public void seedFieldRelative() {
         try {

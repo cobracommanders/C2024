@@ -12,9 +12,60 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "sequential",
           "data": {
-            "name": "subwooferScore"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "setStateCrescendo"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "setShooterNextState"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "AmpSidePreLoad"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "deadline",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "wait",
+                            "data": {
+                              "waitTime": 1.4
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "autoAlign"
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "crescendoScore"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {
@@ -34,7 +85,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 1.9
+                        "waitTime": 1.0
                       }
                     },
                     {
@@ -44,13 +95,13 @@
                           {
                             "type": "wait",
                             "data": {
-                              "waitTime": 2.0
+                              "waitTime": 1.2
                             }
                           },
                           {
                             "type": "named",
                             "data": {
-                              "name": "loadGroundAuto"
+                              "name": "loadGround"
                             }
                           }
                         ]
@@ -69,32 +120,13 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "sequential",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
                   "pathName": "MidNoteOneShot"
-                }
-              },
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "setStateOuterStage"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "setShooterNextState"
-                      }
-                    }
-                  ]
                 }
               }
             ]
@@ -107,13 +139,13 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 0.7
+                  "waitTime": 1.2
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "autoAlignLoad"
+                  "name": "autoAlign"
                 }
               }
             ]
@@ -122,7 +154,7 @@
         {
           "type": "named",
           "data": {
-            "name": "stageScore"
+            "name": "crescendoScore"
           }
         },
         {
@@ -152,13 +184,13 @@
                           {
                             "type": "wait",
                             "data": {
-                              "waitTime": 2.0
+                              "waitTime": 1.5
                             }
                           },
                           {
                             "type": "named",
                             "data": {
-                              "name": "loadGroundAuto"
+                              "name": "loadGround"
                             }
                           }
                         ]
@@ -204,7 +236,7 @@
         {
           "type": "named",
           "data": {
-            "name": "stageScore"
+            "name": "crescendoScore"
           }
         },
         {
@@ -240,7 +272,7 @@
                           {
                             "type": "named",
                             "data": {
-                              "name": "loadGroundAuto"
+                              "name": "loadGround"
                             }
                           }
                         ]
@@ -271,7 +303,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 0.7
+                  "waitTime": 0.5
                 }
               },
               {
@@ -286,7 +318,7 @@
         {
           "type": "named",
           "data": {
-            "name": "stageScore"
+            "name": "crescendoScore"
           }
         }
       ]

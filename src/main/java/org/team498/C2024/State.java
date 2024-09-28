@@ -45,7 +45,7 @@ public enum State {
         CRESCENDO(3500, 1000, 40),
         SOURCE(0, 0, 50),
         PREPARE(4500, 1000, 40),
-        CANCEL_AMP(0, 0, 31),
+        AUTOINTAKE(3800, 0, 33),
         VISION(0, 0, 40),
         AUTO(4000, 1000, 40),
         CLIMB_UP(0, 0, 70),

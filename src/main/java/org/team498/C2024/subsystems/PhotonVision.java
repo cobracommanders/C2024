@@ -113,10 +113,10 @@ public class PhotonVision {
     }
 
     public TimedPose averagePoses(TimedPose poseOne, TimedPose poseTwo){
-        double timestamp = poseOne.timeStamp + poseTwo.timeStamp / 2;
-        double x = poseOne.pose.getX() + poseTwo.pose.getX() / 2;
-        double y = poseOne.pose.getY() + poseTwo.pose.getY() / 2;
-        Rotation2d rotation = Rotation2d.fromDegrees(poseOne.pose.getRotation().getDegrees() + poseTwo.pose.getRotation().getDegrees() / 2);
+        double timestamp = (poseOne.timeStamp + poseTwo.timeStamp) / 2;
+        double x = (poseOne.pose.getX() + poseTwo.pose.getX()) / 2;
+        double y = (poseOne.pose.getY() + poseTwo.pose.getY()) / 2;
+        Rotation2d rotation = Rotation2d.fromDegrees((poseOne.pose.getRotation().getDegrees() + poseTwo.pose.getRotation().getDegrees()) / 2);
         return new TimedPose(new Pose2d(x, y, rotation), timestamp);
 }
 

@@ -16,12 +16,15 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.team498.C2024.commands.drivetrain.AutoAlign;
 import org.team498.C2024.commands.intake.SetIntakeRollerState;
 import org.team498.C2024.commands.intake.SetIntakeRollersNextState;
+import org.team498.C2024.commands.intake.SetIntakeState;
 import org.team498.C2024.commands.robot.ReturnToIdle;
 import org.team498.C2024.commands.robot.SetIntakeIdle;
 import org.team498.C2024.commands.robot.SetState;
 import org.team498.C2024.commands.robot.loading.LoadGround;
+import org.team498.C2024.commands.robot.loading.LoadGroundAuto;
 import org.team498.C2024.commands.robot.scoring.AmpZoneScore;
 import org.team498.C2024.commands.robot.scoring.AutoScore;
+import org.team498.C2024.commands.robot.scoring.CrescendoScore;
 import org.team498.C2024.commands.robot.scoring.HalfScore;
 import org.team498.C2024.commands.robot.scoring.PodiumScore;
 import org.team498.C2024.commands.robot.scoring.PrepareToScore;
@@ -45,8 +48,6 @@ import java.util.List;
 import java.util.Optional;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import dev.doglog.DogLog;
-import dev.doglog.DogLogOptions;
 
 
 public class Robot extends TimedRobot{
@@ -101,7 +102,8 @@ public class Robot extends TimedRobot{
         NamedCommands.registerCommand("prepareToScore", new PrepareToScore());
         NamedCommands.registerCommand("halfScore", new HalfScore());
         NamedCommands.registerCommand("loadGround", new LoadGround());
-        NamedCommands.registerCommand("setIntakeIdle", new SetIntakeRollerState(State.IntakeRollers.IDLE).andThen(new SetIntakeRollersNextState()));
+        NamedCommands.registerCommand("setIntakeIdle", new SetIntakeRollerState(State.IntakeRollers.IDLE));
+        NamedCommands.registerCommand("setIntakeOut", new SetIntakeState(State.Intake.INTAKE));
         NamedCommands.registerCommand("subwooferScore", new SubwooferScore(0.5));
         NamedCommands.registerCommand("setStatePodium", new SetState(State.PODIUM));
         NamedCommands.registerCommand("podiumScore", new PodiumScore());
@@ -110,6 +112,9 @@ public class Robot extends TimedRobot{
         NamedCommands.registerCommand("ampZoneScore", new AmpZoneScore());
         NamedCommands.registerCommand("setStateOuterStage", new SetState(State.OUTER_STAGE));
         NamedCommands.registerCommand("stageScore", new StageScore());
+        NamedCommands.registerCommand("setStateCrescendo", new SetState(State.CRESCENDO));
+        NamedCommands.registerCommand("crescendoScore", new CrescendoScore());
+        NamedCommands.registerCommand("loadGroundAuto", new LoadGroundAuto());
 
 
         // m_robotContainer = new RobotContainer();
@@ -153,7 +158,6 @@ public class Robot extends TimedRobot{
         SmartDashboard.putNumber("Distance To Speaker", RobotPosition.distanceToSpeaker());
         // SmartDashboard.putNumber("bl cancoder", kDefaultPeriod)
         // SmartDashboard.putBoolean("is Scoring", StateController.getInstance().isScoring());
-
         if (alliance.isEmpty()) {
             alliance = DriverStation.getAlliance();
             // This reverses the coordinates/direction of the drive commands on the red alliance
