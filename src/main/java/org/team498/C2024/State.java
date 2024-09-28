@@ -88,7 +88,7 @@ public enum State {
         IDLE(0),
         FORWARD(0.5),
         REVERSE(-0.5),
-        AMP(-1);
+        AMP(-0.95);
 
         public final double speed;
 

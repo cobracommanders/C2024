@@ -158,7 +158,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
         
         
         Optional<PhotonVision.TimedPose> timedPose = PhotonVision.getInstance().getEstimatedPose();
-        if (isMoving() == false && timedPose.isPresent()) {
+        if (isMoving() == false && timedPose.isPresent() && DriverStation.isTeleopEnabled()) {
             TimedPose useGyro = new TimedPose(new Pose2d(timedPose.get().pose.getTranslation(), Rotation2d.fromDegrees(getHeading(timedPose.get().timeStamp))), timedPose.get().timeStamp);
             this.addVisionMeasurement(useGyro.pose, useGyro.timeStamp);
         }
