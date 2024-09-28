@@ -100,10 +100,10 @@ public enum State {
     //Sets Positions for Intake
     public enum Intake {
         IDLE(1.96), //1.96
-        INTAKE(0.4),
+        INTAKE(0),
         AUTO_SHOT(1),
         // AUTO_INTAKE(0.7),
-        OUTTAKE(0.4);
+        OUTTAKE(0);
 
         public final double speed;
         
