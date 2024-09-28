@@ -22,6 +22,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.proto.Kinematics;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Notifier; 
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
@@ -135,6 +137,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
         m_simNotifier.startPeriodic(kSimLoopPeriod);
     }
 
+    Field2d field = new Field2d();
     @Override
     public void periodic() {
         /* Periodically try to apply the operator perspective */
@@ -155,9 +158,22 @@ import com.pathplanner.lib.util.ReplanningConfig;
         if (isMoving() == false && timedPose.isPresent() && DriverStation.isTeleopEnabled()) {
             this.addVisionMeasurement(timedPose.get().pose, timedPose.get().timeStamp);
         }
-            
+        field.setRobotPose(this.getState().Pose);
+        SmartDashboard.putData(field);
         headingHistory.addSample(Timer.getFPGATimestamp(), this.getState().Pose.getRotation().getDegrees());
     }
+    // @Override
+    // public void seedFieldRelative(Pose2d location) {
+    //     try {
+    //         m_stateLock.writeLock().lock();
+
+    //         m_odometry.resetPosition(location.getRotation(), m_modulePositions, location);
+    //         /* We need to update our cached pose immediately so that race conditions don't happen */
+    //         m_cachedState.Pose = location;
+    //     } finally {
+    //         m_stateLock.writeLock().unlock();
+    //     }
+    // }
     @Override
     public void seedFieldRelative() {
         try {
