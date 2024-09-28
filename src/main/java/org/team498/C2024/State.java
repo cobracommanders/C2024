@@ -103,7 +103,7 @@ public enum State {
         INTAKE(0.4),
         AUTO_SHOT(1),
         // AUTO_INTAKE(0.7),
-        OUTTAKE(1.96);
+        OUTTAKE(0.4);
 
         public final double speed;
         
