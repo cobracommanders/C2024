@@ -18,7 +18,9 @@ public enum State {
     FRONT_PODIUM(Shooter.FRONT_PODIUM, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.REVERSE),
     AMP_SPEAKER(Shooter.AMP_SPEAKER, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.REVERSE),
     OUTREACH(Shooter.OUTREACH, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.REVERSE),
-    OUTER_STAGE(Shooter.OUTER_STAGE, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.REVERSE);
+    OUTER_STAGE(Shooter.OUTER_STAGE, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.REVERSE),
+    SANGHI(Shooter.SANGHI, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.REVERSE);
+
 
 
     public final Shooter shooter;
@@ -55,7 +57,9 @@ public enum State {
         FRONT_PODIUM(4000, 1000, 33), //31.5
         AMP_SPEAKER(3300, 1000, 32),
         OUTREACH(2800, 1000, 55),
-        OUTER_STAGE(4500, 1000, 25.5);
+        OUTER_STAGE(4500, 1000, 25.5),
+        SANGHI(4500, 1000, 27.5);
+
 
         public final double speed;
         public final double feedSpeed;

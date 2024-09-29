@@ -13,8 +13,8 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 public class CrescendoScore extends SequentialCommandGroup{
     public CrescendoScore(){
         super(
-            new SetState(State.CRESCENDO),
-            new InstantCommand(()-> StateController.getInstance().setNextScoringOption(ScoringOption.CRESCENDO)),
+            new SetState(State.SANGHI),
+            new InstantCommand(()-> StateController.getInstance().setNextScoringOption(ScoringOption.SANGHI)),
             //new InstantCommand(StateController.getInstance().setNextScoringOption(ScoringOption.SUBWOOFER))),
             new ParallelDeadlineGroup(
                // new WaitCommand(0.5),

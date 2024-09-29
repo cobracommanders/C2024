@@ -167,6 +167,9 @@ import com.pathplanner.lib.util.ReplanningConfig;
             
     }
     public class TimedPose{
+        //4.1 , 6.5
+        //0.16, 5.57
+        //4.106
         Pose2d pose;
         double timeStamp;
 
