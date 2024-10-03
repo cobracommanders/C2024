@@ -5,6 +5,7 @@ import org.team498.C2024.Constants.OIConstants;
 import org.team498.C2024.StateController.ScoringOption;
 import org.team498.C2024.commands.drivetrain.AngleLock;
 import org.team498.C2024.commands.drivetrain.AutoAlign;
+import org.team498.C2024.commands.drivetrain.AutoLock;
 import org.team498.C2024.commands.drivetrain.SlowDrive;
 import org.team498.C2024.commands.drivetrain.TargetDrive;
 import org.team498.C2024.commands.hopper.SetHopperState;
@@ -84,7 +85,7 @@ public class Controls {
                     new AngleLock(-90),
                     new AngleLock(-90),
                     ()-> Robot.alliance.get() == Alliance.Red),
-                new AutoAlign(), 
+                new AutoLock().andThen(new AutoAlign()), 
                 ()-> StateController.getInstance().getNextScoringState() == State.AMP))
             .onFalse(CommandSwerveDrivetrain.getInstance().getDefaultCommand());
         //driver.A().onTrue(runOnce(() -> Drivetrain.getInstance().setYaw(0 + Robot.rotationOffset)));

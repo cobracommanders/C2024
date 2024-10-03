@@ -166,13 +166,13 @@ public class RobotPosition {
     //     return new Transform2d(new Translation2d(Math.copySign(x * x, x), Math.copySign(y * y, y)), r);
     //}
 
-    public static  double calculateDegreesToSpeaker(){
+    public static double calculateDegreesToSpeaker(){
         Pose2d blueSpeaker = FieldPositions.blueSpeaker.toPose2d();
         if (Robot.alliance.get() == Alliance.Red) return calculateDegreesToTarget(PoseUtil.flip(blueSpeaker), shooter.getTimeOfFlight());
         return calculateDegreesToTarget(blueSpeaker, shooter.getTimeOfFlight());
     }
 
-    public static  double calculateDegreesToNote(Point note){
+    public static double calculateDegreesToNote(Point note){
         Pose2d notePose = note.toPose2d();
         if (Robot.alliance.get() == Alliance.Red) return calculateDegreesToTarget(PoseUtil.flip(notePose));
         return calculateDegreesToTarget(notePose);
