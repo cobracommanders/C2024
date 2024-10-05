@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.78,
-      "y": 6.88
+      "x": 1.46,
+      "y": 7.3
     },
-    "rotation": -120.0
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
@@ -18,7 +18,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "setStateCrescendo"
+                  "name": "setStateSanghi"
                 }
               },
               {
@@ -44,7 +44,7 @@
                           {
                             "type": "wait",
                             "data": {
-                              "waitTime": 1.4
+                              "waitTime": 0.3
                             }
                           },
                           {
@@ -139,7 +139,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 1.2
+                  "waitTime": 0.3
                 }
               },
               {
@@ -174,7 +174,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 1.0
+                        "waitTime": 1.15
                       }
                     },
                     {
@@ -221,7 +221,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 0.7
+                  "waitTime": 0.3
                 }
               },
               {
@@ -303,7 +303,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 0.5
+                  "waitTime": 0.3
                 }
               },
               {

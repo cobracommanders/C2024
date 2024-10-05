@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.7815863793056181,
-        "y": 6.875164023163159
+        "x": 1.4437834806867724,
+        "y": 7.284168115192696
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.9492697432958861,
-        "y": 7.13001868613151
+        "x": 1.6114668446770402,
+        "y": 7.539022778161046
       },
       "isLocked": false,
       "linkedName": null
@@ -47,7 +47,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.0,
-      "rotationDegrees": -120.0,
+      "rotationDegrees": -177.33699923393294,
       "rotateFast": true
     },
     {
@@ -76,6 +76,9 @@
   },
   "reversed": false,
   "folder": "AmpSide88",
-  "previewStartingState": null,
+  "previewStartingState": {
+    "rotation": 178.61964592655553,
+    "velocity": 0
+  },
   "useDefaultConstraints": false
 }

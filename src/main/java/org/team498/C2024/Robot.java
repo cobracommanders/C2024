@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 import org.team498.C2024.commands.drivetrain.AutoAlign;
+import org.team498.C2024.commands.drivetrain.AutoLock;
 import org.team498.C2024.commands.intake.SetIntakeRollerState;
 import org.team498.C2024.commands.intake.SetIntakeRollersNextState;
 import org.team498.C2024.commands.intake.SetIntakeState;
@@ -107,7 +108,7 @@ public class Robot extends TimedRobot{
         NamedCommands.registerCommand("subwooferScore", new SubwooferScore(0.5));
         NamedCommands.registerCommand("setStatePodium", new SetState(State.PODIUM));
         NamedCommands.registerCommand("podiumScore", new PodiumScore());
-        NamedCommands.registerCommand("autoAlign", new AutoAlign());
+        NamedCommands.registerCommand("autoAlign", new AutoLock().andThen(new AutoAlign()));
         NamedCommands.registerCommand("setShooterNextState", new SetShooterNextState());
         NamedCommands.registerCommand("ampZoneScore", new AmpZoneScore());
         NamedCommands.registerCommand("setStateOuterStage", new SetState(State.OUTER_STAGE));
