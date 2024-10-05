@@ -53,8 +53,8 @@ public class AutoAlign extends Command{
         //end = true;
         
         // }
-        if (Math.abs(tx) < 3) {
-            LimelightHelpers.setLEDMode_ForceBlink("limelight");
+        if (Math.abs(tx) < 5) {
+            LimelightHelpers.setLEDMode_ForceOn("limelight");
         }
         // double speeds = 0;
         // speeds = tx * (Math.PI / 180);

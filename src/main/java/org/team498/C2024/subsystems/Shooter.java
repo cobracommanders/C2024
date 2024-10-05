@@ -96,8 +96,8 @@ public class Shooter extends SubsystemBase {
         feedSpeed = State.Shooter.IDLE.feedSpeed;
         angle = State.Shooter.IDLE.angle;
 
-        rightController.setTolerance(100);
-        leftController.setTolerance(100);
+        rightController.setTolerance(300);
+        leftController.setTolerance(300);
         feedController.setTolerance(500);
         angleController.setTolerance(0.5);
 
