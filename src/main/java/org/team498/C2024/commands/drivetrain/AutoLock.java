@@ -14,27 +14,31 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class AutoLock extends Command {
-    private final double degrees;
+    private double degrees;
     private final CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
     private Xbox controller = Robot.controls.driver;
     public AutoLock() {
         addRequirements(drivetrain);
-        this.degrees = RobotPosition.calculateDegreesToSpeaker();
+    }
+
+    @Override
+    public void initialize() {
+        
     }
 
     @Override
     public void execute() {
+        this.degrees = RobotPosition.calculateDegreesToSpeaker();
         drivetrain.driveFieldRelativeAngleLock(new ChassisSpeeds(
             -controller.leftY() * controller.leftY() * controller.leftY() * TunerConstants.kSpeedAt12VoltsMps,
             -controller.leftX() * controller.leftX() * controller.leftX() * TunerConstants.kSpeedAt12VoltsMps,
             0), 
             this.degrees);
-            isFinished();
     }
 
     @Override
     public boolean isFinished() {
         //currentTime > trajectory.getTotalTimeSeconds();
-        return ((Math.abs(RobotPosition.calculateDegreesToSpeaker() - Math.abs(CommandSwerveDrivetrain.getInstance().getHeading(degrees))) ) <= 3);
+        return ((Math.abs(RobotPosition.calculateDegreesToSpeaker() - Math.abs(CommandSwerveDrivetrain.getInstance().getHeading(degrees))) ) <= 1.2);
     }
 }
