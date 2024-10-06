@@ -4,7 +4,7 @@ import org.team498.lib.util.LinearInterpolator;
 
 public class ShooterUtil {
     private static double[][] data = new double[][] {
-        {4.0, 29},
+        {4.0, 27},
         {3.3, 32},
         {3, 34},
         {2.8, 35},

@@ -5,6 +5,8 @@ import org.team498.C2024.Ports;
 import org.team498.C2024.State;
 import org.team498.C2024.Constants.IntakeConstants;
 import org.team498.C2024.Constants.ShooterConstants;
+
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -39,6 +41,8 @@ public class Intake extends SubsystemBase {
         // motor = new LazySparkMax(Ports.IntakePorts.LMOTOR, MotorType.kBrushless);
         motor = new TalonFX(Ports.IntakePorts.MOTOR);
         angleEncoder = new DutyCycle(new DigitalInput(Ports.IntakePorts.ANGLE_ENCODER));
+
+        motor.getConfigurator().apply(new CurrentLimitsConfigs().withStatorCurrentLimit(60).withStatorCurrentLimitEnable(true));
 
         pidController = new PIDController(IntakeConstants.P, IntakeConstants.I, IntakeConstants.D);
         gravityFeedforward = new ArmFeedforward(IntakeConstants.S, IntakeConstants.G, IntakeConstants.V);

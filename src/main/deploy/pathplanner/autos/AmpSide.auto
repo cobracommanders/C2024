@@ -44,7 +44,7 @@
                           {
                             "type": "wait",
                             "data": {
-                              "waitTime": 0.3
+                              "waitTime": 0.2
                             }
                           },
                           {
@@ -93,15 +93,15 @@
                       "data": {
                         "commands": [
                           {
-                            "type": "wait",
-                            "data": {
-                              "waitTime": 2.5
-                            }
-                          },
-                          {
                             "type": "named",
                             "data": {
                               "name": "loadGround"
+                            }
+                          },
+                          {
+                            "type": "wait",
+                            "data": {
+                              "waitTime": 3.0
                             }
                           }
                         ]
@@ -139,7 +139,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 0.3
+                  "waitTime": 0.2
                 }
               },
               {
@@ -182,15 +182,15 @@
                       "data": {
                         "commands": [
                           {
-                            "type": "wait",
-                            "data": {
-                              "waitTime": 1.5
-                            }
-                          },
-                          {
                             "type": "named",
                             "data": {
                               "name": "loadGround"
+                            }
+                          },
+                          {
+                            "type": "wait",
+                            "data": {
+                              "waitTime": 2.75
                             }
                           }
                         ]
@@ -200,6 +200,12 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setStateCrescenlow"
           }
         },
         {
@@ -221,7 +227,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 0.3
+                  "waitTime": 0.2
                 }
               },
               {
@@ -236,7 +242,7 @@
         {
           "type": "named",
           "data": {
-            "name": "crescendoScore"
+            "name": "crescenlowScore"
           }
         },
         {
@@ -264,15 +270,15 @@
                       "data": {
                         "commands": [
                           {
-                            "type": "wait",
-                            "data": {
-                              "waitTime": 2.0
-                            }
-                          },
-                          {
                             "type": "named",
                             "data": {
                               "name": "loadGround"
+                            }
+                          },
+                          {
+                            "type": "wait",
+                            "data": {
+                              "waitTime": 3.25
                             }
                           }
                         ]
@@ -318,7 +324,7 @@
         {
           "type": "named",
           "data": {
-            "name": "crescendoScore"
+            "name": "crescenlowScore"
           }
         }
       ]

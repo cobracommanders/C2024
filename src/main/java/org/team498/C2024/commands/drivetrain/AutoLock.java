@@ -35,10 +35,14 @@ public class AutoLock extends Command {
             0), 
             this.degrees);
     }
+    @Override
+    public void end(boolean interrupted) {
+        drivetrain.driveFieldRelative(new ChassisSpeeds());
+    }
 
     @Override
     public boolean isFinished() {
         //currentTime > trajectory.getTotalTimeSeconds();
-        return ((Math.abs(RobotPosition.calculateDegreesToSpeaker() - Math.abs(CommandSwerveDrivetrain.getInstance().getHeading(degrees))) ) <= 1.2);
+        return Math.abs(RobotPosition.calculateDegreesToSpeaker() - drivetrain.getState().Pose.getRotation().getDegrees()) <= 2;
     }
 }

@@ -19,7 +19,8 @@ public enum State {
     AMP_SPEAKER(Shooter.AMP_SPEAKER, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.REVERSE),
     OUTREACH(Shooter.OUTREACH, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.REVERSE),
     OUTER_STAGE(Shooter.OUTER_STAGE, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.REVERSE),
-    SANGHI(Shooter.SANGHI, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.REVERSE);
+    SANGHI(Shooter.SANGHI, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.REVERSE),
+    CRESCENLOW(Shooter.CRESCENLOW, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.REVERSE);
 
 
 
@@ -58,7 +59,8 @@ public enum State {
         AMP_SPEAKER(3600, 1000, 35.5),
         OUTREACH(2800, 1000, 55),
         OUTER_STAGE(4500, 1000, 25.5),
-        SANGHI(4500, 1000, 28);
+        SANGHI(4500, 1000, 28),
+        CRESCENLOW(4500, 1000, 27.5);
 
 
         public final double speed;

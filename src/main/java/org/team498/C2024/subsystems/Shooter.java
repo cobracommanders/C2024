@@ -104,7 +104,7 @@ public class Shooter extends SubsystemBase {
         // reset motor defaults to ensure all settings are clear
         TalonFXConfiguration flywheelConfig = new TalonFXConfiguration();
         flywheelConfig.CurrentLimits.SupplyCurrentLimit = 70;
-        flywheelConfig.CurrentLimits.StatorCurrentLimit = 80;
+        flywheelConfig.CurrentLimits.StatorCurrentLimit = 60;
         flywheelConfig.CurrentLimits.StatorCurrentLimitEnable = true;
         flywheelConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
         rightMotor.getConfigurator().apply(flywheelConfig);

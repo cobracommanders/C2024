@@ -3,6 +3,7 @@ package org.team498.C2024.subsystems;
 import org.team498.C2024.Ports;
 import org.team498.C2024.State;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -20,6 +21,7 @@ public class IntakeRollers extends SubsystemBase {
     public IntakeRollers() {
         motor = new TalonFX(Ports.IntakeRollersPorts.MOTOR);
         //encoder = motor.getEncoder(); //this can be left or right motor, whichever is most convenient
+        motor.getConfigurator().apply(new CurrentLimitsConfigs().withStatorCurrentLimit(60).withStatorCurrentLimitEnable(true));
 
         // Instantiate variables to intitial values
         setpoint = 0;

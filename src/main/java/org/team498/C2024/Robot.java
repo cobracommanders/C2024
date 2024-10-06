@@ -26,6 +26,7 @@ import org.team498.C2024.commands.robot.loading.LoadGroundAuto;
 import org.team498.C2024.commands.robot.scoring.AmpZoneScore;
 import org.team498.C2024.commands.robot.scoring.AutoScore;
 import org.team498.C2024.commands.robot.scoring.CrescendoScore;
+import org.team498.C2024.commands.robot.scoring.CrescenlowScore;
 import org.team498.C2024.commands.robot.scoring.HalfScore;
 import org.team498.C2024.commands.robot.scoring.PodiumScore;
 import org.team498.C2024.commands.robot.scoring.PrepareToScore;
@@ -115,9 +116,10 @@ public class Robot extends TimedRobot{
         NamedCommands.registerCommand("stageScore", new StageScore());
         NamedCommands.registerCommand("setStateCrescendo", new SetState(State.CRESCENDO));
         NamedCommands.registerCommand("crescendoScore", new CrescendoScore());
+        NamedCommands.registerCommand("crescenlowScore", new CrescenlowScore());
         NamedCommands.registerCommand("loadGroundAuto", new LoadGroundAuto());
         NamedCommands.registerCommand("setStateSanghi", new SetState(State.SANGHI));
-
+        NamedCommands.registerCommand("setStateCrescenlow", new SetState(State.CRESCENLOW));
 
         // m_robotContainer = new RobotContainer();
         //new PowerDistribution(1, PowerDistribution.ModuleType.kRev).close(); // Enables power distribution logging
@@ -155,6 +157,7 @@ public class Robot extends TimedRobot{
     @Override
     public void robotPeriodic() {
         CommandScheduler.getInstance().run();
+        
         SmartDashboard.putData(autoChooser);
         SmartDashboard.putBoolean("Note Ready To AMP", Kicker.getInstance().getKickerBeamBreak());
         SmartDashboard.putNumber("Distance To Speaker", RobotPosition.distanceToSpeaker());

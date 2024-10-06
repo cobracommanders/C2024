@@ -153,7 +153,6 @@ import com.pathplanner.lib.util.ReplanningConfig;
                 hasAppliedOperatorPerspective = true;
             });
         }
-        
         headingHistory.addSample(Timer.getFPGATimestamp(), this.getState().Pose.getRotation().getDegrees());
         
         
