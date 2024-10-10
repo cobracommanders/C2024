@@ -147,8 +147,8 @@ public class Controls {
         operator.POV0().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.AMP_SPEAKER)));
         operator.POV0().toggleOnTrue(new PrepareToScore());
 
-        operator.POVMinus90().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.SPIT)));
-        operator.POVMinus90().toggleOnTrue(new PrepareToScore());
+        // operator.POVMinus90().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.SPIT)));
+        // operator.POVMinus90().toggleOnTrue(new PrepareToScore());
 
         operator.POV90().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.CRESCENDO)));
         operator.POV90().toggleOnTrue(new PrepareToScore());
