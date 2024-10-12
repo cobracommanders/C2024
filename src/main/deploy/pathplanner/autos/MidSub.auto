@@ -54,15 +54,15 @@
                       "data": {
                         "commands": [
                           {
-                            "type": "wait",
-                            "data": {
-                              "waitTime": 1.5
-                            }
-                          },
-                          {
                             "type": "named",
                             "data": {
                               "name": "loadGround"
+                            }
+                          },
+                          {
+                            "type": "wait",
+                            "data": {
+                              "waitTime": 1.5
                             }
                           }
                         ]
@@ -133,15 +133,15 @@
                 "data": {
                   "commands": [
                     {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 1.7
-                      }
-                    },
-                    {
                       "type": "named",
                       "data": {
                         "name": "loadGround"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 1.7
                       }
                     }
                   ]
@@ -209,15 +209,15 @@
                 "data": {
                   "commands": [
                     {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 2.0
-                      }
-                    },
-                    {
                       "type": "named",
                       "data": {
                         "name": "loadGround"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 2.0
                       }
                     }
                   ]

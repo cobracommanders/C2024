@@ -94,7 +94,7 @@ public enum State {
         IDLE(0),
         FORWARD(0.5),
         REVERSE(-0.5),
-        AMP(-0.95);
+        AMP(-0.90);
 
         public final double speed;
 
@@ -105,7 +105,7 @@ public enum State {
 
     //Sets Positions for Intake
     public enum Intake {
-        IDLE(1.96), //1.96
+        IDLE(1.9), //1.96
         INTAKE(0.05),
         AUTO_SHOT(1),
         // AUTO_INTAKE(0.7),
