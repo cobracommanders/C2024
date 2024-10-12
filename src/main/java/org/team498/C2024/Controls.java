@@ -18,6 +18,7 @@ import org.team498.C2024.commands.robot.loading.Outtake;
 import org.team498.C2024.commands.robot.scoring.PrepareAmp;
 import org.team498.C2024.commands.robot.scoring.PrepareToScore;
 import org.team498.C2024.commands.robot.scoring.Score;
+import org.team498.C2024.commands.robot.scoring.UnAmp;
 import org.team498.C2024.commands.shooter.SetShooterManual;
 import org.team498.C2024.commands.shooter.SetShooterState;
 import org.team498.C2024.subsystems.CommandSwerveDrivetrain;
@@ -117,7 +118,8 @@ public class Controls {
             .onFalse(new ReturnToIdle());
         operator.leftTrigger().onTrue(new Outtake())
             .onFalse(new ReturnToIdle());
-        operator.leftBumper().onTrue(new SetShooterState(State.Shooter.PODIUM));
+        operator.leftBumper().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.AMP)));
+        operator.leftBumper().toggleOnTrue(new UnAmp());
         operator.rightBumper().onTrue(new IdleIntakeOn());
         // operator.back().toggleOnTrue(new SetShooterManual(true, operator::leftY, ()-> 0.5));
         // operator.A().toggleOnTrue(new SetShooterManual(true, operator::leftY, ()-> 1.0));

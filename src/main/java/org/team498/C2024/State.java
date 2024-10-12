@@ -60,7 +60,7 @@ public enum State {
         OUTREACH(2800, 1000, 55),
         OUTER_STAGE(4500, 1000, 25.5),
         SANGHI(4500, 1000, 28),
-        CRESCENLOW(4500, 1000, 27.5);
+        CRESCENLOW(4500, 1000, 26.5);
 
 
         public final double speed;
