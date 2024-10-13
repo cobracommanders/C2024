@@ -42,15 +42,15 @@
                       "data": {
                         "commands": [
                           {
-                            "type": "named",
+                            "type": "wait",
                             "data": {
-                              "name": "autoAlign"
+                              "waitTime": 0.5
                             }
                           },
                           {
-                            "type": "wait",
+                            "type": "named",
                             "data": {
-                              "waitTime": 1.4
+                              "name": "autoAlign"
                             }
                           }
                         ]
@@ -132,7 +132,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 0.7
+                  "waitTime": 0.5
                 }
               },
               {
@@ -147,7 +147,7 @@
         {
           "type": "named",
           "data": {
-            "name": "crescendoScore"
+            "name": "crescenlowScore"
           }
         },
         {
@@ -214,7 +214,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 0.5
+                  "waitTime": 0.6
                 }
               },
               {
