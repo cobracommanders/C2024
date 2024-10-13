@@ -6,6 +6,7 @@ import org.team498.C2024.StateController.ScoringOption;
 import org.team498.C2024.commands.drivetrain.AngleLock;
 import org.team498.C2024.commands.drivetrain.AutoAlign;
 import org.team498.C2024.commands.drivetrain.AutoLock;
+import org.team498.C2024.commands.drivetrain.CrescendoAlign;
 import org.team498.C2024.commands.drivetrain.SlowDrive;
 import org.team498.C2024.commands.drivetrain.TargetDrive;
 import org.team498.C2024.commands.hopper.SetHopperState;
@@ -22,6 +23,7 @@ import org.team498.C2024.commands.robot.scoring.UnAmp;
 import org.team498.C2024.commands.shooter.SetShooterManual;
 import org.team498.C2024.commands.shooter.SetShooterState;
 import org.team498.C2024.subsystems.CommandSwerveDrivetrain;
+import org.team498.C2024.subsystems.Hopper;
 import org.team498.C2024.subsystems.TunerConstants;
 import org.team498.lib.drivers.Xbox;
 import org.team498.lib.util.PoseUtil;
@@ -34,6 +36,8 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 
 import java.util.function.Supplier;
@@ -81,14 +85,23 @@ public class Controls {
         // driver.rightBumper().onTrue(new SlowDrive(DrivetrainConstants.SLOW_SPEED_SCALAR))
         //     .onFalse(new SlowDrive(DrivetrainConstants.FULL_SPEED_SCALAR));
         driver.rightBumper().onTrue(runOnce(() ->CommandSwerveDrivetrain.getInstance().setYaw(Robot.alliance.get() == Alliance.Red?180:0)));
-        driver.leftBumper().onTrue(new ConditionalCommand(
+        driver.leftBumper().whileTrue(new ConditionalCommand(
                 new ConditionalCommand(
                     new AngleLock(-90),
                     new AngleLock(-90),
                     ()-> Robot.alliance.get() == Alliance.Red),
-                new AutoLock().andThen(new AutoAlign()), 
+                // CRESCENDO MODE SHOOT COMMAND
+                new AutoAlign(0.03).andThen(new SetScoringState().andThen(runOnce(()-> CommandScheduler.getInstance().schedule(scoreCommand)))),
+                // END CRESCENDO MODE SHOOT
                 ()-> StateController.getInstance().getNextScoringState() == State.AMP))
             .onFalse(CommandSwerveDrivetrain.getInstance().getDefaultCommand());
+        // driver.B().onTrue(new AutoAlign().andThen(
+        //         new ConditionalCommand(
+        //             new SetScoringState().andThen(runOnce(()-> CommandScheduler.getInstance().schedule(scoreCommand))),
+        //             new WaitCommand(0.0),
+        //             () -> Hopper.getInstance().getBackBeamBreak()
+        //         )
+        //     ));
         //driver.A().onTrue(runOnce(() -> Drivetrain.getInstance().setYaw(0 + Robot.rotationOffset)));
         //driver.B().onTrue(runOnce(() -> Drivetrain.getInstance().setPose(new Pose2d(15.18, 1.32, Rotation2d.fromDegrees(0 + Robot.rotationOffset)))));
         // driver.Y().onTrue(runOnce(() -> Drivetrain.getInstance().setPose(new Pose2d(15.07, 5.55, Rotation2d.fromDegrees(0 + Robot.rotationOffset)))));

@@ -42,15 +42,15 @@
                       "data": {
                         "commands": [
                           {
-                            "type": "wait",
-                            "data": {
-                              "waitTime": 0.5
-                            }
-                          },
-                          {
                             "type": "named",
                             "data": {
                               "name": "autoAlign"
+                            }
+                          },
+                          {
+                            "type": "wait",
+                            "data": {
+                              "waitTime": 0.2
                             }
                           }
                         ]
@@ -137,15 +137,15 @@
           "data": {
             "commands": [
               {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.6
-                }
-              },
-              {
                 "type": "named",
                 "data": {
                   "name": "autoAlign"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.7
                 }
               }
             ]
@@ -225,15 +225,15 @@
           "data": {
             "commands": [
               {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.4
-                }
-              },
-              {
                 "type": "named",
                 "data": {
                   "name": "autoAlign"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.2
                 }
               }
             ]
@@ -307,15 +307,15 @@
           "data": {
             "commands": [
               {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.5
-                }
-              },
-              {
                 "type": "named",
                 "data": {
                   "name": "autoAlign"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.5
                 }
               }
             ]

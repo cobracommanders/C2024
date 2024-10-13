@@ -2,6 +2,7 @@ package org.team498.C2024.commands.drivetrain;
 
 import org.team498.C2024.Robot;
 import org.team498.C2024.RobotPosition;
+import org.team498.C2024.commands.robot.SetScoringState;
 import org.team498.C2024.Controls;
 import org.team498.C2024.subsystems.CommandSwerveDrivetrain;
 import org.team498.C2024.subsystems.Hopper;
@@ -22,7 +23,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
-public class AutoAlign extends Command{
+public class CrescendoAlign extends Command{
     double tx = 0;
     boolean end = true;
     private final CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
@@ -31,9 +32,7 @@ public class AutoAlign extends Command{
     private double targetAngle = -1000;
     private boolean useLL = true;
     private Timer endTimer = new Timer();
-    private final double endTime;
-    public AutoAlign(double endTime) {
-            this.endTime = endTime;
+    public CrescendoAlign() {
             addRequirements(drivetrain);
         }
         
@@ -103,13 +102,13 @@ public class AutoAlign extends Command{
     }
     @Override
     public boolean isFinished() {
-        return endTimer.get() >= endTime;
+        return endTimer.get() >= 0.05;
     }
     @Override
     public void end(boolean interrupted) {
         LimelightHelpers.setLEDMode_ForceOff("limelight");
         // if (Hopper.getInstance().getBackBeamBreak() && !CommandScheduler.getInstance().isScheduled(Controls.scoreCommand)) {
-        //     CommandScheduler.getInstance().schedule(Controls.scoreCommand);
+        //     CommandScheduler.getInstance().schedule(new SetScoringState().andThen(Controls.scoreCommand));
         // }
     }
 }

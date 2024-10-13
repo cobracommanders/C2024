@@ -45,7 +45,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
     public TimeInterpolatableBuffer<Double> headingHistory = TimeInterpolatableBuffer.createDoubleBuffer(6);
 
 
-    private final PIDController rotationController = new PIDController(6 * 3.14/180.0, 0, 0);
+    private final PIDController rotationController = new PIDController(5.5 * 3.14/180.0, 0, 0);
 
     private final SlewRateLimiter xLimiter = new SlewRateLimiter(MAX_ACCELERATION_METERS_PER_SECOND_SQUARED);
     private final SlewRateLimiter yLimiter = new SlewRateLimiter(MAX_ACCELERATION_METERS_PER_SECOND_SQUARED);
@@ -102,6 +102,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
         this.seedFieldRelative(new Pose2d(getState().Pose.getTranslation(), Rotation2d.fromDegrees(angle)));
         this.m_pigeon2.setYaw(angle);
     }
+
     public double getHeading(double timestamp) {
         return headingHistory.getSample(timestamp).orElse((double) 0);
     }
