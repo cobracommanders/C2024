@@ -26,7 +26,8 @@ import org.team498.C2024.commands.robot.loading.LoadGroundAuto;
 import org.team498.C2024.commands.robot.scoring.AmpZoneScore;
 import org.team498.C2024.commands.robot.scoring.AutoScore;
 import org.team498.C2024.commands.robot.scoring.CrescendoScore;
-import org.team498.C2024.commands.robot.scoring.CrescenlowScore;
+import org.team498.C2024.commands.robot.scoring.SanghiScore;
+import org.team498.C2024.commands.robot.scoring.FarShotScore;
 import org.team498.C2024.commands.robot.scoring.HalfScore;
 import org.team498.C2024.commands.robot.scoring.PodiumScore;
 import org.team498.C2024.commands.robot.scoring.PrepareToScore;
@@ -115,11 +116,12 @@ public class Robot extends TimedRobot{
         NamedCommands.registerCommand("setStateOuterStage", new SetState(State.OUTER_STAGE));
         NamedCommands.registerCommand("stageScore", new StageScore());
         NamedCommands.registerCommand("setStateCrescendo", new SetState(State.CRESCENDO));
+        NamedCommands.registerCommand("crescendoScore", new SanghiScore());
+        NamedCommands.registerCommand("crescenlowScore", new FarShotScore());
         NamedCommands.registerCommand("crescendoScore", new CrescendoScore());
-        NamedCommands.registerCommand("crescenlowScore", new CrescenlowScore());
         NamedCommands.registerCommand("loadGroundAuto", new LoadGroundAuto());
         NamedCommands.registerCommand("setStateSanghi", new SetState(State.SANGHI));
-        NamedCommands.registerCommand("setStateCrescenlow", new SetState(State.CRESCENLOW));
+        NamedCommands.registerCommand("setStateCrescenlow", new SetState(State.FARSHOT));
 
         // m_robotContainer = new RobotContainer();
         //new PowerDistribution(1, PowerDistribution.ModuleType.kRev).close(); // Enables power distribution logging

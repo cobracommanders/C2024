@@ -68,7 +68,7 @@ public class StateController extends SubsystemBase {
             
             case SANGHI -> State.SANGHI;
 
-            case CRESCENLOW -> State.CRESCENLOW;
+            case CRESCENLOW -> State.FARSHOT;
         };
 
         return state;

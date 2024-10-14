@@ -10,11 +10,11 @@ import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
-public class CrescendoScore extends SequentialCommandGroup{
-    public CrescendoScore(){
+public class FarShotScore extends SequentialCommandGroup{
+    public FarShotScore(){
         super(
-            new SetState(State.CRESCENDO),
-            new InstantCommand(()-> StateController.getInstance().setNextScoringOption(ScoringOption.CRESCENDO)),
+            new SetState(State.FARSHOT),
+            new InstantCommand(()-> StateController.getInstance().setNextScoringOption(ScoringOption.CRESCENLOW)),
             //new InstantCommand(StateController.getInstance().setNextScoringOption(ScoringOption.SUBWOOFER))),
             new ParallelDeadlineGroup(
                // new WaitCommand(0.5),
