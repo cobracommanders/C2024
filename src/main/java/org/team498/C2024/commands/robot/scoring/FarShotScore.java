@@ -14,7 +14,7 @@ public class FarShotScore extends SequentialCommandGroup{
     public FarShotScore(){
         super(
             new SetState(State.FARSHOT),
-            new InstantCommand(()-> StateController.getInstance().setNextScoringOption(ScoringOption.CRESCENLOW)),
+            new InstantCommand(()-> StateController.getInstance().setNextScoringOption(ScoringOption.FARSHOT)),
             //new InstantCommand(StateController.getInstance().setNextScoringOption(ScoringOption.SUBWOOFER))),
             new ParallelDeadlineGroup(
                // new WaitCommand(0.5),

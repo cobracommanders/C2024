@@ -116,7 +116,7 @@ public class Robot extends TimedRobot{
         NamedCommands.registerCommand("setStateOuterStage", new SetState(State.OUTER_STAGE));
         NamedCommands.registerCommand("stageScore", new StageScore());
         NamedCommands.registerCommand("setStateCrescendo", new SetState(State.CRESCENDO));
-        NamedCommands.registerCommand("crescendoScore", new SanghiScore());
+        NamedCommands.registerCommand("sanghiScore", new SanghiScore());
         NamedCommands.registerCommand("crescenlowScore", new FarShotScore());
         NamedCommands.registerCommand("crescendoScore", new CrescendoScore());
         NamedCommands.registerCommand("loadGroundAuto", new LoadGroundAuto());
