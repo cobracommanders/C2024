@@ -37,7 +37,7 @@ public final class Constants {
         public static final double FL_MODULE_OFFSET = -0.984863 - 0.002197; //- 0.004639;
         public static final double FR_MODULE_OFFSET = -0.707031 - 0.487061 + 0.5; //- 0.974121;
         public static final double BL_MODULE_OFFSET = -0.716553 + 0.5 - 0.013916 - 0.009521; //- 0.013916;
-        public static final double BR_MODULE_OFFSET = -0.960449 + 0.5;
+        public static final double BR_MODULE_OFFSET = -0.842285;
 
         public static final double ROBOT_WIDTH = 26.5 + 6; // Robot width with bumpers, in inches
 
