@@ -24,8 +24,13 @@ import org.team498.C2024.commands.shooter.SetShooterManual;
 import org.team498.C2024.commands.shooter.SetShooterState;
 import org.team498.C2024.subsystems.CommandSwerveDrivetrain;
 import org.team498.C2024.subsystems.Hopper;
+import org.team498.C2024.subsystems.LED;
+import org.team498.C2024.subsystems.Shooter;
 import org.team498.C2024.subsystems.TunerConstants;
+import org.team498.C2024.subsystems.LED.LEDState;
+import org.team498.lib.drivers.Blinkin;
 import org.team498.lib.drivers.Xbox;
+import org.team498.lib.drivers.Blinkin.BlinkinColor;
 import org.team498.lib.util.PoseUtil;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
@@ -36,7 +41,9 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 
@@ -91,7 +98,7 @@ public class Controls {
                     new AngleLock(-90),
                     ()-> Robot.alliance.get() == Alliance.Red),
                 // CRESCENDO MODE SHOOT COMMAND
-                new AutoAlign(0.03).andThen(new SetScoringState().andThen(runOnce(()-> CommandScheduler.getInstance().schedule(scoreCommand)))),
+                new AutoAlign(0.07),//.andThen(new SetScoringState().andThen(new WaitUntilCommand(() -> Shooter.getInstance().atSetpoint() && Hopper.getInstance().getBackBeamBreak())).andThen(new SetScoringState().andThen(runOnce(()-> CommandScheduler.getInstance().schedule(scoreCommand))))),
                 // END CRESCENDO MODE SHOOT
                 ()-> StateController.getInstance().getNextScoringState() == State.AMP))
             .onFalse(CommandSwerveDrivetrain.getInstance().getDefaultCommand());

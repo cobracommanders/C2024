@@ -27,6 +27,8 @@ public class LED extends SubsystemBase {
     SUBWOOFER(BlinkinColor.SOLID_HOT_PINK),
     //Communicates that the robot cannot go under the stage because the shooter is too high | Pink
     SHOOTER_READY(BlinkinColor.SOLID_GREEN),
+
+    NO_SHOOT(BlinkinColor.SOLID_RED),
     //Communicates the Shooter being aligned
     AUTO(BlinkinColor.OCEAN_PALETTE),
     //BATTERY_LOW(BlinkinColor.STROBE_RED),
