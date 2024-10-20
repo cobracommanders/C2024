@@ -124,7 +124,16 @@ public class Controls {
         //     ));
         //driver.rightTrigger().onTrue(runOnce(()-> CommandScheduler.getInstance().schedule(scoreCommand)));//.onFalse(runOnce(()-> scoreCommand.cancel()));
         driver.rightTrigger().onTrue(new SetScoringState().andThen(runOnce(()-> CommandScheduler.getInstance().schedule(scoreCommand))));
-        
+        driver.B().whileTrue(new ConditionalCommand(
+                new ConditionalCommand(
+                    new AngleLock(-90),
+                    new AngleLock(-90),
+                    ()-> Robot.alliance.get() == Alliance.Red),
+                // CRESCENDO MODE SHOOT COMMAND
+                new CrescendoAlign(0.07),//.andThen(new SetScoringState().andThen(new WaitUntilCommand(() -> Shooter.getInstance().atSetpoint() && Hopper.getInstance().getBackBeamBreak())).andThen(new SetScoringState().andThen(runOnce(()-> CommandScheduler.getInstance().schedule(scoreCommand))))),
+                // END CRESCENDO MODE SHOOT
+                ()-> StateController.getInstance().getNextScoringState() == State.AMP))
+            .onFalse(CommandSwerveDrivetrain.getInstance().getDefaultCommand());
         //driver.POV90().onTrue(new AutoAlign());
         driver.X().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.OUTREACH)));
         driver.X().toggleOnTrue(new PrepareToScore());

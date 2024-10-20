@@ -22,15 +22,35 @@
                 }
               },
               {
-                "type": "named",
+                "type": "parallel",
                 "data": {
-                  "name": "setShooterNextState"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "AmpSidePreLoad"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "AmpSidePreLoad"
+                      }
+                    },
+                    {
+                      "type": "sequential",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "wait",
+                            "data": {
+                              "waitTime": 0.5
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "setShooterNextState"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
                 }
               },
               {
@@ -59,7 +79,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "crescendoScore"
+                        "name": "sanghiScore"
                       }
                     }
                   ]
@@ -206,6 +226,12 @@
           "type": "named",
           "data": {
             "name": "setStateCrescenlow"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setShooterNextState"
           }
         },
         {

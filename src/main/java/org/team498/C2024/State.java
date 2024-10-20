@@ -59,7 +59,7 @@ public enum State {
         AMP_SPEAKER(3600, 1000, 35),
         OUTREACH(2800, 1000, 55),
         OUTER_STAGE(4500, 1000, 25.5),
-        SANGHI(4500, 1000, 26),
+        SANGHI(4500, 1000, 26.75),
         FARSHOT(4500, 1000, 26.5);
 
 
@@ -94,7 +94,7 @@ public enum State {
         IDLE(0),
         FORWARD(0.5),
         REVERSE(-0.5),
-        AMP(-0.8525);
+        AMP(-0.845);
 
         public final double speed;
 

@@ -2,7 +2,6 @@ package org.team498.C2024.commands.drivetrain;
 
 import org.team498.C2024.Robot;
 import org.team498.C2024.RobotPosition;
-import org.team498.C2024.commands.robot.SetScoringState;
 import org.team498.C2024.Controls;
 import org.team498.C2024.subsystems.CommandSwerveDrivetrain;
 import org.team498.C2024.subsystems.Hopper;
@@ -32,7 +31,9 @@ public class CrescendoAlign extends Command{
     private double targetAngle = -1000;
     private boolean useLL = true;
     private Timer endTimer = new Timer();
-    public CrescendoAlign() {
+    private final double endTime;
+    public CrescendoAlign(double endTime) {
+            this.endTime = endTime;
             addRequirements(drivetrain);
         }
         
@@ -62,12 +63,12 @@ public class CrescendoAlign extends Command{
         if (useLL) {
             targetAngle = drivetrain.getHeading(limelightTimestamp) - tx;
         } else {
-            targetAngle = RobotPosition.calculateDegreesToSpeaker();
+            targetAngle = drivetrain.getState().Pose.getRotation().getDegrees();
         }
         //end = true;
         
         // }
-        if ((Math.abs(tx) < 5 && useLL) || (Math.abs(drivetrain.getState().Pose.getRotation().getDegrees() - targetAngle) < 4 && !useLL)) {
+        if ((Math.abs(tx) < 5.5 && useLL) || (Math.abs(drivetrain.getState().Pose.getRotation().getDegrees() - targetAngle) < 5 && !useLL)) {
             LimelightHelpers.setLEDMode_ForceOn("limelight");
             endTimer.start();
         } else {
@@ -102,13 +103,13 @@ public class CrescendoAlign extends Command{
     }
     @Override
     public boolean isFinished() {
-        return endTimer.get() >= 0.05;
+        return endTimer.get() >= endTime;
     }
     @Override
     public void end(boolean interrupted) {
         LimelightHelpers.setLEDMode_ForceOff("limelight");
         // if (Hopper.getInstance().getBackBeamBreak() && !CommandScheduler.getInstance().isScheduled(Controls.scoreCommand)) {
-        //     CommandScheduler.getInstance().schedule(new SetScoringState().andThen(Controls.scoreCommand));
+        //     CommandScheduler.getInstance().schedule(Controls.scoreCommand);
         // }
     }
 }
