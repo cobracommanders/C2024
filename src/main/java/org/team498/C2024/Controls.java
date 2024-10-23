@@ -98,7 +98,7 @@ public class Controls {
                     new AngleLock(-90),
                     ()-> Robot.alliance.get() == Alliance.Red),
                 // CRESCENDO MODE SHOOT COMMAND
-                new AutoAlign(0.07),//.andThen(new SetScoringState().andThen(new WaitUntilCommand(() -> Shooter.getInstance().atSetpoint() && Hopper.getInstance().getBackBeamBreak())).andThen(new SetScoringState().andThen(runOnce(()-> CommandScheduler.getInstance().schedule(scoreCommand))))),
+                new AutoAlign(0.07).andThen(new SetScoringState().andThen(new WaitUntilCommand(() -> Shooter.getInstance().atSetpoint() && Hopper.getInstance().getBackBeamBreak())).andThen(new SetScoringState().andThen(runOnce(()-> CommandScheduler.getInstance().schedule(scoreCommand))))),
                 // END CRESCENDO MODE SHOOT
                 ()-> StateController.getInstance().getNextScoringState() == State.AMP))
             .onFalse(CommandSwerveDrivetrain.getInstance().getDefaultCommand());
