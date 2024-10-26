@@ -96,6 +96,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
         if (Utils.isSimulation()) {
             startSimThread();
         }
+        rotationController.enableContinuousInput(0, 360);
     }
 
     public void setYaw(double angle) {
@@ -115,7 +116,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
     }
 
     public void driveFieldRelativeAngleLock(ChassisSpeeds speeds, double degrees) {
-        double rotationRate = rotationController.calculate(CommandSwerveDrivetrain.getInstance().getState().Pose.getRotation().getDegrees(), degrees);
+        double rotationRate = rotationController.calculate(CommandSwerveDrivetrain.getInstance().getState().Pose.getRotation().getDegrees(), degrees % 360);
         this.setControl(new SwerveRequest.FieldCentric().withVelocityX(xLimiter.calculate(speeds.vxMetersPerSecond)).withVelocityY(yLimiter.calculate(speeds.vyMetersPerSecond)).withRotationalRate(rotationRate));
     }
 
