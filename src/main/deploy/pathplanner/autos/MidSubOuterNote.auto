@@ -20,7 +20,7 @@
         {
           "type": "named",
           "data": {
-            "name": "setStatePodium"
+            "name": "setStateSanghi"
           }
         },
         {
@@ -112,7 +112,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "podiumScore"
+                  "name": "crescendoScore"
                 }
               }
             ]
@@ -195,13 +195,25 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "setStateCrescenlow"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setShooterNextState"
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "midNotePodium"
+                  "pathName": "MidNotePodium"
                 }
               },
               {

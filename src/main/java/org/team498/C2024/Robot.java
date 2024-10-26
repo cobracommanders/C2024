@@ -122,6 +122,7 @@ public class Robot extends TimedRobot{
         NamedCommands.registerCommand("loadGroundAuto", new LoadGroundAuto());
         NamedCommands.registerCommand("setStateSanghi", new SetState(State.SANGHI));
         NamedCommands.registerCommand("setStateCrescenlow", new SetState(State.FARSHOT));
+        NamedCommands.registerCommand("setStateAmpZone", new SetState(State.AMP_SPEAKER));
 
         // m_robotContainer = new RobotContainer();
         //new PowerDistribution(1, PowerDistribution.ModuleType.kRev).close(); // Enables power distribution logging

@@ -119,6 +119,18 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "setStateSanghi"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setShooterNextState"
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -192,6 +204,18 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setStateAmpZone"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setShooterNextState"
           }
         },
         {
