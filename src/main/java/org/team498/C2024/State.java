@@ -8,6 +8,7 @@ public enum State {
     OUTTAKE(Shooter.IDLE, Hopper.FORWARD, Intake.OUTTAKE, IntakeRollers.OUTTAKE, Kicker.IDLE),
     AMP(Shooter.AMP, Hopper.AMP, Intake.IDLE, IntakeRollers.IDLE, Kicker.FORWARD),
     SUBWOOFER(Shooter.SUBWOOFER, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.REVERSE),
+    FEED(Shooter.FEED, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.REVERSE),
     PODIUM(Shooter.PODIUM, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.REVERSE),
     CRESCENDO(Shooter.CRESCENDO, Hopper.REVERSE, Intake.IDLE, IntakeRollers.IDLE, Kicker.REVERSE),
     CANCEL_AMP(Shooter.IDLE, Hopper.IDLE, Intake.IDLE, IntakeRollers.IDLE, Kicker.REVERSE),
@@ -42,7 +43,8 @@ public enum State {
     //Sets Speed and Angle for Shooter
     public enum Shooter {
         IDLE(0, 0, 40),
-        SUBWOOFER(3900, 1000, 52), //49 //3200
+        SUBWOOFER(3900, 1000, 52),
+        FEED(3300, 1000, 52), //49 //3200
         AMP(0, 0, 32.5),
         PODIUM(3800, 1000, 36), //38
         CRESCENDO(3500, 1000, 40),
@@ -56,11 +58,11 @@ public enum State {
         TRAP(3500, 1000, 50),
         SPIT(3800, 1000, 43),
         FRONT_PODIUM(4000, 1000, 33), //31.5
-        AMP_SPEAKER(3600, 1000, 35),
+        AMP_SPEAKER(3600, 1000, 34.5),
         OUTREACH(2800, 1000, 55),
         OUTER_STAGE(4500, 1000, 25.5),
-        SANGHI(4500, 1000, 26.75),
-        FARSHOT(4500, 1000, 26.5);
+        SANGHI(4500, 1000, 28.5),
+        FARSHOT(4500, 1000, 26.8);
 
 
         public final double speed;

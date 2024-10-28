@@ -2,7 +2,7 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.41,
+      "x": 1.46,
       "y": 7.3
     },
     "rotation": 180.0
@@ -18,19 +18,39 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "setStateCrescendo"
+                  "name": "setStateSanghi"
                 }
               },
               {
-                "type": "named",
+                "type": "parallel",
                 "data": {
-                  "name": "setShooterNextState"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "AmpSidePreLoad"
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "AmpSidePreLoad"
+                      }
+                    },
+                    {
+                      "type": "sequential",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "wait",
+                            "data": {
+                              "waitTime": 0.5
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "setShooterNextState"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
                 }
               },
               {
@@ -42,15 +62,15 @@
                       "data": {
                         "commands": [
                           {
-                            "type": "wait",
-                            "data": {
-                              "waitTime": 1.4
-                            }
-                          },
-                          {
                             "type": "named",
                             "data": {
                               "name": "autoAlign"
+                            }
+                          },
+                          {
+                            "type": "wait",
+                            "data": {
+                              "waitTime": 0.2
                             }
                           }
                         ]
@@ -59,13 +79,25 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "crescendoScore"
+                        "name": "sanghiScore"
                       }
                     }
                   ]
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setStateCrescenlow"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "setShooterNextState"
           }
         },
         {
@@ -85,7 +117,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 1.0
+                        "waitTime": 1.15
                       }
                     },
                     {
@@ -93,15 +125,15 @@
                       "data": {
                         "commands": [
                           {
-                            "type": "wait",
-                            "data": {
-                              "waitTime": 1.7
-                            }
-                          },
-                          {
                             "type": "named",
                             "data": {
                               "name": "loadGround"
+                            }
+                          },
+                          {
+                            "type": "wait",
+                            "data": {
+                              "waitTime": 2.75
                             }
                           }
                         ]
@@ -130,15 +162,15 @@
           "data": {
             "commands": [
               {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.5
-                }
-              },
-              {
                 "type": "named",
                 "data": {
                   "name": "autoAlign"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.2
                 }
               }
             ]
@@ -147,7 +179,7 @@
         {
           "type": "named",
           "data": {
-            "name": "crescendoScore"
+            "name": "crescenlowScore"
           }
         },
         {
@@ -175,15 +207,15 @@
                       "data": {
                         "commands": [
                           {
-                            "type": "wait",
-                            "data": {
-                              "waitTime": 2.0
-                            }
-                          },
-                          {
                             "type": "named",
                             "data": {
                               "name": "loadGround"
+                            }
+                          },
+                          {
+                            "type": "wait",
+                            "data": {
+                              "waitTime": 3.25
                             }
                           }
                         ]
@@ -212,24 +244,18 @@
           "data": {
             "commands": [
               {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.5
-                }
-              },
-              {
                 "type": "named",
                 "data": {
                   "name": "autoAlign"
                 }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.3
+                }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "setStateCrescenlow"
           }
         },
         {

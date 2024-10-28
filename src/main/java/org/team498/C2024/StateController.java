@@ -24,7 +24,7 @@ public class StateController extends SubsystemBase {
     private DoubleSupplier slowDrive = ()-> 1;
     private DoubleSupplier angleOverride = null;
 
-    public enum ScoringOption{AMP, PODIUM, SUBWOOFER, CRESCENDO, FRONT_PODIUM, AMP_SPEAKER, SPIT, OUTREACH, OUTER_STAGE, SANGHI, FARSHOT}
+    public enum ScoringOption{AMP, PODIUM, SUBWOOFER, CRESCENDO, FRONT_PODIUM, AMP_SPEAKER, SPIT, OUTREACH, OUTER_STAGE, SANGHI, FARSHOT, FEED}
     public enum LoadingOption{GROUND, SOURCE}
 
     public void setState(State state){
@@ -52,10 +52,13 @@ public class StateController extends SubsystemBase {
             //if nextScoringOption is SUBWOOFER, it sets the State to SUBWOOFER
             case SUBWOOFER -> State.SUBWOOFER;
 
+            //if nextScoringOption is SUBWOOFER, it sets the State to SUBWOOFER
+            case FEED -> State.FEED;
+
             //if nextScoringOption is CRESCENDO, it sets the State to CRESCENDO
             case CRESCENDO -> State.CRESCENDO;
 
-            //if nextScoringOption is CRESCENDO, it sets the State to AMP_SPEAKER
+            //if nextScoringOption is AMP_SPEAKER, it sets the State to AMP_SPEAKER
             case FRONT_PODIUM -> State.FRONT_PODIUM;
 
             case AMP_SPEAKER -> State.AMP_SPEAKER;

@@ -14,6 +14,7 @@ import org.team498.C2024.commands.robot.IdleIntakeOn;
 import org.team498.C2024.commands.robot.ReturnToIdle;
 import org.team498.C2024.commands.robot.SetIntakeIdle;
 import org.team498.C2024.commands.robot.SetScoringState;
+import org.team498.C2024.commands.robot.StoreNote;
 import org.team498.C2024.commands.robot.loading.LoadGround;
 import org.team498.C2024.commands.robot.loading.Outtake;
 import org.team498.C2024.commands.robot.scoring.PrepareAmp;
@@ -92,13 +93,13 @@ public class Controls {
         // driver.rightBumper().onTrue(new SlowDrive(DrivetrainConstants.SLOW_SPEED_SCALAR))
         //     .onFalse(new SlowDrive(DrivetrainConstants.FULL_SPEED_SCALAR));
         driver.rightBumper().onTrue(runOnce(() ->CommandSwerveDrivetrain.getInstance().setYaw(Robot.alliance.get() == Alliance.Red?180:0)));
-        driver.leftBumper().onTrue(new ConditionalCommand(
+        driver.leftBumper().whileTrue(new ConditionalCommand(
                 new ConditionalCommand(
                     new AngleLock(-90),
                     new AngleLock(-90),
                     ()-> Robot.alliance.get() == Alliance.Red),
                 // CRESCENDO MODE SHOOT COMMAND
-                new AutoAlign(0.07),//.andThen(new SetScoringState().andThen(new WaitUntilCommand(() -> Shooter.getInstance().atSetpoint() && Hopper.getInstance().getBackBeamBreak())).andThen(new SetScoringState().andThen(runOnce(()-> CommandScheduler.getInstance().schedule(scoreCommand))))),
+                new AutoAlign(0.05),//.andThen(new SetScoringState().andThen(new WaitUntilCommand(() -> Shooter.getInstance().atSetpoint() && Hopper.getInstance().getBackBeamBreak())).andThen(new SetScoringState().andThen(runOnce(()-> CommandScheduler.getInstance().schedule(scoreCommand))))),
                 // END CRESCENDO MODE SHOOT
                 ()-> StateController.getInstance().getNextScoringState() == State.AMP))
             .onFalse(CommandSwerveDrivetrain.getInstance().getDefaultCommand());
@@ -130,7 +131,7 @@ public class Controls {
                     new AngleLock(-90),
                     ()-> Robot.alliance.get() == Alliance.Red),
                 // CRESCENDO MODE SHOOT COMMAND
-                new CrescendoAlign(0.07),//.andThen(new SetScoringState().andThen(new WaitUntilCommand(() -> Shooter.getInstance().atSetpoint() && Hopper.getInstance().getBackBeamBreak())).andThen(new SetScoringState().andThen(runOnce(()-> CommandScheduler.getInstance().schedule(scoreCommand))))),
+                new CrescendoAlign(0.07),//andThen(new SetScoringState().andThen(new WaitUntilCommand(() -> Shooter.getInstance().atSetpoint() && Hopper.getInstance().getBackBeamBreak())).andThen(new SetScoringState().andThen(runOnce(()-> CommandScheduler.getInstance().schedule(scoreCommand))))),
                 // END CRESCENDO MODE SHOOT
                 ()-> StateController.getInstance().getNextScoringState() == State.AMP))
             .onFalse(CommandSwerveDrivetrain.getInstance().getDefaultCommand());
@@ -178,8 +179,8 @@ public class Controls {
         operator.POV0().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.AMP_SPEAKER)));
         operator.POV0().toggleOnTrue(new PrepareToScore());
 
-        // operator.POVMinus90().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.SPIT)));
-        // operator.POVMinus90().toggleOnTrue(new PrepareToScore());
+        operator.POVMinus90().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.FEED)));
+        operator.POVMinus90().toggleOnTrue(new PrepareToScore());
 
         operator.POV90().onTrue(runOnce(() -> StateController.getInstance().setNextScoringOption(ScoringOption.CRESCENDO)));
         operator.POV90().toggleOnTrue(new PrepareToScore());
