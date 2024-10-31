@@ -43,7 +43,7 @@ public enum State {
     //Sets Speed and Angle for Shooter
     public enum Shooter {
         IDLE(0, 0, 40),
-        SUBWOOFER(3900, 1000, 52),
+        SUBWOOFER(3900, 1000, 53),
         FEED(3300, 1000, 52), //49 //3200
         AMP(0, 0, 32.5),
         PODIUM(3800, 1000, 36), //38
@@ -57,12 +57,12 @@ public enum State {
         CLIMB_DOWN(0, 0, 30),
         TRAP(3500, 1000, 50),
         SPIT(3800, 1000, 43),
-        FRONT_PODIUM(4000, 1000, 33), //31.5
-        AMP_SPEAKER(3600, 1000, 34.5),
+        FRONT_PODIUM(4000, 1000, 37.25), //31.5
+        AMP_SPEAKER(3600, 1000, 33.5),
         OUTREACH(2800, 1000, 55),
         OUTER_STAGE(4500, 1000, 25.5),
-        SANGHI(4500, 1000, 28.75),
-        FARSHOT(4500, 1000, 27.25);
+        SANGHI(4500, 1000, 29.5),
+        FARSHOT(4500, 1000, 28.25);
 
 
         public final double speed;
