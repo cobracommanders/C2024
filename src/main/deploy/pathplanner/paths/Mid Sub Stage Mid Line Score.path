@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 5.08490900006051,
-        "y": 4.262744502664469
+        "x": 5.365969077159265,
+        "y": 4.286166175756032
       },
       "prevControl": {
-        "x": 6.09204094299772,
-        "y": 3.735756858104301
+        "x": 6.373101020096475,
+        "y": 3.7591785311958636
       },
       "nextControl": {
-        "x": 3.3783492302872298,
-        "y": 5.155711824057465
+        "x": 3.659409307385985,
+        "y": 5.179133497149028
       },
       "isLocked": false,
       "linkedName": null
@@ -56,7 +56,7 @@
   "goalEndState": {
     "velocity": 0,
     "rotation": -160.0,
-    "rotateFast": true
+    "rotateFast": false
   },
   "reversed": false,
   "folder": "Shooting Positions",
