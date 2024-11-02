@@ -62,7 +62,7 @@ public enum State {
         OUTREACH(2800, 1000, 55),
         OUTER_STAGE(4500, 1000, 25.5),
         SANGHI(4500, 1000, 29.5),
-        FARSHOT(4500, 1000, 28.25);
+        FARSHOT(4500, 1000, 27.75);
 
 
         public final double speed;

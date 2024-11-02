@@ -147,7 +147,7 @@ public class TunerConstants extends SubsystemBase{
     private static final int kBackRightDriveMotorId = 7;
     private static final int kBackRightSteerMotorId = 8;
     private static final int kBackRightEncoderId = 14;
-    private static final double kBackRightEncoderOffset = 0.241211;
+    private static final double kBackRightEncoderOffset = 0.240723;
     private static final boolean kBackRightSteerInvert = true;
 
     private static final double kBackRightXPosInches = -10.25;
