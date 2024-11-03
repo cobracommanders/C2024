@@ -68,7 +68,7 @@ public class AutoAlign extends Command{
         //end = true;
         
         // }
-        if ((Math.abs(tx) <= 5.5 && useLL) || (Math.abs(drivetrain.getState().Pose.getRotation().getDegrees() - targetAngle) < 5 && !useLL)) {
+        if ((Math.abs(tx) <= 5.25 && useLL) || (Math.abs(drivetrain.getState().Pose.getRotation().getDegrees() - targetAngle) < 5 && !useLL)) {
             LimelightHelpers.setLEDMode_ForceOn("limelight");
             endTimer.start();
         } else {

@@ -113,7 +113,7 @@ public class Robot extends TimedRobot{
         NamedCommands.registerCommand("setStateFrontPodium", new SetState(State.FRONT_PODIUM));
         NamedCommands.registerCommand("podiumScore", new PodiumScore());
         NamedCommands.registerCommand("frontPodiumScore", new FrontPodiumScore());
-        NamedCommands.registerCommand("autoAlign", new AutoAlign(0.07));
+        NamedCommands.registerCommand("autoAlign", new AutoAlign(0.1));
         NamedCommands.registerCommand("setShooterNextState", new SetShooterNextState());
         NamedCommands.registerCommand("ampZoneScore", new AmpZoneScore());
         NamedCommands.registerCommand("setStateOuterStage", new SetState(State.OUTER_STAGE));

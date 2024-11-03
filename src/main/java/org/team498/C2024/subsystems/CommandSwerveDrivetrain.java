@@ -45,7 +45,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
     public TimeInterpolatableBuffer<Double> headingHistory = TimeInterpolatableBuffer.createDoubleBuffer(6);
 
 
-    private final PIDController rotationController = new PIDController(5.5 * 3.14/180.0, 0, 0);
+    private final PIDController rotationController = new PIDController(5.75 * 3.14/180.0, 0, 0);
 
     private final SlewRateLimiter xLimiter = new SlewRateLimiter(MAX_ACCELERATION_METERS_PER_SECOND_SQUARED);
     private final SlewRateLimiter yLimiter = new SlewRateLimiter(MAX_ACCELERATION_METERS_PER_SECOND_SQUARED);
