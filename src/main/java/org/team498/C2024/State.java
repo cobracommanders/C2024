@@ -58,7 +58,7 @@ public enum State {
         TRAP(3500, 1000, 50),
         SPIT(3800, 1000, 43),
         FRONT_PODIUM(4000, 1000, 37.75), //31.5
-        AMP_SPEAKER(3600, 1000, 33.5),
+        AMP_SPEAKER(3600, 1000, 34),
         OUTREACH(2800, 1000, 55),
         OUTER_STAGE(4500, 1000, 25.5),
         SANGHI(4500, 1000, 29),
