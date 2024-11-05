@@ -46,7 +46,7 @@ public enum State {
         SUBWOOFER(3900, 1000, 54),
         FEED(3300, 1000, 52), //49 //3200
         AMP(0, 0, 32.5),
-        PODIUM(3800, 1000, 35.5), //38
+        PODIUM(3800, 1000, 35), //38
         CRESCENDO(3500, 1000, 40),
         SOURCE(0, 0, 50),
         PREPARE(4500, 1000, 40),
