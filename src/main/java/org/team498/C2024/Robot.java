@@ -48,6 +48,9 @@ import org.team498.lib.LimelightHelpers;
 import org.team498.lib.auto.Auto;
 import org.team498.lib.drivers.Blinkin;
 import org.team498.lib.drivers.Gyro;
+
+import static edu.wpi.first.wpilibj2.command.Commands.waitSeconds;
+
 import java.util.List;
 import java.util.Optional;
 import com.pathplanner.lib.auto.AutoBuilder;

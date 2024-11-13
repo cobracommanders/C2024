@@ -1,12 +1,5 @@
 {
-  "version": 1.0,
-  "startingPose": {
-    "position": {
-      "x": 0.71,
-      "y": 4.32
-    },
-    "rotation": 121.0
-  },
+  "version": "2025.0",
   "command": {
     "type": "sequential",
     "data": {
@@ -273,6 +266,7 @@
       ]
     }
   },
+  "resetOdom": true,
   "folder": "MidSub Autos",
   "choreoAuto": false
 }
