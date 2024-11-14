@@ -1,7 +1,5 @@
 package org.team498.C2024;
 
-import org.team498.C2024.subsystems.CommandSwerveDrivetrain;
-
 public enum State {
     IDLE(Shooter.IDLE, Hopper.IDLE, Intake.IDLE, IntakeRollers.IDLE, Kicker.IDLE),
     SOURCE(Shooter.SOURCE, Hopper.IDLE, Intake.INTAKE, IntakeRollers.IDLE, Kicker.IDLE),
@@ -32,16 +30,14 @@ public enum State {
     public final Intake intake;
     public final IntakeRollers intakeRollers;
     public final Kicker kicker;
-    public final CommandSwerveDrivetrain swerveState;
 
 
-    State(Shooter shooter, Hopper hopper, Intake intake, IntakeRollers intakeRollers, Kicker kicker, CommandSwerveDrivetrain swerveState) {
+    State(Shooter shooter, Hopper hopper, Intake intake, IntakeRollers intakeRollers, Kicker kicker) {
         this.shooter = shooter;
         this.hopper = hopper;
         this.intake = intake;
         this.intakeRollers = intakeRollers;
         this.kicker = kicker;
-        this.swerveState = swerveState;
     }
 
     //Sets Speed and Angle for Shooter
@@ -147,9 +143,5 @@ public enum State {
         INTAKE_ASSIST_TELEOP,
         INTAKE_ASSIST_AUTO;
       }
-
-      public final double speed;
-
-        void SwerveState() {
-        }
+      
 }
