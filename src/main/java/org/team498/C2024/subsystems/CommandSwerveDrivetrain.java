@@ -5,11 +5,14 @@ import static org.team498.C2024.Constants.DrivetrainConstants.MAX_ACCELERATION_M
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import org.team498.C2024.State;
+import org.team498.C2024.State.SwerveState;
 import org.team498.C2024.subsystems.PhotonVision.TimedPose;
 
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
@@ -42,13 +45,24 @@ import com.pathplanner.lib.util.ReplanningConfig;
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
+    private double goalSnapAngle = 0;
     public TimeInterpolatableBuffer<Double> headingHistory = TimeInterpolatableBuffer.createDoubleBuffer(6);
 
+    
 
     private final PIDController rotationController = new PIDController(5.75 * 3.14/180.0, 0, 0);
 
     private final SlewRateLimiter xLimiter = new SlewRateLimiter(MAX_ACCELERATION_METERS_PER_SECOND_SQUARED);
     private final SlewRateLimiter yLimiter = new SlewRateLimiter(MAX_ACCELERATION_METERS_PER_SECOND_SQUARED);
+
+    private ChassisSpeeds teleopSpeeds = new ChassisSpeeds();
+
+    private ChassisSpeeds autoSpeeds = new ChassisSpeeds();
+
+    private ChassisSpeeds intakeAssistTeleopSpeeds = new ChassisSpeeds();
+
+    private ChassisSpeeds intakeAssistAutoSpeeds = new ChassisSpeeds();
+
 
     /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
     private final Rotation2d BlueAlliancePerspectiveRotation = Rotation2d.fromDegrees(0);
@@ -59,6 +73,8 @@ import com.pathplanner.lib.util.ReplanningConfig;
     private boolean isMoving() {
         return (Math.abs(this.getState().speeds.vxMetersPerSecond) >= 0.1 || Math.abs(this.getState().speeds.vyMetersPerSecond) >= 0.1 || Math.abs(this.getState().speeds.omegaRadiansPerSecond) >= 0.5);
     }
+
+
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
         if (Utils.isSimulation()) {
@@ -119,6 +135,86 @@ import com.pathplanner.lib.util.ReplanningConfig;
         double rotationRate = rotationController.calculate(CommandSwerveDrivetrain.getInstance().getState().Pose.getRotation().getDegrees(), degrees % 360);
         this.setControl(new SwerveRequest.FieldCentric().withVelocityX(xLimiter.calculate(speeds.vxMetersPerSecond)).withVelocityY(yLimiter.calculate(speeds.vyMetersPerSecond)).withRotationalRate(rotationRate));
     }
+
+    private void sendSwerveRequest() {
+        switch (getState()) {
+          case State.SwerveState.TELEOP ->
+              this.setControl(
+                  new SwerveRequest.FieldCentric()
+                      .withVelocityX(teleopSpeeds.vxMetersPerSecond)
+                      .withVelocityY(teleopSpeeds.vyMetersPerSecond)
+                      .withRotationalRate(teleopSpeeds.omegaRadiansPerSecond)
+                      .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
+          case State.SwerveState.TELEOP_SNAPS -> {
+            if (teleopSpeeds.omegaRadiansPerSecond == 0) {
+              this.setControl(
+                  new SwerveRequest.FieldCentricFacingAngle()
+                      .withVelocityX(teleopSpeeds.vxMetersPerSecond)
+                      .withVelocityY(teleopSpeeds.vyMetersPerSecond)
+                      .withTargetDirection(Rotation2d.fromDegrees(goalSnapAngle))
+                      .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
+    
+            } else {
+              this.setControl(
+                new SwerveRequest.FieldCentric()
+                      .withVelocityX(teleopSpeeds.vxMetersPerSecond)
+                      .withVelocityY(teleopSpeeds.vyMetersPerSecond)
+                      .withRotationalRate(teleopSpeeds.omegaRadiansPerSecond)
+                      .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
+            }
+          }
+          case State.SwerveState.INTAKE_ASSIST_TELEOP -> {
+            // intakeAssistTeleopSpeeds =
+            //     IntakeAssistManager.getRobotRelativeAssistSpeeds(0, teleopSpeeds);
+            /// fix robotHeading
+    
+            this.setControl(
+                new SwerveRequest.FieldCentric()
+                    .withVelocityX(intakeAssistTeleopSpeeds.vxMetersPerSecond)
+                    .withVelocityY(intakeAssistTeleopSpeeds.vyMetersPerSecond)
+                    .withRotationalRate(intakeAssistTeleopSpeeds.omegaRadiansPerSecond)
+                    .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
+          }
+          case State.SwerveState.AUTO ->
+              this.setControl(
+                new SwerveRequest.FieldCentric()
+                      .withVelocityX(autoSpeeds.vxMetersPerSecond)
+                      .withVelocityY(autoSpeeds.vyMetersPerSecond)
+                      .withRotationalRate(autoSpeeds.omegaRadiansPerSecond)
+                      .withDriveRequestType(DriveRequestType.Velocity));
+          case State.SwerveState.AUTO_SNAPS ->
+              this.setControl(
+                new SwerveRequest.FieldCentricFacingAngle()
+                      .withVelocityX(autoSpeeds.vxMetersPerSecond)
+                      .withVelocityY(autoSpeeds.vyMetersPerSecond)
+                      .withTargetDirection(Rotation2d.fromDegrees(goalSnapAngle))
+                      .withDriveRequestType(DriveRequestType.Velocity));
+    
+          case State.SwerveState.INTAKE_ASSIST_AUTO -> {
+            //intakeAssistAutoSpeeds = IntakeAssistManager.getRobotRelativeAssistSpeeds(0, autoSpeeds);
+            /// fix robotHeading
+            this.setControl(
+                new SwerveRequest.FieldCentric()
+                    .withVelocityX(intakeAssistAutoSpeeds.vxMetersPerSecond)
+                    .withVelocityY(intakeAssistAutoSpeeds.vyMetersPerSecond)
+                    .withRotationalRate(intakeAssistAutoSpeeds.omegaRadiansPerSecond)
+                    .withDriveRequestType(DriveRequestType.Velocity));
+          }
+        }
+      }
+    
+      public void setState(SwerveState newState) {
+        setState(newState);
+      }
+    
+      public void setSnapsEnabled(boolean newValue) {
+        switch (getState()) {
+          case State.SwerveState.TELEOP, State.SwerveState.TELEOP_SNAPS, State.SwerveState.INTAKE_ASSIST_TELEOP ->
+              setState(newValue ? SwerveState.TELEOP_SNAPS : SwerveState.TELEOP);
+          case State.SwerveState.AUTO, State.SwerveState.AUTO_SNAPS, State.SwerveState.INTAKE_ASSIST_AUTO ->
+              setState(newValue ? SwerveState.AUTO_SNAPS : SwerveState.AUTO);
+        }
+      }
 
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
         return run(() -> this.setControl(requestSupplier.get()));

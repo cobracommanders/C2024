@@ -72,7 +72,7 @@ public class Intake extends SubsystemBase {
         // We will use this variable to keep track of our desired speed
         double speed = 0;
         if (isActivated) {
-            double rotation = CommandSwerveDrivetrain.getInstance().getState().speeds.omegaRadiansPerSecond;
+            double rotation = Intake.getInstance().getState().speeds.omegaRadiansPerSecond;
             //double driveAccel = Drivetrain.getInstance().getRobotRelativeYAcceleration();
 
             double initialPID = pidController.calculate(getPosition(), this.setpoint);
