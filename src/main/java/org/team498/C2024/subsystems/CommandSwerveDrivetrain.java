@@ -20,8 +20,10 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.proto.Kinematics;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -46,6 +48,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
     private double goalSnapAngle = 0;
+    private State.SwerveState currentState;
     public TimeInterpolatableBuffer<Double> headingHistory = TimeInterpolatableBuffer.createDoubleBuffer(6);
 
     
@@ -62,6 +65,27 @@ import com.pathplanner.lib.util.ReplanningConfig;
     private ChassisSpeeds intakeAssistTeleopSpeeds = new ChassisSpeeds();
 
     private ChassisSpeeds intakeAssistAutoSpeeds = new ChassisSpeeds();
+
+     public static final Translation2d FRONT_LEFT_LOCATION =
+      new Translation2d(
+          TunerConstants.kFrontLeftXPosInches, TunerConstants.kFrontLeftYPosInches);
+        public static final Translation2d FRONT_RIGHT_LOCATION =
+      new Translation2d(
+          TunerConstants.kFrontRightXPosInches,
+          TunerConstants.kFrontRightYPosInches);
+        public static final Translation2d BACK_LEFT_LOCATION =
+      new Translation2d(
+        TunerConstants.kBackLeftXPosInches, TunerConstants.kBackLeftYPosInches);
+        public static final Translation2d BACK_RIGHT_LOCATION =
+      new Translation2d(
+        TunerConstants.kBackRightXPosInches, TunerConstants.kBackRightYPosInches);
+        public static final Translation2d[] MODULE_LOCATIONS =
+      new Translation2d[] {
+        FRONT_LEFT_LOCATION, FRONT_RIGHT_LOCATION, BACK_LEFT_LOCATION, BACK_RIGHT_LOCATION
+      };
+
+     public static final SwerveDriveKinematics KINEMATICS =
+      new SwerveDriveKinematics(MODULE_LOCATIONS);
 
 
     /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
@@ -114,6 +138,10 @@ import com.pathplanner.lib.util.ReplanningConfig;
         }
         rotationController.enableContinuousInput(0, 360);
     }
+
+    private ChassisSpeeds calculateRobotRelativeSpeeds() {
+        return KINEMATICS.toChassisSpeeds(this.getState().ModuleStates);
+      }
 
     public void setYaw(double angle) {
         this.seedFieldRelative(new Pose2d(getState().Pose.getTranslation(), Rotation2d.fromDegrees(angle)));
@@ -206,6 +234,10 @@ import com.pathplanner.lib.util.ReplanningConfig;
       public void setState(SwerveState newState) {
         setState(newState);
       }
+
+      public State.SwerveState getState() {
+        return currentState;
+    }
     
       public void setSnapsEnabled(boolean newValue) {
         switch (getState()) {
