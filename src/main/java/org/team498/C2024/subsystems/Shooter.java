@@ -162,11 +162,11 @@ public class Shooter extends SubsystemBase {
             this.angle = ShooterConstants.AngleConstants.MAX_ANGLE;
         // } else if (this.angle < ShooterConstants.AngleConstants.MIN_ANGLE && Intake.getInstance().getState() == State.Intake.IDLE) {
         //     this.angle = ShooterConstants.AngleConstants.MIN_ANGLE;
-        } else if (this.angle < ShooterConstants.AngleConstants.MIN_ANGLE && Intake.getInstance().getState() == State.Intake.IDLE) {
-            this.angle = ShooterConstants.AngleConstants.MIN_ANGLE;
-        } else if(this.angle < ShooterConstants.AngleConstants.AUTO_MIN_ANGLE && Intake.getInstance().getState() != State.Intake.IDLE) {
-            this.angle = ShooterConstants.AngleConstants.AUTO_MIN_ANGLE;
-        }
+        // } else if (this.angle < ShooterConstants.AngleConstants.MIN_ANGLE && Intake.getInstance().getState() == State.Intake.IDLE) {
+        //     this.angle = ShooterConstants.AngleConstants.MIN_ANGLE;
+        // } else if(this.angle < ShooterConstants.AngleConstants.AUTO_MIN_ANGLE && Intake.getInstance().getState() != State.Intake.IDLE) {
+        //     this.angle = ShooterConstants.AngleConstants.AUTO_MIN_ANGLE;
+        // }
 
         if (currentState.speed == 0) {
             //IF State is IDLE, don't Spin the right wheel
@@ -211,7 +211,7 @@ public class Shooter extends SubsystemBase {
         setFeed(feedShooterSpeed);
         setAngle(angleSpeed + angleFeedForward.calculate(Units.degreesToRadians(getAngle()), 0));
         // We divide by MAX_RPM to scale to {-1, 1}
-    }
+    }}
     
     //sets top speed and bottom speed
     private void set(double rightSpeed, double leftSpeed) {

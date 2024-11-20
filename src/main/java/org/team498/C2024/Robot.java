@@ -35,9 +35,7 @@ import org.team498.C2024.commands.robot.scoring.PrepareToScore;
 import org.team498.C2024.commands.robot.scoring.StageScore;
 import org.team498.C2024.commands.robot.scoring.SubwooferScore;
 import org.team498.C2024.commands.shooter.SetShooterNextState;
-import org.team498.C2024.subsystems.CommandSwerveDrivetrain;
 import org.team498.C2024.subsystems.Hopper;
-import org.team498.C2024.subsystems.Intake;
 import org.team498.C2024.subsystems.IntakeRollers;
 import org.team498.C2024.subsystems.Kicker;
 import org.team498.C2024.subsystems.LED;
@@ -70,7 +68,7 @@ public class Robot extends TimedRobot{
     // private PowerDistribution pdh;
     private LED led = new LED();
 
-    private final CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
+    //private final CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
     private final Gyro gyro = Gyro.getInstance();
     private final Blinkin blinkin = Blinkin.getInstance();
     //private final RobotState robotState = RobotState.getInstance();
@@ -132,7 +130,7 @@ public class Robot extends TimedRobot{
 
         // m_robotContainer = new RobotContainer();
         //new PowerDistribution(1, PowerDistribution.ModuleType.kRev).close(); // Enables power distribution logging
-        CommandSwerveDrivetrain.getInstance().tareEverything();
+        //CommandSwerveDrivetrain.getInstance().tareEverything();
         autoChooser = AutoBuilder.buildAutoChooser();
        // FieldPositions.displayAll();
         // autoChooser.setDefaultOption(defaultAuto.getName(), defaultAuto);
@@ -145,18 +143,18 @@ public class Robot extends TimedRobot{
         // PathLib.SL1Note1.getClass();
         // CommandSwerveDrivetrain.enableBrakeMode(true);
         // Register Subsystems
-        CommandSwerveDrivetrain.getInstance();
+        //CommandSwerveDrivetrain.getInstance();
         Shooter.getInstance();
         Hopper.getInstance();
         Kicker.getInstance();
-        Intake.getInstance();
+        //Intake.getInstance();
         IntakeRollers.getInstance();
         PhotonVision.getInstance();
 
         Shooter.getInstance().configMotors();
         Hopper.getInstance().configMotors();
         Kicker.getInstance().configMotors();
-        Intake.getInstance().configMotors();
+        //Intake.getInstance().configMotors();
         IntakeRollers.getInstance().configMotors();
 
         // Limelight.getInstance();
@@ -250,7 +248,7 @@ public class Robot extends TimedRobot{
         Shooter.getInstance().setFeed(0);
         Shooter.getInstance().setAngle(0);
         Hopper.getInstance().set(0);
-        Intake.getInstance().set(0);
+        //Intake.getInstance().set(0);
         IntakeRollers.getInstance().set(0);
         Kicker.getInstance().set(0);
         CommandScheduler.getInstance().schedule(new ReturnToIdle());
@@ -345,7 +343,7 @@ public class Robot extends TimedRobot{
         Shooter.getInstance().setFeed(0);
         Shooter.getInstance().setAngle(0);
         Hopper.getInstance().set(0);
-        Intake.getInstance().set(0);
+        //Intake.getInstance().set(0);
         IntakeRollers.getInstance().set(0);
         Kicker.getInstance().set(0);
 
