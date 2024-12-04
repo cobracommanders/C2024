@@ -1,6 +1,6 @@
 package org.team498.C2024.commands.robot;
 
-import org.team498.C2024.subsystems.CommandSwerveDrivetrain;
+import org.team498.C2024.subsystems.drivetrain.CommandSwerveDrivetrain;
 import org.team498.C2024.subsystems.Hopper;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;

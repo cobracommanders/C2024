@@ -5,7 +5,7 @@ import org.team498.C2024.Constants.DrivetrainConstants;
 import org.team498.C2024.commands.drivetrain.SlowDrive;
 import org.team498.C2024.commands.drivetrain.TargetDrive;
 import org.team498.C2024.commands.hopper.SetHopperNextState;
-import org.team498.C2024.commands.intake.SetIntakeNextState;
+// import org.team498.C2024.commands.intake.SetIntakeNextState;
 import org.team498.C2024.commands.intake.SetIntakeRollersNextState;
 import org.team498.C2024.commands.kicker.SetKickerNextState;
 import org.team498.C2024.commands.shooter.SetShooterNextState;
@@ -20,7 +20,7 @@ public class ReturnToIdle extends SequentialCommandGroup {
             new SetState(State.IDLE),
             new ParallelCommandGroup(
                 new SetHopperNextState(),
-                new SetIntakeNextState(),
+                // new SetIntakeNextState(),
                 new SetIntakeRollersNextState(),
                 new SetShooterNextState(),
                 new SetKickerNextState(),

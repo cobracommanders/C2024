@@ -1,4 +1,4 @@
-package org.team498.C2024.subsystems;
+package org.team498.C2024.subsystems.drivetrain;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -120,8 +120,8 @@ public class TunerConstants extends SubsystemBase{
     private static final double kFrontLeftEncoderOffset = -0.4775390625;
     private static final boolean kFrontLeftSteerInvert = true;
 
-    private static final double kFrontLeftXPosInches = 10.25;
-    private static final double kFrontLeftYPosInches = 10.25;
+    public static final double kFrontLeftXPosInches = 10.25;
+    public static final double kFrontLeftYPosInches = 10.25;
 
     // Front Right
     private static final int kFrontRightDriveMotorId = 5;
@@ -130,8 +130,8 @@ public class TunerConstants extends SubsystemBase{
     private static final double kFrontRightEncoderOffset = -0.70068359375;
     private static final boolean kFrontRightSteerInvert = true;
 
-    private static final double kFrontRightXPosInches = 10.25;
-    private static final double kFrontRightYPosInches = -10.25;
+    public static final double kFrontRightXPosInches = 10.25;
+    public static final double kFrontRightYPosInches = -10.25;
 
     // Back Left
     private static final int kBackLeftDriveMotorId = 3;
@@ -140,8 +140,8 @@ public class TunerConstants extends SubsystemBase{
     private static final double kBackLeftEncoderOffset = -0.728759765625;
     private static final boolean kBackLeftSteerInvert = true;
 
-    private static final double kBackLeftXPosInches = -10.25;
-    private static final double kBackLeftYPosInches = 10.25;
+    public static final double kBackLeftXPosInches = -10.25;
+    public static final double kBackLeftYPosInches = 10.25;
 
     // Back Right
     private static final int kBackRightDriveMotorId = 7;
@@ -150,8 +150,8 @@ public class TunerConstants extends SubsystemBase{
     private static final double kBackRightEncoderOffset = 0.240723;
     private static final boolean kBackRightSteerInvert = true;
 
-    private static final double kBackRightXPosInches = -10.25;
-    private static final double kBackRightYPosInches = -10.25;
+    public static final double kBackRightXPosInches = -10.25;
+    public static final double kBackRightYPosInches = -10.25;
 
 
     

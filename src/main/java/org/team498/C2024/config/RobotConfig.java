@@ -13,7 +13,7 @@ import org.team498.C2024.State.Shooter;
 
 public record RobotConfig(
     String robotName,
-    IntakeConfig intake, 
+    IntakeConfig intake,
     ShooterConfig shooter){
 
 

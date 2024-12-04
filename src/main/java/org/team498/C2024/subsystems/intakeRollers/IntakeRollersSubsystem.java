@@ -8,6 +8,8 @@ import org.team498.lib.util.lifecycle.SubsystemPriority;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.CANSparkMax;
 
+import edu.wpi.first.wpilibj.motorcontrol.Talon;
+
 public class IntakeRollersSubsystem extends StateMachine<IntakeRollersStateEnum> {
   private final TalonFX mainMotor;
 
@@ -54,6 +56,6 @@ public class IntakeRollersSubsystem extends StateMachine<IntakeRollersStateEnum>
     // DogLog.log("Intake/StatorCurrent", mainMotor.getStatorCurrent().getValueAsDouble());
     // DogLog.log("Intake/SupplyCurrent", mainMotor.getSupplyCurrent().getValueAsDouble());
     // DogLog.log("Intake/AppliedVoltage", mainMotor.getMotorVoltage().getValueAsDouble());
-  }
+}
 }
 

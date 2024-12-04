@@ -2,7 +2,7 @@ package org.team498.C2024.commands.robot.loading;
 
 import org.team498.C2024.State;
 import org.team498.C2024.commands.hopper.SetHopperNextState;
-import org.team498.C2024.commands.intake.SetIntakeNextState;
+// import org.team498.C2024.commands.intake.SetIntakeNextState;
 import org.team498.C2024.commands.intake.SetIntakeRollersNextState;
 import org.team498.C2024.commands.robot.SetState;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -20,9 +20,9 @@ public class Outtake extends SequentialCommandGroup{
                 new SequentialCommandGroup(
                     new WaitCommand(.1),
                     new SetIntakeRollersNextState()
-                ),
+                )
                 // new SetKickerNextState(),
-                new SetIntakeNextState()
+                //new SetIntakeNextState()
             ),
             // If the BeamBreak is enabled then it stores the Note and if it's not enabled then it Sets the hopper to the next state
             new SetHopperNextState()

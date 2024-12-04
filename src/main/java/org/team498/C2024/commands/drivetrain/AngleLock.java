@@ -1,8 +1,8 @@
 package org.team498.C2024.commands.drivetrain;
 
 import org.team498.C2024.Robot;
-import org.team498.C2024.subsystems.CommandSwerveDrivetrain;
-import org.team498.C2024.subsystems.TunerConstants;
+import org.team498.C2024.subsystems.drivetrain.CommandSwerveDrivetrain;
+import org.team498.C2024.subsystems.drivetrain.TunerConstants;
 import org.team498.lib.LimelightHelpers;
 import org.team498.lib.LimelightHelpers.LimelightResults;
 import org.team498.lib.LimelightHelpers.LimelightTarget_Fiducial;

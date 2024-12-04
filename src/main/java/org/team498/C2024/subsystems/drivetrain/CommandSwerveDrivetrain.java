@@ -6,7 +6,6 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import org.team498.C2024.State;
-import org.team498.C2024.State.SwerveState;
 import org.team498.C2024.subsystems.PhotonVision.TimedPose;
 
 import com.ctre.phoenix6.Utils;
@@ -48,7 +47,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
     private double goalSnapAngle = 0;
-    private State.SwerveState currentState;
+    private SwerveState currentState;
     public TimeInterpolatableBuffer<Double> headingHistory = TimeInterpolatableBuffer.createDoubleBuffer(6);
 
     
@@ -144,7 +143,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
       }
 
     public void setYaw(double angle) {
-        this.seedFieldRelative(new Pose2d(getState().getPose().getTranslation(), Rotation2d.fromDegrees(angle)));
+        this.seedFieldRelative(new Pose2d(getState().Pose.getTranslation(), Rotation2d.fromDegrees(angle)));
         this.m_pigeon2.setYaw(angle);
     }
 
@@ -165,7 +164,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
     }
 
     private void sendSwerveRequest() {
-        switch (getState()) {
+        switch (getCurrentState()) {
           case TELEOP ->
               this.setControl(
                   new SwerveRequest.FieldCentric()
@@ -235,12 +234,12 @@ import com.pathplanner.lib.util.ReplanningConfig;
         setState(newState);
       }
 
-      public SwerveState getState() {
+      public SwerveState getCurrentState() {
         return currentState;
     }
     
       public void setSnapsEnabled(boolean newValue) {
-        switch (getState()) {
+        switch (getCurrentState()) {
           case TELEOP, TELEOP_SNAPS, INTAKE_ASSIST_TELEOP ->
               setState(newValue ? SwerveState.TELEOP_SNAPS : SwerveState.TELEOP);
           case AUTO, AUTO_SNAPS, INTAKE_ASSIST_AUTO ->
@@ -286,11 +285,11 @@ import com.pathplanner.lib.util.ReplanningConfig;
         headingHistory.addSample(Timer.getFPGATimestamp(), this.getState().Pose.getRotation().getDegrees());
         
         
-        Optional<PhotonVision.TimedPose> timedPose = PhotonVision.getInstance().getEstimatedPose();
-        if (isMoving() == false && timedPose.isPresent() && DriverStation.isTeleopEnabled()) {
-            TimedPose useGyro = new TimedPose(new Pose2d(timedPose.get().pose.getTranslation(), Rotation2d.fromDegrees(getHeading(timedPose.get().timeStamp))), timedPose.get().timeStamp);
-            this.addVisionMeasurement(useGyro.pose, useGyro.timeStamp);
-        }
+        // Optional<PhotonVision.TimedPose> timedPose = PhotonVision.getInstance().getEstimatedPose();
+        // if (isMoving() == false && timedPose.isPresent() && DriverStation.isTeleopEnabled()) {
+        //     TimedPose useGyro = new TimedPose(new Pose2d(timedPose.get().pose.getTranslation(), Rotation2d.fromDegrees(getHeading(timedPose.get().timeStamp))), timedPose.get().timeStamp);
+        //     this.addVisionMeasurement(useGyro.pose, useGyro.timeStamp);
+        // }
         field.setRobotPose(this.getState().Pose);
         SmartDashboard.putData(field);
             

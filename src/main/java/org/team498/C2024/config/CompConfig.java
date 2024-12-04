@@ -1,6 +1,7 @@
 package org.team498.C2024.config;
 
 import org.team498.C2024.config.RobotConfig.IntakeConfig;
+import org.team498.C2024.config.RobotConfig.ShooterConfig;
 
 import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
@@ -20,7 +21,7 @@ import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.util.Units;
 
 class CompConfig {
-  private static final String CANIVORE_NAME = "581CANivore";
+  private static final String CANIVORE_NAME = "498CANivore";
   private static final String RIO_CAN_NAME = "rio";
 
   private static final ClosedLoopRampsConfigs CLOSED_LOOP_RAMP =
@@ -37,11 +38,57 @@ class CompConfig {
   public static final RobotConfig competitionBot =
       new RobotConfig(
           "competition",
+          
           new IntakeConfig(
               19,
               CANIVORE_NAME,
-              2,
               new TalonFXConfiguration()
+                  .withClosedLoopRamps(CLOSED_LOOP_RAMP)
+                  .withOpenLoopRamps(OPEN_LOOP_RAMP)
+                  .withCurrentLimits(
+                      new CurrentLimitsConfigs()
+                          .withStatorCurrentLimit(20)
+                          .withSupplyCurrentLimit(25))
+                  .withSlot0(
+                      new Slot0Configs().withKV(0).withKP(1.0).withKI(0).withKD(0).withKG(0))
+             ),
+             new ShooterConfig(
+              1,
+              2,
+              3,
+              4,
+              CANIVORE_NAME,
+              CANIVORE_NAME,
+              CANIVORE_NAME,
+              CANIVORE_NAME,
+              new TalonFXConfiguration()
+                  .withClosedLoopRamps(CLOSED_LOOP_RAMP)
+                  .withOpenLoopRamps(OPEN_LOOP_RAMP)
+                  .withCurrentLimits(
+                      new CurrentLimitsConfigs()
+                          .withStatorCurrentLimit(20)
+                          .withSupplyCurrentLimit(25))
+                  .withSlot0(
+                      new Slot0Configs().withKV(0).withKP(1.0).withKI(0).withKD(0).withKG(0)),
+               new TalonFXConfiguration()
+                  .withClosedLoopRamps(CLOSED_LOOP_RAMP)
+                  .withOpenLoopRamps(OPEN_LOOP_RAMP)
+                  .withCurrentLimits(
+                      new CurrentLimitsConfigs()
+                          .withStatorCurrentLimit(20)
+                          .withSupplyCurrentLimit(25))
+                  .withSlot0(
+                      new Slot0Configs().withKV(0).withKP(1.0).withKI(0).withKD(0).withKG(0)),
+                new TalonFXConfiguration()
+                  .withClosedLoopRamps(CLOSED_LOOP_RAMP)
+                  .withOpenLoopRamps(OPEN_LOOP_RAMP)
+                  .withCurrentLimits(
+                      new CurrentLimitsConfigs()
+                          .withStatorCurrentLimit(20)
+                          .withSupplyCurrentLimit(25))
+                  .withSlot0(
+                      new Slot0Configs().withKV(0).withKP(1.0).withKI(0).withKD(0).withKG(0)),
+                new TalonFXConfiguration()
                   .withClosedLoopRamps(CLOSED_LOOP_RAMP)
                   .withOpenLoopRamps(OPEN_LOOP_RAMP)
                   .withCurrentLimits(

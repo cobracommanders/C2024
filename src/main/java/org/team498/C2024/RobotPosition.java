@@ -16,8 +16,8 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.team498.C2024.Constants.DrivetrainConstants;
-import org.team498.C2024.subsystems.CommandSwerveDrivetrain;
 import org.team498.C2024.subsystems.Shooter;
+import org.team498.C2024.subsystems.drivetrain.CommandSwerveDrivetrain;
 import org.team498.lib.LimelightHelpers;
 import org.team498.lib.LimelightHelpers.LimelightResults;
 import org.team498.lib.LimelightHelpers.LimelightTarget_Fiducial;
@@ -29,7 +29,7 @@ import org.team498.lib.wpilib.ChassisSpeeds;
 
 
 public class RobotPosition {
-    //private static final CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
+    private static final CommandSwerveDrivetrain drivetrain = CommandSwerveDrivetrain.getInstance();
     private static final Shooter shooter = Shooter.getInstance();
     public static final double scoringOffset = Units.inchesToMeters((DrivetrainConstants.ROBOT_WIDTH / 2) + 10);
     
@@ -158,13 +158,13 @@ public class RobotPosition {
             Rotation2d.fromRadians(CommandSwerveDrivetrain.getInstance().getState().speeds.omegaRadiansPerSecond * (tof)));
     }
 
-    // private static Transform2d getVelocitySquared(double loopCycles) {
-    //     var currentSpeeds = drivetrain.getCurrentSpeeds();
-    //     var x = currentSpeeds.vxMetersPerSecond * (Robot.DEFAULT_PERIOD * loopCycles);
-    //     var y = currentSpeeds.vyMetersPerSecond * (Robot.DEFAULT_PERIOD * loopCycles);
-    //     var r = Rotation2d.fromRadians(currentSpeeds.omegaRadiansPerSecond * (Robot.DEFAULT_PERIOD * loopCycles));
-    //     return new Transform2d(new Translation2d(Math.copySign(x * x, x), Math.copySign(y * y, y)), r);
-    //}
+    private static Transform2d getVelocitySquared(double loopCycles) {
+        var currentSpeeds = drivetrain.getState().speeds;
+        var x = currentSpeeds.vxMetersPerSecond * (Robot.DEFAULT_PERIOD * loopCycles);
+        var y = currentSpeeds.vyMetersPerSecond * (Robot.DEFAULT_PERIOD * loopCycles);
+        var r = Rotation2d.fromRadians(currentSpeeds.omegaRadiansPerSecond * (Robot.DEFAULT_PERIOD * loopCycles));
+        return new Transform2d(new Translation2d(Math.copySign(x * x, x), Math.copySign(y * y, y)), r);
+    }
 
     public static double calculateDegreesToSpeaker(){
         Pose2d blueSpeaker = FieldPositions.blueSpeaker.toPose2d();
