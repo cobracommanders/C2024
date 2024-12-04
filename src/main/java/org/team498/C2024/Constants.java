@@ -4,6 +4,12 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants {
+    public enum Mode {
+        REAL, SIM, REPLAY
+    }
+    
+    public static Mode mode = Mode.REAL;
+    
     public static final double CAN_TIMEOUT_SECONDS = 0.01;
 
     public static final class OIConstants {

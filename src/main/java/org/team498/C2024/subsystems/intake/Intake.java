@@ -1,4 +1,4 @@
-package org.team498.C2024.subsystems;
+package org.team498.C2024.subsystems.intake;
 
 import org.team498.C2024.Constants;
 import org.team498.C2024.Ports;
@@ -19,6 +19,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {
+    private final IntakeIO IO;
+    private final IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
 
     private final TalonFX motor;
     private final DutyCycle angleEncoder;
@@ -38,7 +40,11 @@ public class Intake extends SubsystemBase {
     // Constructor: Configure Motor Controller settings and  
     // Instantiate all objects (assign values to every variable and object)
     public Intake() {
-        // motor = new LazySparkMax(Ports.IntakePorts.LMOTOR, MotorType.kBrushless);
+        IO = switch (Constants.mode) {
+            case REAL, REPLAY -> new IntakeIO();
+            case SIM -> new IntakeIOSim() {};
+        };
+         // motor = new LazySparkMax(Ports.IntakePorts.LMOTOR, MotorType.kBrushless);
         motor = new TalonFX(Ports.IntakePorts.MOTOR);
         angleEncoder = new DutyCycle(new DigitalInput(Ports.IntakePorts.ANGLE_ENCODER));
 
