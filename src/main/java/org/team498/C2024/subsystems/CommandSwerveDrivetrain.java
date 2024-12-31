@@ -14,6 +14,8 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.estimator.PoseEstimator;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -43,7 +45,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
     public TimeInterpolatableBuffer<Double> headingHistory = TimeInterpolatableBuffer.createDoubleBuffer(6);
-
+    public LimelightLocalization limelightLocalization = new LimelightLocalization(m_odometry, m_pigeon2);
 
     private final PIDController rotationController = new PIDController(5.75 * 3.14/180.0, 0, 0);
 
@@ -56,7 +58,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
     private final Rotation2d RedAlliancePerspectiveRotation = Rotation2d.fromDegrees(180);
     /* Keep track if we've ever applied the operator perspective before or not */
     private Boolean hasAppliedOperatorPerspective = false;
-    private boolean isMoving() {
+    public boolean isMoving() {
         return (Math.abs(this.getState().speeds.vxMetersPerSecond) >= 0.1 || Math.abs(this.getState().speeds.vyMetersPerSecond) >= 0.1 || Math.abs(this.getState().speeds.omegaRadiansPerSecond) >= 0.5);
     }
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
@@ -166,6 +168,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
         field.setRobotPose(this.getState().Pose);
         SmartDashboard.putData(field);
             
+        limelightLocalization.update();
     }
     public class TimedPose{
         //4.1 , 6.5
