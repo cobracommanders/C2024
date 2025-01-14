@@ -59,7 +59,7 @@ public enum State {
         SPIT(3800, 1000, 43),
         FRONT_PODIUM(4000, 1000, 37.75), //31.5
         AMP_SPEAKER(3600, 1000, 34),
-        OUTREACH(2800, 1000, 55),
+        OUTREACH(2800, 1000, 35),
         OUTER_STAGE(4500, 1000, 25.5),
         SANGHI(4500, 1000, 29),
         FARSHOT(4500, 1000, 28.25);
